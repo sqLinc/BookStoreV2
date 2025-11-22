@@ -15,33 +15,52 @@ import javax.inject.Inject
 class UserRepositoryImpl @Inject constructor(
     private val auth: FirebaseAuth
 ) : UserRepository {
-    override suspend fun loginUserByEmailPass(email: String, password: String) : MainScreenDataObject{
+    override suspend fun loginUserByEmailPass(email: String, password: String) : Result<MainScreenDataObject>{
         return try {
-            val result = auth.signInWithEmailAndPassword(email, password).await().user
-            MainScreenDataObject(
-                result!!.uid,
-                result.email.toString()
+
+            if(email.isBlank() || password.isBlank()){
+                return Result.failure(Exception("Email and password can not be empty!"))
+            }
+
+            val result = auth.signInWithEmailAndPassword(email, password).await()
+            val user = result.user ?: return Result.failure(Exception("This user does not exist!"))
+
+            Result.success(
+                MainScreenDataObject(
+                    uid = user.uid,
+                    email = user.email ?: ""
+                )
             )
         } catch (e: Exception){
-            throw e
+            Result.failure(e)
         }
 
 
     }
 
-    override suspend fun createUserByEmailPass(email: String, password: String): MainScreenDataObject {
+    override suspend fun createUserByEmailPass(email: String, password: String): Result<MainScreenDataObject>{
         return try {
-            val result = auth.createUserWithEmailAndPassword(email, password).await().user
-            MainScreenDataObject(
-                result!!.uid,
-                result.email.toString()
+
+            if(email.isBlank() || password.isBlank()){
+                return Result.failure(Exception("Email and password can not be empty!"))
+            }
+
+            val result = auth.createUserWithEmailAndPassword(email, password).await()
+            val user = result.user ?: return Result.failure(Exception("Can not create user!"))
+
+
+            Result.success(
+                MainScreenDataObject(
+                    uid = user.uid,
+                    email = user.email ?: ""
+                )
             )
         } catch (e: Exception){
-            throw e
+            Result.failure(e)
         }
     }
 
-    override suspend fun loginByGoogle(idToken: String): Result<Unit> {
+    override suspend fun loginByGoogle(idToken: String): Result<MainScreenDataObject> {
         TODO("Not yet implemented")
     }
 
