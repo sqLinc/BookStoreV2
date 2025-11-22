@@ -8,7 +8,8 @@ interface BookRepository {
     suspend fun setReadStatus(bookId: String, isRead: Boolean)
     suspend fun saveBook(book: Book)
 
-    suspend fun getAllBooks(): Flow<List<Book>>
+    suspend fun getAllBooks(): List<Book>
 
     suspend fun isFavorite(bookId: String) : Boolean
+    suspend fun isRead(bookId: String) : Boolean
 }

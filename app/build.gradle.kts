@@ -54,6 +54,8 @@ dependencies {
 
     // build.gradle.kts (Module)
     implementation("com.github.bumptech.glide:compose:1.0.0-beta01")
+    // build.gradle (Module)
+    implementation ("androidx.datastore:datastore-preferences:1.0.0")
 
     implementation(libs.androidx.navigation.compose)
     implementation(libs.kotlinx.serialization.json)
