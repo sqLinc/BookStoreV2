@@ -1,7 +1,7 @@
 package com.example.bookstorev2.domain.models
 
 data class Book(
-    val id: String = "",
+    val key: String = "",
     val title: String = "",
     val imageUrl: String = "",
     val category: String = "",
