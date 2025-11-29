@@ -4,6 +4,8 @@ plugins {
     id("com.google.gms.google-services")
     id("org.jetbrains.kotlin.plugin.compose")
     id("org.jetbrains.kotlin.plugin.serialization")
+    id("kotlin-kapt")
+    id("com.google.dagger.hilt.android")
 }
 
 android {
@@ -57,6 +59,14 @@ dependencies {
     // build.gradle (Module)
     implementation ("androidx.datastore:datastore-preferences:1.0.0")
 
+    // Hilt
+    implementation ("com.google.dagger:hilt-android:2.48")
+    implementation ("com.google.dagger:hilt-compiler:2.48")
+
+    // Hilt для ViewModel
+    implementation ("androidx.hilt:hilt-navigation-compose:1.1.0")
+
+
     implementation(libs.androidx.navigation.compose)
     implementation(libs.kotlinx.serialization.json)
 
@@ -79,6 +89,8 @@ dependencies {
     implementation(libs.androidx.ui.graphics)
     implementation(libs.androidx.ui.tooling.preview)
     implementation(libs.androidx.material3)
+    implementation ("androidx.compose.runtime:runtime-livedata:1.5.4")
+    implementation ("androidx.lifecycle:lifecycle-viewmodel-ktx:2.6.2")
 
     // Testing
     testImplementation(libs.junit)

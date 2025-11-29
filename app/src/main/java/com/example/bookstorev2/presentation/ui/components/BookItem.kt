@@ -1,6 +1,5 @@
 package com.example.bookstorev2.presentation.ui.components
 
-import ads_mobile_sdk.h6
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.padding

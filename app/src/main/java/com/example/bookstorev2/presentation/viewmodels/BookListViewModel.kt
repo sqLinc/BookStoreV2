@@ -12,9 +12,11 @@ import com.example.bookstorev2.domain.usecases.GetAllBooksUseCase
 import com.example.bookstorev2.domain.usecases.ToggleFavoriteUseCase
 import com.example.bookstorev2.domain.usecases.ToggleReadUseCase
 import com.example.bookstorev2.presentation.ui.state.BookListUiState
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
+@HiltViewModel
 class BookListViewModel @Inject constructor(
     private val getAllBooksUseCase: GetAllBooksUseCase,
     private val toggleFavoriteUseCase: ToggleFavoriteUseCase,
