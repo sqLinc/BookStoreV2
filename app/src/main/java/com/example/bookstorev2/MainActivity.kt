@@ -3,45 +3,43 @@ package com.example.bookstorev2
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
-import androidx.activity.enableEdgeToEdge
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.padding
-import androidx.compose.material3.Scaffold
-import androidx.compose.material3.Text
-import androidx.compose.runtime.Composable
-import androidx.compose.ui.Modifier
-import androidx.compose.ui.tooling.preview.Preview
-import com.example.bookstorev2.ui.theme.BookStoreV2Theme
+import androidx.navigation.compose.NavHost
+import androidx.navigation.compose.composable
+import androidx.navigation.compose.rememberNavController
+import com.example.bookstorev2.presentation.navigation.Screen
+import com.example.bookstorev2.presentation.ui.screens.BookListScreen
+import com.example.bookstorev2.presentation.ui.screens.LoginScreen
+import com.ramcosta.composedestinations.DestinationsNavHost
+import dagger.hilt.android.AndroidEntryPoint
 
+@AndroidEntryPoint
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        enableEdgeToEdge()
         setContent {
-            BookStoreV2Theme {
-                Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
-                    Greeting(
-                        name = "Android",
-                        modifier = Modifier.padding(innerPadding)
+            val navController = rememberNavController()
+
+            NavHost(
+                navController = navController,
+                startDestination = Screen.Login.route
+            ) {
+                composable(Screen.Login.route) {
+                    LoginScreen(
+                        onNavigateToBookList = {
+                            navController.navigate(Screen.BookList.route) {
+                                popUpTo(Screen.Login.route) { inclusive = true }
+                            }
+                        }
+                    )
+                }
+                composable(Screen.BookList.route) {
+                    BookListScreen(
+                        onLogoutClick = {
+                            navController.navigate(Screen.Login.route)
+                        }
                     )
                 }
             }
         }
-    }
-}
-
-@Composable
-fun Greeting(name: String, modifier: Modifier = Modifier) {
-    Text(
-        text = "Hello $name!",
-        modifier = modifier
-    )
-}
-
-@Preview(showBackground = true)
-@Composable
-fun GreetingPreview() {
-    BookStoreV2Theme {
-        Greeting("Android")
     }
 }

@@ -5,12 +5,14 @@ import com.example.bookstorev2.domain.repositories.BookRepository
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.toObject
 import com.google.firebase.firestore.toObjects
+import dagger.hilt.android.HiltAndroidApp
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.tasks.await
 import javax.inject.Inject
+import javax.inject.Singleton
 
 
-
+@Singleton
 class BookRepositoryImpl @Inject constructor(
     private val db: FirebaseFirestore
 ) : BookRepository {
