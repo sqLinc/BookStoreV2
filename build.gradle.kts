@@ -3,9 +3,8 @@ plugins {
     alias(libs.plugins.android.application) apply false
     alias(libs.plugins.kotlin.android) apply false
     alias(libs.plugins.google.services) apply false
-
-    alias(libs.plugins.kotlin.compose) apply true
-    alias(libs.plugins.plugin.serialization) apply true
-    id("com.google.dagger.hilt.android") version "2.57.1"  apply false
-
+    id("com.google.dagger.hilt.android") version "2.48" apply false
+    kotlin("plugin.serialization") version "1.9.22" apply false
 }
+
+// Удалите или закомментируйте проблемные плагины из libs.versions.toml

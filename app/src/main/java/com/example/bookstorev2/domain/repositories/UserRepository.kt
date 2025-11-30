@@ -1,13 +1,11 @@
 package com.example.bookstorev2.domain.repositories
 
-import com.example.bookstorev2.domain.models.User
-import com.example.bookstorev2.presentation.navigation.MainScreenDataObject
-import kotlinx.coroutines.flow.Flow
+import com.example.bookstorev2.presentation.navigation.ToMainScreenDataObject
 
 interface UserRepository {
-    suspend fun loginUserByEmailPass(email: String, password: String) : Result<MainScreenDataObject>
-    suspend fun createUserByEmailPass(email: String, password: String) : Result<MainScreenDataObject>
-    suspend fun loginByGoogle(idToken : String) : Result<MainScreenDataObject>
+    suspend fun loginUserByEmailPass(email: String, password: String) : Result<ToMainScreenDataObject>
+    suspend fun createUserByEmailPass(email: String, password: String) : Result<ToMainScreenDataObject>
+    suspend fun loginByGoogle(idToken : String) : Result<ToMainScreenDataObject>
 
     //fun getCurrentUser() : MainScreenDataObject
     suspend fun logOut()
