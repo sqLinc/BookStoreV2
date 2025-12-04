@@ -24,19 +24,30 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.example.bookstorev2.presentation.navigation.ToMainScreenDataObject
 import com.example.bookstorev2.presentation.ui.state.NavigationEvent
 import com.example.bookstorev2.presentation.viewmodels.LoginViewModel
+import com.google.firebase.auth.auth
+import com.google.firebase.auth.ktx.auth
+import com.google.firebase.firestore.FirebaseFirestore
+import com.google.firebase.firestore.ktx.firestore
+import com.google.firebase.ktx.Firebase
+import kotlinx.coroutines.tasks.await
 
 @OptIn(ExperimentalMaterial3Api::class)
+
 @Composable
 fun LoginScreen(
     viewModel: LoginViewModel = hiltViewModel(),
     onBackClick: () -> Unit = {},
-    onNavigateToBookList: () -> Unit = {}
+    onNavigateToBookList: () -> Unit = {},
+
+
 ) {
+
     var uiState = viewModel.uiState.value
 
 
@@ -55,16 +66,11 @@ fun LoginScreen(
     }
 
 
-
     Scaffold(
         topBar = {
             TopAppBar(
                 title = { Text("Login")},
-                navigationIcon = {
-                    IconButton(onClick = onBackClick){
-                        Icon(Icons.Default.ArrowBack, "back")
-                    }
-                }
+
             )
         }
     ) { paddingValues ->
@@ -75,25 +81,25 @@ fun LoginScreen(
                 .padding(16.dp),
             horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.Center
-            ){
+        ) {
             Spacer(modifier = Modifier.height(10.dp))
 
             OutlinedTextField(
                 value = uiState.email,
-                onValueChange = {viewModel.onEmailChange(it)},
-                label = { Text("Email")},
+                onValueChange = { viewModel.onEmailChange(it) },
+                label = { Text("Email") },
                 modifier = Modifier.fillMaxWidth()
             )
             Spacer(modifier = Modifier.height(10.dp))
             OutlinedTextField(
                 value = uiState.password,
-                onValueChange = {viewModel.onPasswordChange(it)},
-                label = { Text("Password")},
+                onValueChange = { viewModel.onPasswordChange(it) },
+                label = { Text("Password") },
                 modifier = Modifier.fillMaxWidth()
             )
             Spacer(modifier = Modifier.height(10.dp))
 
-            if(!uiState.error.isNullOrEmpty()){
+            if (!uiState.error.isNullOrEmpty()) {
                 Text(
                     text = uiState.error!!,
                     color = Color.Red,
@@ -103,11 +109,11 @@ fun LoginScreen(
             }
 
             Button(
-                onClick = {viewModel.onLoginClick()},
+                onClick = { viewModel.onLoginClick() },
                 modifier = Modifier.fillMaxWidth(),
                 enabled = !uiState.isLoading
-                ){
-                if (uiState.isLoading){
+            ) {
+                if (uiState.isLoading) {
                     CircularProgressIndicator(color = Color.White)
                 } else {
                     Text("Log in")
@@ -115,11 +121,11 @@ fun LoginScreen(
             }
             Spacer(modifier = Modifier.height(10.dp))
             Button(
-                onClick = {viewModel.onRegisterClick()},
+                onClick = { viewModel.onRegisterClick() },
                 modifier = Modifier.fillMaxWidth(),
                 enabled = !uiState.isLoading
-            ){
-                if (uiState.isLoading){
+            ) {
+                if (uiState.isLoading) {
                     CircularProgressIndicator(color = Color.White)
                 } else {
                     Text("Register")
@@ -129,6 +135,9 @@ fun LoginScreen(
 
         }
     }
-
-
 }
+
+
+
+
+
