@@ -48,13 +48,13 @@ import org.intellij.lang.annotations.JdkConstants.HorizontalAlignment
 @Preview
 @Composable
 fun BookListScreen(
-
     bookViewModel: BookListViewModel = hiltViewModel(),
     userViewModel: LoginViewModel = hiltViewModel(),
 
     onLoginClick: () -> Unit = {},
     onLogoutClick: () -> Unit = {},
     onAdminClick: () -> Unit = {}
+
 ) {
     val uiState = bookViewModel.uiState.value
     val userUiState = userViewModel.uiState.value
@@ -78,7 +78,7 @@ fun BookListScreen(
         drawerContent = {
             Column(Modifier.fillMaxWidth(0.7f)){
                 DrawerHeader()
-                DrawerBody(uiUserState.isAdminState)
+                DrawerBody(uiUserState.isAdminState, onAdminClick)
 
             }
         }
@@ -86,7 +86,7 @@ fun BookListScreen(
     ) {
         Scaffold(
         floatingActionButton = {
-            FloatingActionButton(onClick = onLoginClick){
+            FloatingActionButton(onClick = onLogoutClick){
                 Icon(Icons.Default.Person, "Login")
             }
         }
