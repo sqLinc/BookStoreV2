@@ -7,6 +7,8 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.example.bookstorev2.presentation.navigation.Screen
+import com.example.bookstorev2.presentation.ui.components.AddBookScreen
+import com.example.bookstorev2.presentation.ui.components.DrawerBody
 import com.example.bookstorev2.presentation.ui.screens.BookListScreen
 import com.example.bookstorev2.presentation.ui.screens.LoginScreen
 import com.ramcosta.composedestinations.DestinationsNavHost
@@ -36,9 +38,21 @@ class MainActivity : ComponentActivity() {
                     BookListScreen(
                         onLogoutClick = {
                             navController.navigate(Screen.Login.route)
+                        },
+                        onAdminClick = {
+                            navController.navigate(Screen.AddBook.route)
                         }
                     )
                 }
+                composable(Screen.AddBook.route){
+                    AddBookScreen(
+                        onBackClick = {
+                            navController.popBackStack()
+                        }
+                    )
+                }
+
+
             }
         }
     }
