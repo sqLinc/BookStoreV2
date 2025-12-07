@@ -1,16 +1,15 @@
 package com.example.bookstorev2.presentation.viewmodels
 
-import android.util.Log
 import androidx.compose.runtime.State
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.bookstorev2.data.repositories.UserRepositoryImpl
 import com.example.bookstorev2.domain.repositories.UserRepository
 import com.example.bookstorev2.domain.usecases.AuthByEmailPassUseCase
 import com.example.bookstorev2.domain.usecases.RegisterByEmailPassUseCase
+import com.example.bookstorev2.presentation.ui.state.LoginMainNavigation
 import com.example.bookstorev2.presentation.ui.state.LoginUiState
-import com.example.bookstorev2.presentation.ui.state.NavigationEvent
+import com.example.bookstorev2.presentation.ui.state.MainAddScreenNavigation
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -58,7 +57,7 @@ class LoginViewModel @Inject constructor(
                 result.fold(
                     onSuccess = { userData ->
                         _uiState.value = _uiState.value.copy(
-                            navigationEvent = NavigationEvent.NavigateToMainScreen(userData)
+                            navigationEvent = LoginMainNavigation.NavigateToMainScreen(userData)
                         )
 
                     },
@@ -84,7 +83,7 @@ class LoginViewModel @Inject constructor(
             result.fold(
                 onSuccess = { userData ->
                     _uiState.value = _uiState.value.copy(
-                        navigationEvent = NavigationEvent.NavigateToMainScreen(userData)
+                        navigationEvent = LoginMainNavigation.NavigateToMainScreen(userData)
                     )
                 },
                 onFailure = { e->

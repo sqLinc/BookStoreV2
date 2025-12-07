@@ -1,5 +1,6 @@
 package com.example.bookstorev2.di
 
+import android.content.ContentResolver
 import com.example.bookstorev2.data.repositories.BookRepositoryImpl
 import com.example.bookstorev2.data.repositories.UserRepositoryImpl
 import com.example.bookstorev2.domain.repositories.BookRepository
@@ -26,6 +27,7 @@ abstract class RepositoryModule {
     abstract fun bindUserRepository(
         userRepositoryImpl: UserRepositoryImpl
     ): UserRepository
+
 
 
 }

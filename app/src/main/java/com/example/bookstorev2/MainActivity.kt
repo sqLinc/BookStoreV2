@@ -7,11 +7,9 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.example.bookstorev2.presentation.navigation.Screen
-import com.example.bookstorev2.presentation.ui.components.AddBookScreen
-import com.example.bookstorev2.presentation.ui.components.DrawerBody
+import com.example.bookstorev2.presentation.ui.screens.AddBookScreen
 import com.example.bookstorev2.presentation.ui.screens.BookListScreen
 import com.example.bookstorev2.presentation.ui.screens.LoginScreen
-import com.ramcosta.composedestinations.DestinationsNavHost
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
@@ -47,6 +45,9 @@ class MainActivity : ComponentActivity() {
                 composable(Screen.AddBook.route){
                     AddBookScreen(
                         onBackClick = {
+                            navController.popBackStack()
+                        },
+                        onSuccess = {
                             navController.popBackStack()
                         }
                     )

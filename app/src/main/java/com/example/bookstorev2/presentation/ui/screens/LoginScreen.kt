@@ -7,13 +7,9 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material3.Button
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
@@ -24,18 +20,11 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
-import com.example.bookstorev2.presentation.navigation.ToMainScreenDataObject
-import com.example.bookstorev2.presentation.ui.state.NavigationEvent
+import com.example.bookstorev2.presentation.ui.state.LoginMainNavigation
+import com.example.bookstorev2.presentation.ui.state.MainAddScreenNavigation
 import com.example.bookstorev2.presentation.viewmodels.LoginViewModel
-import com.google.firebase.auth.auth
-import com.google.firebase.auth.ktx.auth
-import com.google.firebase.firestore.FirebaseFirestore
-import com.google.firebase.firestore.ktx.firestore
-import com.google.firebase.ktx.Firebase
-import kotlinx.coroutines.tasks.await
 
 @OptIn(ExperimentalMaterial3Api::class)
 
@@ -53,7 +42,7 @@ fun LoginScreen(
 
     LaunchedEffect(key1 = uiState.navigationEvent) {
         when(val event = uiState.navigationEvent){
-            is NavigationEvent.NavigateToMainScreen ->{
+            is LoginMainNavigation.NavigateToMainScreen ->{
                 onNavigateToBookList()
                 viewModel.onNavigationConsumed()
 
