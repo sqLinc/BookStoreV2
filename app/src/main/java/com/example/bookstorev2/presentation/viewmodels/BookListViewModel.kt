@@ -1,25 +1,16 @@
 package com.example.bookstorev2.presentation.viewmodels
 
-import androidx.compose.runtime.Recomposer
 import androidx.compose.runtime.State
-import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.setValue
-import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.bookstorev2.domain.usecases.GetAllBooksUseCase
 import com.example.bookstorev2.domain.usecases.ToggleFavoriteUseCase
 import com.example.bookstorev2.domain.usecases.ToggleReadUseCase
-import com.example.bookstorev2.presentation.ui.components.AddBookScreen
 import com.example.bookstorev2.presentation.ui.state.BookListUiState
 import com.example.bookstorev2.presentation.ui.state.LoginUiState
-import com.google.firebase.auth.ktx.auth
-import com.google.firebase.firestore.ktx.firestore
-import com.google.firebase.ktx.Firebase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.tasks.await
 import javax.inject.Inject
 
 @HiltViewModel
@@ -41,7 +32,7 @@ class BookListViewModel @Inject constructor(
     }
 
 
-    private fun loadBooks() {
+    fun loadBooks() {
         viewModelScope.launch {
             _uiState.value = _uiState.value.copy(isLoading = true)
             try {

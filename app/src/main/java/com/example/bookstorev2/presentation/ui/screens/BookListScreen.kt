@@ -67,7 +67,7 @@ fun BookListScreen(
 
     LaunchedEffect(Unit) {
         userViewModel.onAdminCheck()
-        Log.d("MyLog", "${uiUserState.isAdminState}")
+        bookViewModel.loadBooks()
 
     }
 
@@ -79,6 +79,7 @@ fun BookListScreen(
             Column(Modifier.fillMaxWidth(0.7f)){
                 DrawerHeader()
                 DrawerBody(uiUserState.isAdminState, onAdminClick)
+
 
             }
         }

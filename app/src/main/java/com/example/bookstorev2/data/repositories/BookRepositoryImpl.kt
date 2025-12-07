@@ -1,12 +1,11 @@
 package com.example.bookstorev2.data.repositories
 
+import android.net.Uri
+import androidx.activity.compose.ManagedActivityResultLauncher
 import com.example.bookstorev2.domain.models.Book
 import com.example.bookstorev2.domain.repositories.BookRepository
+import com.example.bookstorev2.presentation.navigation.onSavedSuccess
 import com.google.firebase.firestore.FirebaseFirestore
-import com.google.firebase.firestore.toObject
-import com.google.firebase.firestore.toObjects
-import dagger.hilt.android.HiltAndroidApp
-import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.tasks.await
 import javax.inject.Inject
 import javax.inject.Singleton
@@ -18,6 +17,7 @@ class BookRepositoryImpl @Inject constructor(
 ) : BookRepository {
 
     val path = "books"
+
 
     override suspend fun getAllBooks(): List<Book> {
         try {
@@ -72,18 +72,29 @@ class BookRepositoryImpl @Inject constructor(
         }
     }
 
-    override suspend fun saveBook(book: Book) {
-        try {
+    override suspend fun saveBook(book: Book) : Result<onSavedSuccess>{
+        return try {
             val key = book.key.ifEmpty { db.collection(path).document().id }
             db.collection(path).document(key)
                 .set(
                     book.copy(key = key)
                 )
                 .await()
+            Result.success(
+                onSavedSuccess(
+                    book.key
+                )
+            )
+
         } catch (e: Exception){
             throw e
+
         }
 
+    }
+
+    override suspend fun chooseImage(imagePickerLauncher: ManagedActivityResultLauncher<String, Uri?>) {
+        imagePickerLauncher.launch("image/*")
     }
 
 
