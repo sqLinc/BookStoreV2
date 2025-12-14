@@ -3,9 +3,11 @@ package com.example.bookstorev2
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
+import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import androidx.navigation.navArgument
 import com.example.bookstorev2.presentation.navigation.Screen
 import com.example.bookstorev2.presentation.ui.screens.AddBookScreen
 import com.example.bookstorev2.presentation.ui.screens.BookListScreen
@@ -39,11 +41,27 @@ class MainActivity : ComponentActivity() {
                         },
                         onAdminClick = {
                             navController.navigate(Screen.AddBook.route)
+                        },
+                        onSuccess = {
+                            navController.navigate(Screen.AddBook.route)
+                        },
+                        onNavigateToEditBook = { bookId ->
+                            navController.navigate("${Screen.AddBook.route}/$bookId")
+
                         }
                     )
                 }
-                composable(Screen.AddBook.route){
+                composable(
+                    route = "${Screen.AddBook.route}/{bookId}",
+                    arguments = listOf(
+                        navArgument("bookId") {
+                            type = NavType.StringType
+                        }
+                    )
+                ){ backStackEntry ->
+                    val bookId = backStackEntry.arguments?.getString("bookId") ?: ""
                     AddBookScreen(
+                        bookId = bookId,
                         onBackClick = {
                             navController.popBackStack()
                         },
@@ -52,6 +70,21 @@ class MainActivity : ComponentActivity() {
                         }
                     )
                 }
+
+                composable(Screen.AddBook.route) {
+                    AddBookScreen(
+                        bookId = "", // Пустая строка для новой книги
+                        onBackClick = {
+                            navController.popBackStack()
+                        },
+                        onSuccess = {
+                            navController.popBackStack()
+                        }
+                    )
+                }
+
+
+
 
 
             }

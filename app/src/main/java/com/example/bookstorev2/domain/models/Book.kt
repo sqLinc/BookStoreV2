@@ -1,5 +1,7 @@
 package com.example.bookstorev2.domain.models
 
+import android.net.Uri
+
 data class Book(
     val key: String = "",
     val title: String = "",
@@ -9,6 +11,8 @@ data class Book(
     val price: String = "",
     val date: String = "",
     val author: String = "",
-    val isFavorite: Boolean = false,
-    val isRead: Boolean = false
+    val favorite: Boolean = false,
+    val read: Boolean = false,
+    val selectedImage: String = ""
+
 )

@@ -2,6 +2,7 @@ package com.example.bookstorev2.presentation.ui.screens
 
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
+import android.util.Log
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.layout.Arrangement
@@ -31,19 +32,23 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
+import com.bumptech.glide.Glide.init
 import com.bumptech.glide.integration.compose.ExperimentalGlideComposeApi
 import com.bumptech.glide.integration.compose.GlideImage
+import com.example.bookstorev2.presentation.navigation.onEdit
 import com.example.bookstorev2.presentation.ui.components.ActionButton
+import com.example.bookstorev2.presentation.ui.components.CategoryDropDownMenu
 import com.example.bookstorev2.presentation.ui.state.MainAddScreenNavigation
+import com.example.bookstorev2.presentation.ui.state.MainToAddScreenNav
 import com.example.bookstorev2.presentation.viewmodels.AddBookViewModel
 import com.example.bookstorev2.presentation.viewmodels.BookListViewModel
 
 @OptIn(ExperimentalMaterial3Api::class, ExperimentalGlideComposeApi::class)
-@Preview
 @Composable
 fun AddBookScreen(
     bookViewModel: BookListViewModel = hiltViewModel(),
     addBookViewModel: AddBookViewModel = hiltViewModel(),
+    bookId: String,
     onBackClick: () -> Unit = {},
     onSuccess: () -> Unit = {}
 ) {
@@ -66,6 +71,13 @@ fun AddBookScreen(
         }
 
     }
+    LaunchedEffect(bookId) {
+        if (bookId.isNotBlank()) {
+            addBookViewModel.onBookIdUpdate(bookId)
+        }
+    }
+
+
 
 
     val imageBitMap = remember {
@@ -81,6 +93,8 @@ fun AddBookScreen(
         imageBitMap.value = null
         uiState.selectedImageUri = uri
         addBookViewModel.onImageUrlChange(uri.toString())
+        addBookViewModel.onSelectedUriChange(uri)
+
 
 
     }
@@ -116,16 +130,17 @@ fun AddBookScreen(
                 fontWeight = FontWeight.Bold,
                 fontFamily = FontFamily.Serif
             )
+
+
             Spacer(modifier = Modifier.height(16.dp))
 
-            /*CategoryDropDownMenu(
+            CategoryDropDownMenu(
                 uiState.category,
                 onOptionSelected = { selected ->
-                    selected
                     addBookViewModel.onCategoryChange(selected)
 
                 }
-            )*/
+            )
             Spacer(modifier = Modifier.height(16.dp))
             OutlinedTextField(
                 value = uiState.title,
@@ -173,6 +188,7 @@ fun AddBookScreen(
                 "Save book"
             ){
                 addBookViewModel.onSaveClick(cv)
+
             }
 
 

@@ -38,6 +38,9 @@ import androidx.compose.ui.unit.dp
 import com.example.bookstorev2.presentation.ui.components.BookItem
 import com.example.bookstorev2.presentation.ui.components.DrawerBody
 import com.example.bookstorev2.presentation.ui.components.DrawerHeader
+import com.example.bookstorev2.presentation.ui.state.MainAddScreenNavigation
+import com.example.bookstorev2.presentation.ui.state.MainToAddScreenNav
+import com.example.bookstorev2.presentation.viewmodels.AddBookViewModel
 import com.example.bookstorev2.presentation.viewmodels.LoginViewModel
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.firestore.ktx.firestore
@@ -45,19 +48,23 @@ import com.google.firebase.ktx.Firebase
 import kotlinx.coroutines.tasks.await
 import org.intellij.lang.annotations.JdkConstants.HorizontalAlignment
 
-@Preview
+
 @Composable
 fun BookListScreen(
     bookViewModel: BookListViewModel = hiltViewModel(),
     userViewModel: LoginViewModel = hiltViewModel(),
+    addBookViewModel: AddBookViewModel = hiltViewModel(),
 
     onLoginClick: () -> Unit = {},
     onLogoutClick: () -> Unit = {},
-    onAdminClick: () -> Unit = {}
+    onAdminClick: () -> Unit = {},
+    onSuccess: () -> Unit = {},
+    onNavigateToEditBook: (String) -> Unit
 
 ) {
     val uiState = bookViewModel.uiState.value
     val userUiState = userViewModel.uiState.value
+
 
     var uiUserState = userViewModel.uiState.value
 
@@ -68,6 +75,19 @@ fun BookListScreen(
     LaunchedEffect(Unit) {
         userViewModel.onAdminCheck()
         bookViewModel.loadBooks()
+
+    }
+    LaunchedEffect(key1 = uiState.navigationEvent) {
+        when(val event = uiState.navigationEvent){
+            is MainToAddScreenNav.NavigateOnEdit -> {
+                onSuccess()
+                bookViewModel.onNavigationConsumed()
+
+            }
+
+            null -> Unit
+
+        }
 
     }
 
@@ -113,9 +133,14 @@ fun BookListScreen(
                     LazyColumn {
                         items(uiState.books) {book ->
                             BookItem(
+                                uiUserState.isAdminState,
                                 book = book,
                                 onFavoriteClick = {bookViewModel.onFavoriteClick(book.key)},
-                                onReadClick = {bookViewModel.onReadClick(book.key)}
+                                onReadClick = {bookViewModel.onReadClick(book.key)},
+                                onEditClick = { bookId ->
+                                    onNavigateToEditBook(bookId)
+
+                                }
                             )
                         }
                     }

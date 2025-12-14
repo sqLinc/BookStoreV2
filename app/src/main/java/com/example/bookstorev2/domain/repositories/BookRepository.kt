@@ -18,6 +18,7 @@ interface BookRepository {
 
     suspend fun isFavorite(bookId: String) : Boolean
     suspend fun isRead(bookId: String) : Boolean
+    suspend fun getBookById(bookId: String) : Book
 
 
 }
