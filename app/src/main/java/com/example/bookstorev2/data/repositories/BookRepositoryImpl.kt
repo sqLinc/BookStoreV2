@@ -34,7 +34,7 @@ class BookRepositoryImpl @Inject constructor(
         try {
             val task = db.collection(path).document(bookId).get().await()
             val book = task.toObject(Book::class.java)
-            return book?.isFavorite ?: false
+            return book?.favorite ?: false
         } catch (e: Exception){
             throw e
         }
@@ -45,7 +45,7 @@ class BookRepositoryImpl @Inject constructor(
         try {
             val task = db.collection(path).document(bookId).get().await()
             val book = task.toObject(Book::class.java)
-            return book?.isRead ?: false
+            return book?.read ?: false
         } catch (e: Exception){
             throw e
         }
@@ -55,7 +55,7 @@ class BookRepositoryImpl @Inject constructor(
     override suspend fun setFavoriteStatus(bookId: String, isFavorite: Boolean) {
         try {
             db.collection(path).document(bookId)
-                .update("isFavorite", isFavorite)
+                .update("favorite", isFavorite)
                 .await()
         } catch (e: Exception) {
             throw e
@@ -66,7 +66,7 @@ class BookRepositoryImpl @Inject constructor(
     override suspend fun setReadStatus(bookId: String, isRead: Boolean) {
         try{
             db.collection(path).document(bookId)
-                .update("isRead", isRead).await()
+                .update("read", isRead).await()
         } catch (e: Exception){
             throw e
         }
@@ -95,6 +95,16 @@ class BookRepositoryImpl @Inject constructor(
 
     override suspend fun chooseImage(imagePickerLauncher: ManagedActivityResultLauncher<String, Uri?>) {
         imagePickerLauncher.launch("image/*")
+    }
+
+    override suspend fun getBookById(bookId: String): Book {
+        return try {
+            val task = db.collection("books").document(bookId).get().await()
+            task.toObject(Book::class.java) ?: throw Exception("Book not found with id: $bookId")
+
+        } catch(e: Exception) {
+            throw e
+        }
     }
 
 

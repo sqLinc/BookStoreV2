@@ -58,7 +58,9 @@ fun CategoryDropDownMenu(
 
 
                     onOptionSelected(option)
+                    selectedOption.value = option
                     expanded.value = false
+
                 })
             }
         }

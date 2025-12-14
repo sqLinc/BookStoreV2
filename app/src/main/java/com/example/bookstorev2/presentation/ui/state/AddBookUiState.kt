@@ -16,7 +16,9 @@ data class AddBookUiState(
     val isFavorite: Boolean = false,
     val isRead: Boolean = false,
     val navigationEvent: MainAddScreenNavigation? = null,
-    val error: String = ""
+    val error: String = "",
+    val editKey: String = "",
+    val isEditing: Boolean = false
 
 
 )
