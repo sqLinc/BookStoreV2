@@ -46,11 +46,11 @@ class BookListViewModel @Inject constructor(
     }
 
 
-    fun loadBooks() {
+    fun loadBooks(category: String = "") {
         viewModelScope.launch {
             _uiState.value = _uiState.value.copy(isLoading = true)
             try {
-                val books = getAllBooksUseCase()
+                val books = getAllBooksUseCase(category)
                 _uiState.value = _uiState.value.copy(
                     books = books,
                     isLoading = false

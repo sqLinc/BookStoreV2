@@ -10,4 +10,5 @@ data class BookListUiState (
     val isLoading: Boolean = false,
     val error: String? = null,
     val navigationEvent: MainToAddScreenNav? = null,
+    val category: String = ""
 )
