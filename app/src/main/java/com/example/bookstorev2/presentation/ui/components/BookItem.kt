@@ -3,7 +3,6 @@ package com.example.bookstorev2.presentation.ui.components
 import android.graphics.BitmapFactory
 import android.net.Uri
 import androidx.compose.foundation.Image
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.absoluteOffset
@@ -46,7 +45,6 @@ fun BookItem(
     onFavoriteClick: () -> Unit,
     onReadClick: () -> Unit,
     onEditClick: (String) -> Unit,
-    onBookClick: (String) -> Unit,
     modifier: Modifier = Modifier
     ) {
     Card(
@@ -59,9 +57,7 @@ fun BookItem(
 
             GlideImage(
                 model = bitmap ?: "", contentDescription = "BG",
-                modifier = Modifier.fillMaxWidth().height(250.dp).clip(RoundedCornerShape(15.dp)).clickable {
-                    onBookClick(book.key)
-                }
+                modifier = Modifier.fillMaxWidth().height(250.dp).clip(RoundedCornerShape(15.dp))
 
 
             )
