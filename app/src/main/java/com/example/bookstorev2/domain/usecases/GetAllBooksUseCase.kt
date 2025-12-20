@@ -9,7 +9,7 @@ import javax.inject.Inject
 class GetAllBooksUseCase @Inject constructor(
     private val bookRepo: BookRepository
 ) {
-    suspend operator fun invoke() : List<Book> {
-        return bookRepo.getAllBooks()
+    suspend operator fun invoke(category: String = "") : List<Book> {
+        return bookRepo.getAllBooks(category)
     }
 }
