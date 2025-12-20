@@ -101,9 +101,6 @@ fun BookListScreen(
                 DrawerHeader()
                 DrawerBody(uiUserState.isAdminState, onAdminClick, onCategoryClick = { item ->
                     bookViewModel.loadBooks(item)
-
-
-
                 })
 
 
