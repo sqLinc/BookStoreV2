@@ -53,9 +53,7 @@ import org.intellij.lang.annotations.JdkConstants.HorizontalAlignment
 fun BookListScreen(
     bookViewModel: BookListViewModel = hiltViewModel(),
     userViewModel: LoginViewModel = hiltViewModel(),
-    addBookViewModel: AddBookViewModel = hiltViewModel(),
 
-    onLoginClick: () -> Unit = {},
     onLogoutClick: () -> Unit = {},
     onAdminClick: () -> Unit = {},
     onSuccess: () -> Unit = {},
@@ -64,7 +62,6 @@ fun BookListScreen(
 
 ) {
     val uiState = bookViewModel.uiState.value
-    val userUiState = userViewModel.uiState.value
 
 
     var uiUserState = userViewModel.uiState.value
