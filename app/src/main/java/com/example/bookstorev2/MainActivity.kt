@@ -10,6 +10,7 @@ import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
 import com.example.bookstorev2.presentation.navigation.Screen
 import com.example.bookstorev2.presentation.ui.screens.AddBookScreen
+import com.example.bookstorev2.presentation.ui.screens.BookDetailScreen
 import com.example.bookstorev2.presentation.ui.screens.BookListScreen
 import com.example.bookstorev2.presentation.ui.screens.LoginScreen
 import dagger.hilt.android.AndroidEntryPoint
@@ -48,8 +49,28 @@ class MainActivity : ComponentActivity() {
                         onNavigateToEditBook = { bookId ->
                             navController.navigate("${Screen.AddBook.route}/$bookId")
 
+                        },
+                        onNavigateToDetailScreen = { bookId ->
+                            navController.navigate("${Screen.DetailScreen.route}/$bookId")
                         }
                     )
+                }
+                composable(
+                    route = "${Screen.DetailScreen.route}/{bookId}",
+                    arguments = listOf(
+                        navArgument("bookId") {
+                            type = NavType.StringType
+                        }
+                    )
+                ) { backStackEntry ->
+                    val bookId = backStackEntry.arguments?.getString("bookId") ?: ""
+                    BookDetailScreen(
+                        onBackClick = {
+                            navController.navigate(Screen.BookList.route)
+                        },
+                        bookId = bookId
+                    )
+
                 }
                 composable(
                     route = "${Screen.AddBook.route}/{bookId}",
@@ -82,6 +103,7 @@ class MainActivity : ComponentActivity() {
                         }
                     )
                 }
+
 
 
 

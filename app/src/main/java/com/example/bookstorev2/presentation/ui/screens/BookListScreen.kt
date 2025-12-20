@@ -59,7 +59,8 @@ fun BookListScreen(
     onLogoutClick: () -> Unit = {},
     onAdminClick: () -> Unit = {},
     onSuccess: () -> Unit = {},
-    onNavigateToEditBook: (String) -> Unit
+    onNavigateToEditBook: (String) -> Unit,
+    onNavigateToDetailScreen: (String) -> Unit
 
 ) {
     val uiState = bookViewModel.uiState.value
@@ -140,6 +141,9 @@ fun BookListScreen(
                                 onEditClick = { bookId ->
                                     onNavigateToEditBook(bookId)
 
+                                },
+                                onBookClick = { bookId ->
+                                    onNavigateToDetailScreen(bookId)
                                 }
                             )
                         }
