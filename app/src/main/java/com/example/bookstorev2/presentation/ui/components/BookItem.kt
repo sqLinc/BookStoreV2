@@ -53,9 +53,6 @@ fun BookItem(
         modifier = modifier.padding(8.dp)
     ){
 
-
-
-
         Column(modifier = Modifier.padding(16.dp)) {
             val base64Image = android.util.Base64.decode(book.imageUrl, android.util.Base64.DEFAULT)
             val bitmap = BitmapFactory.decodeByteArray(base64Image, 0, base64Image.size)

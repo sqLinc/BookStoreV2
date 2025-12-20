@@ -32,10 +32,13 @@ fun CategoryDropDownMenu(
     val expanded = remember { mutableStateOf(false) }
     val selectedOption = remember { mutableStateOf(selectedCategory) }
     val categories = listOf (
-        "Bestseller",
         "Fantasy",
         "Detective",
-        "Thriller"
+        "Thriller",
+        "Drama",
+        "Biopic",
+
+
     )
 
     Box(

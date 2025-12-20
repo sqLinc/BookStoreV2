@@ -15,11 +15,13 @@ import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.DrawerValue
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.ModalNavigationDrawer
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
+import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.rememberDrawerState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -49,6 +51,7 @@ import kotlinx.coroutines.tasks.await
 import org.intellij.lang.annotations.JdkConstants.HorizontalAlignment
 
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun BookListScreen(
     bookViewModel: BookListViewModel = hiltViewModel(),
@@ -99,7 +102,10 @@ fun BookListScreen(
         drawerContent = {
             Column(Modifier.fillMaxWidth(0.7f)){
                 DrawerHeader()
-                DrawerBody(uiUserState.isAdminState, onAdminClick)
+                DrawerBody(uiUserState.isAdminState, onAdminClick, onCategoryClick = { item ->
+                    bookViewModel.loadBooks(item)
+                    bookViewModel.onCategoryChange(item)
+                })
 
 
             }
@@ -111,7 +117,12 @@ fun BookListScreen(
             FloatingActionButton(onClick = onLogoutClick){
                 Icon(Icons.Default.Person, "Login")
             }
-        }
+        },
+            topBar = {
+                TopAppBar(
+                    title = { uiState.category  },
+                )
+            }
     ){ padding  ->
         Box(modifier = Modifier.padding(padding) ){
             when{

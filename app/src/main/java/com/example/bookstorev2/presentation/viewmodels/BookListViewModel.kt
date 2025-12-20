@@ -46,11 +46,13 @@ class BookListViewModel @Inject constructor(
     }
 
 
-    fun loadBooks() {
+    fun loadBooks(category: String = "") {
         viewModelScope.launch {
             _uiState.value = _uiState.value.copy(isLoading = true)
             try {
-                val books = getAllBooksUseCase()
+                val books = getAllBooksUseCase(category)
+
+
                 _uiState.value = _uiState.value.copy(
                     books = books,
                     isLoading = false
@@ -61,6 +63,7 @@ class BookListViewModel @Inject constructor(
                     isLoading = false
                 )
             }
+
         }
     }
 
@@ -95,17 +98,16 @@ class BookListViewModel @Inject constructor(
         _uiState.value = _uiState.value.copy(
             navigationEvent = MainToAddScreenNav.NavigateOnEdit(onEdit(bookId))
         )
-
-
-
-
-
-
-
     }
 
 
 
+    fun onCategoryChange(item: String) {
+        _uiState.value = _uiState.value.copy(
+            category = item
+        )
+        Log.d("MyLog", _uiState.value.category )
+    }
 
 
 }

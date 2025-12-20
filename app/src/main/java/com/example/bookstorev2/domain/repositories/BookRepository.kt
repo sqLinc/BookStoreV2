@@ -14,7 +14,7 @@ interface BookRepository {
     suspend fun saveBook(book: Book) : Result<onSavedSuccess>
     suspend fun chooseImage(imagePickerLauncher: ManagedActivityResultLauncher<String, Uri?>)
 
-    suspend fun getAllBooks(): List<Book>
+    suspend fun getAllBooks(category: String = ""): List<Book>
 
     suspend fun isFavorite(bookId: String) : Boolean
     suspend fun isRead(bookId: String) : Boolean

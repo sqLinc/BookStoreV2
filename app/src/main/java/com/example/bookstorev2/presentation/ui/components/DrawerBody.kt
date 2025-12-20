@@ -1,6 +1,7 @@
 package com.example.bookstorev2.presentation.ui.components
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
@@ -13,11 +14,15 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.Card
+import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.MutableState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
@@ -30,6 +35,7 @@ fun DrawerBody(
 
     isAdminState: Boolean,
     onAdminClick: () -> Unit = {},
+    onCategoryClick: (String) -> Unit = {},
     viewModel: BookListViewModel = hiltViewModel(),
 
 
@@ -38,9 +44,12 @@ fun DrawerBody(
 ) {
     val categoryList = listOf(
         "Favorite",
+        "Read",
         "Fantasy",
         "Detective",
-        "Drama"
+        "Thriller",
+        "Drama",
+        "Biopic",
 
     )
 
@@ -58,11 +67,36 @@ fun DrawerBody(
             )
             Spacer(modifier = Modifier.height(16.dp))
             Box(modifier = Modifier.fillMaxWidth().height(1.dp).background(Color.Gray))
+
+            Column(modifier = Modifier.fillMaxWidth().clickable {
+                onCategoryClick("")
+            }){
+                Card(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(16.dp).alpha(0.4f),
+                    elevation = CardDefaults.cardElevation(4.dp),
+                    colors = CardDefaults.cardColors(
+                        containerColor = MaterialTheme.colorScheme.surfaceVariant
+                    )
+
+                ) {
+                    Text(
+                        text = "All Books",
+                        color = Color.Black,
+                        fontSize = 30.sp,
+                        fontWeight = FontWeight.Bold,
+                        modifier = Modifier.fillMaxWidth().wrapContentWidth()
+                    ) }
+            }
+
             LazyColumn(
                 modifier = Modifier.weight(1f)
             ) {
                 items(categoryList){ item ->
-                    Column(modifier = Modifier.fillMaxWidth()) {
+                    Column(modifier = Modifier.fillMaxWidth().clickable {
+                        onCategoryClick(item)
+                    }) {
                         Spacer(modifier = Modifier.height(12.dp))
                         Text(
                             text = item,
