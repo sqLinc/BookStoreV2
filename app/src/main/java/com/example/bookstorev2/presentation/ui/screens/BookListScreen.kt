@@ -62,11 +62,9 @@ fun BookListScreen(
 
 ) {
     val uiState = bookViewModel.uiState.value
+    val uiUserState = userViewModel.uiState.value
 
-
-    var uiUserState = userViewModel.uiState.value
-
-        val drawerState = rememberDrawerState(DrawerValue.Open)
+    val drawerState = rememberDrawerState(DrawerValue.Open)
 
 
 
@@ -76,11 +74,10 @@ fun BookListScreen(
 
     }
     LaunchedEffect(key1 = uiState.navigationEvent) {
-        when(val event = uiState.navigationEvent){
+        when (val event = uiState.navigationEvent) {
             is MainToAddScreenNav.NavigateOnEdit -> {
                 onSuccess()
                 bookViewModel.onNavigationConsumed()
-
             }
 
             null -> Unit
@@ -94,7 +91,7 @@ fun BookListScreen(
         drawerState = drawerState,
         modifier = Modifier.fillMaxWidth(),
         drawerContent = {
-            Column(Modifier.fillMaxWidth(0.7f)){
+            Column(Modifier.fillMaxWidth(0.7f)) {
                 DrawerHeader()
                 DrawerBody(uiUserState.isAdminState, onAdminClick, onCategoryClick = { item ->
                     bookViewModel.loadBooks(item)
@@ -106,61 +103,58 @@ fun BookListScreen(
 
     ) {
         Scaffold(
-        floatingActionButton = {
-            FloatingActionButton(onClick = onLogoutClick){
-                Icon(Icons.Default.Person, "Login")
+            floatingActionButton = {
+                FloatingActionButton(onClick = onLogoutClick) {
+                    Icon(Icons.Default.Person, "Login")
+                }
             }
-        }
-    ){ padding  ->
-        Box(modifier = Modifier.padding(padding) ){
-            when{
-                uiState.isLoading -> {
-                    CircularProgressIndicator()
-                }
-                uiState.error != null -> {
-                    Column(
-                        modifier = Modifier.fillMaxSize(),
-                        horizontalAlignment = Alignment.CenterHorizontally,
-                        verticalArrangement = Arrangement.Center
-                    ){
-                        Text("Error:${uiState.error}")
-                        Button(onClick = {bookViewModel.clearError()}){
-                            Text("Retry")
-                        }
+        ) { padding ->
+            Box(modifier = Modifier.padding(padding)) {
+                when {
+                    uiState.isLoading -> {
+                        CircularProgressIndicator()
                     }
-                }
-                else -> {
-                    LazyColumn {
-                        items(uiState.books) {book ->
-                            BookItem(
-                                uiUserState.isAdminState,
-                                book = book,
-                                onFavoriteClick = {bookViewModel.onFavoriteClick(book.key)},
-                                onReadClick = {bookViewModel.onReadClick(book.key)},
-                                onEditClick = { bookId ->
-                                    onNavigateToEditBook(bookId)
 
-                                },
-                                onBookClick = { bookId ->
-                                    onNavigateToDetailScreen(bookId)
-                                }
-                            )
+                    uiState.error != null -> {
+                        Column(
+                            modifier = Modifier.fillMaxSize(),
+                            horizontalAlignment = Alignment.CenterHorizontally,
+                            verticalArrangement = Arrangement.Center
+                        ) {
+                            Text("Error:${uiState.error}")
+                            Button(onClick = { bookViewModel.clearError() }) {
+                                Text("Retry")
+                            }
                         }
                     }
 
+                    else -> {
+                        LazyColumn {
+                            items(uiState.books) { book ->
+                                BookItem(
+                                    uiUserState.isAdminState,
+                                    book = book,
+                                    onFavoriteClick = { bookViewModel.onFavoriteClick(book.key) },
+                                    onReadClick = { bookViewModel.onReadClick(book.key) },
+                                    onEditClick = { bookId ->
+                                        onNavigateToEditBook(bookId)
 
+                                    },
+                                    onBookClick = { bookId ->
+                                        onNavigateToDetailScreen(bookId)
+                                    }
+                                )
+                            }
+                        }
+
+
+                    }
                 }
             }
+
+
         }
-
-
     }
-    }
-
 
 
 }
-/*suspend fun isAdmin(): Boolean{
-    val currentUid = Firebase.auth.currentUser!!.uid
-    return Firebase.firestore.collection("admin").document(currentUid).get().await().getBoolean("isAdmin") ?: false
-}*/
