@@ -18,72 +18,25 @@ class BookRepositoryImpl @Inject constructor(
 
     val path = "books"
 
-
     override suspend fun getAllBooks(category: String): List<Book> {
-
-
         try {
-
-
-
-
-
-
-
-
             val task = when (category) {
-
-
-
-
-
                 "Favorite" -> db.collection(path).whereEqualTo("favorite", true).get().await()
-
-
                 "Fantasy" -> db.collection(path).whereEqualTo("category", "Fantasy").get().await()
-
-
                 "Detective" -> db.collection(path).whereEqualTo("category", "Detective").get().await()
-
-
                 "Read" -> db.collection(path).whereEqualTo("read", true).get().await()
-
-
                 "Thriller" -> db.collection(path).whereEqualTo("category", "Thriller").get().await()
-
-
                 "Drama" -> db.collection(path).whereEqualTo("category", "Drama").get().await()
-
-
                 "Biopic" -> db.collection(path).whereEqualTo("category", "Biopic").get().await()
 
-
-
-
-
                 else -> db.collection(path).get().await()
-
-
             }
-
-
-
-
-
-
-
             val list = task.toObjects(Book::class.java)
-
             return list
 
         } catch (e: Exception){
-
             throw e
-
         }
-
-
-
     }
 
     override suspend fun isFavorite(bookId: String): Boolean {
