@@ -1,7 +1,5 @@
 package com.example.bookstorev2.data.repositories
 
-import android.net.Uri
-import androidx.activity.compose.ManagedActivityResultLauncher
 import com.example.bookstorev2.domain.models.Book
 import com.example.bookstorev2.domain.repositories.BookRepository
 import com.example.bookstorev2.presentation.navigation.onSavedSuccess
@@ -20,17 +18,8 @@ class BookRepositoryImpl @Inject constructor(
 
     override suspend fun getAllBooks(category: String): List<Book> {
         try {
-            val task = when (category) {
-                "Favorite" -> db.collection(path).whereEqualTo("favorite", true).get().await()
-                "Fantasy" -> db.collection(path).whereEqualTo("category", "Fantasy").get().await()
-                "Detective" -> db.collection(path).whereEqualTo("category", "Detective").get().await()
-                "Read" -> db.collection(path).whereEqualTo("read", true).get().await()
-                "Thriller" -> db.collection(path).whereEqualTo("category", "Thriller").get().await()
-                "Drama" -> db.collection(path).whereEqualTo("category", "Drama").get().await()
-                "Biopic" -> db.collection(path).whereEqualTo("category", "Biopic").get().await()
+            val task = db.collection(path).get().await()
 
-                else -> db.collection(path).get().await()
-            }
             val list = task.toObjects(Book::class.java)
             return list
 
@@ -102,9 +91,6 @@ class BookRepositoryImpl @Inject constructor(
 
     }
 
-    override suspend fun chooseImage(imagePickerLauncher: ManagedActivityResultLauncher<String, Uri?>) {
-        imagePickerLauncher.launch("image/*")
-    }
 
     override suspend fun getBookById(bookId: String): Book {
         return try {
@@ -112,6 +98,47 @@ class BookRepositoryImpl @Inject constructor(
             task.toObject(Book::class.java) ?: throw Exception("Book not found with id: $bookId")
 
         } catch(e: Exception) {
+            throw e
+        }
+    }
+
+    override suspend fun getFavBooks() : List<Book>{
+        try {
+            val task = db.collection(path).whereEqualTo("favorite", true).get().await()
+            val list = task.toObjects(Book::class.java)
+            return list
+        } catch (e: Exception){
+            throw e
+        }
+    }
+
+    override suspend fun getReadBooks() : List<Book>{
+        try {
+            val task = db.collection(path).whereEqualTo("read", true).get().await()
+            val list = task.toObjects(Book::class.java)
+            return list
+        } catch (e:Exception){
+            throw e
+        }
+
+    }
+
+    override suspend fun getBooksByCategory(category: String) : List<Book>{
+        try {
+            val task = when (category) {
+                "Fantasy" -> db.collection(path).whereEqualTo("category", "Fantasy").get().await()
+                "Detective" -> db.collection(path).whereEqualTo("category", "Detective").get().await()
+                "Thriller" -> db.collection(path).whereEqualTo("category", "Thriller").get().await()
+                "Drama" -> db.collection(path).whereEqualTo("category", "Drama").get().await()
+                "Biopic" -> db.collection(path).whereEqualTo("category", "Biopic").get().await()
+                "Adventures" -> db.collection(path).whereEqualTo("category", "Adventures").get().await()
+
+                else -> null
+            }
+            val list = task!!.toObjects(Book::class.java)
+            return list
+
+        } catch (e: Exception){
             throw e
         }
     }

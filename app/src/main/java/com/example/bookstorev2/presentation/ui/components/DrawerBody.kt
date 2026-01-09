@@ -50,6 +50,7 @@ fun DrawerBody(
         "Thriller",
         "Drama",
         "Biopic",
+        "Adventures"
 
     )
 

@@ -13,7 +13,6 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.bookstorev2.domain.models.Book
 import com.example.bookstorev2.domain.repositories.BookRepository
-import com.example.bookstorev2.domain.usecases.ChooseImageUseCase
 import com.example.bookstorev2.domain.usecases.GetBookByIdUseCase
 import com.example.bookstorev2.domain.usecases.SaveBookUseCase
 import com.example.bookstorev2.presentation.ui.state.AddBookUiState
@@ -27,7 +26,6 @@ import javax.inject.Inject
 class AddBookViewModel @Inject constructor(
     private val bookRepo: BookRepository,
     private val saveBook: SaveBookUseCase,
-    private val chooseImage: ChooseImageUseCase,
     private val getBook: GetBookByIdUseCase
 
 ) : ViewModel() {
@@ -213,7 +211,7 @@ class AddBookViewModel @Inject constructor(
 
     fun onChooseImage(imagePickerLauncher: ManagedActivityResultLauncher<String, Uri?>) {
         viewModelScope.launch {
-            chooseImage(imagePickerLauncher)
+            imagePickerLauncher.launch("image/*")
         }
     }
 
