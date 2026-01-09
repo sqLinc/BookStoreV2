@@ -3,49 +3,47 @@ package com.example.bookstorev2.domain.usecases
 import com.example.bookstorev2.domain.repositories.UserRepository
 import com.example.bookstorev2.presentation.navigation.ToMainScreenDataObject
 import kotlinx.coroutines.test.runTest
-import org.junit.Assert.assertEquals
-import org.junit.Assert.assertNotNull
-import org.junit.Assert.assertTrue
+import org.junit.Assert
 import org.junit.Before
 import org.junit.Test
 import org.mockito.Mockito
 import org.mockito.kotlin.mock
 import org.mockito.kotlin.verify
+import kotlin.test.assertEquals
+import kotlin.test.assertNotNull
+import kotlin.test.assertTrue
 
-
-class AuthByEmailPassUseCaseTest {
+class RegisterByEmailPassUseCaseTest {
 
     private lateinit var userRepo: UserRepository
-    private lateinit var useCase: AuthByEmailPassUseCase
+    private lateinit var useCase: RegisterByEmailPassUseCase
 
     @Before
-    fun setUp() {
+    fun setUp(){
         userRepo = mock()
-        useCase = AuthByEmailPassUseCase(userRepo)
+        useCase = RegisterByEmailPassUseCase(userRepo)
     }
 
+
     @Test
-    fun `should return the same valid email and uid as in repository`() = runTest{
+    fun `should return the same valid email and uid as in repository`() = runTest {
 
         val email = "test@gmail.com"
         val password = "test_password"
         val expected = Result.success(ToMainScreenDataObject("test_uid", email))
 
-
-        Mockito.`when`(userRepo.loginUserByEmailPass(email, password)).thenReturn(expected)
-
-
-
+        Mockito.`when`(userRepo.createUserByEmailPass(email, password)).thenReturn(expected)
 
         val actual = useCase(email, password)
 
         assertTrue(actual.isSuccess)
         assertEquals(expected, actual)
-        verify(userRepo).loginUserByEmailPass(email, password)
+        verify(userRepo).createUserByEmailPass(email, password)
+
     }
 
     @Test
-    fun `should throw exception if password is less than 8 characters`() = runTest{
+    fun `should throw exception if password is less than 8 characters length`() = runTest {
 
         val email = "test@gmail.com"
         val password = "123"
@@ -57,7 +55,7 @@ class AuthByEmailPassUseCaseTest {
         val exception = actual.exceptionOrNull()
         assertNotNull(exception)
         assertTrue(exception is IllegalArgumentException)
-        assertEquals(expected, exception?.message)
+        assertEquals(expected, exception.message)
 
     }
 
@@ -69,11 +67,11 @@ class AuthByEmailPassUseCaseTest {
 
         val actual = useCase(email, password)
 
-        assertTrue(actual.isFailure)
+        Assert.assertTrue(actual.isFailure)
         val exception = actual.exceptionOrNull()
-        assertNotNull(exception)
-        assertTrue(exception is IllegalArgumentException)
-        assertEquals(expected, exception?.message)
+        Assert.assertNotNull(exception)
+        Assert.assertTrue(exception is IllegalArgumentException)
+        Assert.assertEquals(expected, exception?.message)
 
     }
 
@@ -85,11 +83,14 @@ class AuthByEmailPassUseCaseTest {
 
         val actual = useCase(email, password)
 
-        assertTrue(actual.isFailure)
+        Assert.assertTrue(actual.isFailure)
         val exception = actual.exceptionOrNull()
-        assertNotNull(exception)
-        assertTrue(exception is IllegalArgumentException)
-        assertEquals(expected, exception?.message)
+        Assert.assertNotNull(exception)
+        Assert.assertTrue(exception is IllegalArgumentException)
+        Assert.assertEquals(expected, exception?.message)
 
     }
+
+
+
 }

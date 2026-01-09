@@ -10,6 +10,13 @@ class GetAllBooksUseCase @Inject constructor(
     private val bookRepo: BookRepository
 ) {
     suspend operator fun invoke(category: String = "") : List<Book> {
-        return bookRepo.getAllBooks(category)
+        return when (category) {
+            "Favorite" -> bookRepo.getFavBooks()
+            "Read" -> bookRepo.getReadBooks()
+            "" -> bookRepo.getAllBooks()
+
+            else -> bookRepo.getBooksByCategory(category)
+        }
+
     }
 }

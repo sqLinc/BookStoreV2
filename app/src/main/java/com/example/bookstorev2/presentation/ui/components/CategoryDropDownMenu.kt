@@ -37,6 +37,7 @@ fun CategoryDropDownMenu(
         "Thriller",
         "Drama",
         "Biopic",
+        "Adventures"
     )
 
     Box(

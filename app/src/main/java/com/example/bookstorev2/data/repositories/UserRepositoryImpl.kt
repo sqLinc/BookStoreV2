@@ -47,9 +47,7 @@ class UserRepositoryImpl @Inject constructor(
     override suspend fun createUserByEmailPass(email: String, password: String): Result<ToMainScreenDataObject>{
         return try {
 
-            if(email.isBlank() || password.isBlank()){
-                return Result.failure(IllegalArgumentException("Email and password can not be empty!"))
-            }
+
 
             val result = auth.createUserWithEmailAndPassword(email, password).await()
             val user = result.user ?: return Result.failure(IllegalArgumentException("Can not create user!"))
