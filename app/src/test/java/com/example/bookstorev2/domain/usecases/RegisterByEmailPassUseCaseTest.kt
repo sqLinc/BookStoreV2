@@ -4,14 +4,14 @@ import com.example.bookstorev2.domain.repositories.UserRepository
 import com.example.bookstorev2.presentation.navigation.ToMainScreenDataObject
 import kotlinx.coroutines.test.runTest
 import org.junit.Assert
+import org.junit.Assert.assertEquals
+import org.junit.Assert.assertNotNull
+import org.junit.Assert.assertTrue
 import org.junit.Before
 import org.junit.Test
 import org.mockito.Mockito
 import org.mockito.kotlin.mock
 import org.mockito.kotlin.verify
-import kotlin.test.assertEquals
-import kotlin.test.assertNotNull
-import kotlin.test.assertTrue
 
 class RegisterByEmailPassUseCaseTest {
 
@@ -55,7 +55,7 @@ class RegisterByEmailPassUseCaseTest {
         val exception = actual.exceptionOrNull()
         assertNotNull(exception)
         assertTrue(exception is IllegalArgumentException)
-        assertEquals(expected, exception.message)
+        assertEquals(expected, exception!!.message)
 
     }
 
