@@ -3,17 +3,14 @@ package com.example.bookstorev2.domain.usecases
 import com.example.bookstorev2.domain.models.Book
 import com.example.bookstorev2.domain.repositories.BookRepository
 import kotlinx.coroutines.test.runTest
+import org.junit.Assert.assertEquals
 import org.junit.Before
 import org.junit.Test
-import org.mockito.Mockito
-import org.mockito.internal.verification.NoMoreInteractions
 import org.mockito.kotlin.mock
 import org.mockito.kotlin.verify
 import org.mockito.kotlin.verifyNoMoreInteractions
 import org.mockito.kotlin.whenever
-import kotlin.math.truncate
-import kotlin.test.assertEquals
-import kotlin.test.assertTrue
+
 
 const val CATEGORY_READ = "Read"
 const val CATEGORY_FAVORITE = "Favorite"
