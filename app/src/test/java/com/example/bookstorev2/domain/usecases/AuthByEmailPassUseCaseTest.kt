@@ -25,7 +25,7 @@ class AuthByEmailPassUseCaseTest {
     }
 
     @Test
-    fun `should return the same valid email and uid as in repository`() = runTest{
+    fun should_return_the_same_valid_email_and_uid_as_in_repository() = runTest{
 
         val email = "test@gmail.com"
         val password = "test_password"
