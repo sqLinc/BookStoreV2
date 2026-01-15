@@ -11,8 +11,10 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.core.net.toUri
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.bookstorev2.data.repositories.ImageRefactor
 import com.example.bookstorev2.domain.models.Book
 import com.example.bookstorev2.domain.repositories.BookRepository
+import com.example.bookstorev2.domain.repositories.ImageRefactorRepository
 import com.example.bookstorev2.domain.usecases.GetBookByIdUseCase
 import com.example.bookstorev2.domain.usecases.SaveBookUseCase
 import com.example.bookstorev2.presentation.ui.state.AddBookUiState
@@ -26,7 +28,8 @@ import javax.inject.Inject
 class AddBookViewModel @Inject constructor(
     private val bookRepo: BookRepository,
     private val saveBook: SaveBookUseCase,
-    private val getBook: GetBookByIdUseCase
+    private val getBook: GetBookByIdUseCase,
+    private val imageRef: ImageRefactorRepository
 
 ) : ViewModel() {
 
@@ -127,14 +130,13 @@ class AddBookViewModel @Inject constructor(
                 else -> null
             }
         )
-        Log.d("MyLog", _uiState.value.selectedImageUri.toString())
         _uiState.value = _uiState.value.copy(
             isEditing = true
         )
 
     }
 
-    fun onSaveClick(cv: ContentResolver) {
+    fun onSaveClick() {
         viewModelScope.launch {
             val result = saveBook(
                 book = Book(
@@ -144,25 +146,28 @@ class AddBookViewModel @Inject constructor(
                     imageUrl = when {
                     _uiState.value.isEditing == false -> {
                         if (_uiState.value.selectedImageUri != null) {
-                            Log.d("ImageSave", "Branch: create + selectedImageUri")
-                            imageToBase64(_uiState.value.selectedImageUri!!, cv)
+                            //Log.d("ImageSave", "Branch: create + selectedImageUri")
+
+
+                            imageRef.uriToBase64(_uiState.value.selectedImageUri!!)
+
                         } else {
-                            Log.d("ImageSave", "Branch: create + no image")
+                            //Log.d("ImageSave", "Branch: create + no image")
                             ""
                         }
                     }
 
                     else -> {
                         if (_uiState.value.imageUrl.isNotEmpty()) {
-                            Log.d("ImageSave", "Branch: edit + old/new imageUrl")
-                            imageToBase64(_uiState.value.selectedImageUri!!, cv)
+                            //Log.d("ImageSave", "Branch: edit + old/new imageUrl")
+                            imageRef.uriToBase64(_uiState.value.selectedImageUri!!)
                         } else {
                             if (_uiState.value.selectedImageUri.toString() == "null") {
-                                Log.d("ImageSave", "Branch: edit + no image")
+                                //Log.d("ImageSave", "Branch: edit + no image")
                                 ""
                             } else {
-                                Log.d("ImageSave", "Branch: edit + new image")
-                                imageToBase64(_uiState.value.selectedImageUri!!, cv)
+                                //Log.d("ImageSave", "Branch: edit + new image")
+                                imageRef.uriToBase64(_uiState.value.selectedImageUri!!)
                             }
                         }
                     }
@@ -201,6 +206,7 @@ class AddBookViewModel @Inject constructor(
                 onFailure = { e ->
                     _uiState.value = _uiState.value.copy(
                         error = e.message ?: "Error while saving book"
+
                     )
 
                 }

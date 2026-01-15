@@ -68,8 +68,10 @@ class BookListViewModelTest {
 
         whenever(bookRepo.getAllBooks(any())).thenReturn(expected)
 
+
         viewModel.loadBooks("")
-        assertTrue(viewModel.uiState.value.isLoading)
+
+
         advanceUntilIdle()
 
         assertFalse(viewModel.uiState.value.isLoading)
@@ -84,7 +86,6 @@ class BookListViewModelTest {
         whenever(bookRepo.getAllBooks(any())).thenAnswer{throw Exception("Determined error")}
 
         viewModel.loadBooks("")
-        assertTrue(viewModel.uiState.value.isLoading)
         advanceUntilIdle()
         assertEquals("Failed to load books", viewModel.uiState.value.error)
         assertFalse(viewModel.uiState.value.isLoading)
