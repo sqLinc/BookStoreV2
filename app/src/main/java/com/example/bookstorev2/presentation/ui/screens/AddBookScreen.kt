@@ -55,7 +55,7 @@ fun AddBookScreen(
 
 
 
-    val cv = LocalContext.current.contentResolver
+
     val uiState = addBookViewModel.uiState.value
 
     LaunchedEffect(key1 = uiState.navigationEvent) {
@@ -187,7 +187,7 @@ fun AddBookScreen(
             ActionButton(
                 "Save book"
             ){
-                addBookViewModel.onSaveClick(cv)
+                addBookViewModel.onSaveClick()
 
             }
 

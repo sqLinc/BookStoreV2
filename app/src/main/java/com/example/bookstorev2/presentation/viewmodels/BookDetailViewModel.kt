@@ -38,7 +38,9 @@ class BookDetailViewModel @Inject constructor(
 
             }
             catch (e: Exception){
-                throw e
+                _uiState.value = _uiState.value.copy(
+                    error = e.message ?: "Error"
+                )
             }
         }
 

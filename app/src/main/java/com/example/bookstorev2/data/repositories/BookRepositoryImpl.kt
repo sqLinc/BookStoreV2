@@ -1,5 +1,8 @@
 package com.example.bookstorev2.data.repositories
 
+import android.content.ContentResolver
+import android.net.Uri
+import android.util.Base64
 import com.example.bookstorev2.domain.models.Book
 import com.example.bookstorev2.domain.repositories.BookRepository
 import com.example.bookstorev2.presentation.navigation.onSavedSuccess
@@ -11,7 +14,8 @@ import javax.inject.Singleton
 
 @Singleton
 class BookRepositoryImpl @Inject constructor(
-    private val db: FirebaseFirestore
+    private val db: FirebaseFirestore,
+
 ) : BookRepository {
 
     val path = "books"
@@ -142,6 +146,7 @@ class BookRepositoryImpl @Inject constructor(
             throw e
         }
     }
+
 
 
 

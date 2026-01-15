@@ -14,5 +14,6 @@ data class DetailScreenState(
     val favorite: Boolean = false,
     val read: Boolean = false,
     val selectedImage: String = "",
+    val error: String = ""
 
     )
