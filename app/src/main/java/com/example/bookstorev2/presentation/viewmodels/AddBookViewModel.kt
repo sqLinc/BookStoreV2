@@ -1,17 +1,14 @@
 package com.example.bookstorev2.presentation.viewmodels
 
 import android.content.ContentResolver
-import android.content.Context
 import android.net.Uri
 import android.util.Base64
-import android.util.Log
 import androidx.activity.compose.ManagedActivityResultLauncher
 import androidx.compose.runtime.State
 import androidx.compose.runtime.mutableStateOf
 import androidx.core.net.toUri
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.bookstorev2.data.repositories.ImageRefactor
 import com.example.bookstorev2.domain.models.Book
 import com.example.bookstorev2.domain.repositories.BookRepository
 import com.example.bookstorev2.domain.repositories.ImageRefactorRepository
@@ -146,27 +143,27 @@ class AddBookViewModel @Inject constructor(
                     imageUrl = when {
                     _uiState.value.isEditing == false -> {
                         if (_uiState.value.selectedImageUri != null) {
-                            //Log.d("ImageSave", "Branch: create + selectedImageUri")
+
 
 
                             imageRef.uriToBase64(_uiState.value.selectedImageUri!!)
 
                         } else {
-                            //Log.d("ImageSave", "Branch: create + no image")
+
                             ""
                         }
                     }
 
                     else -> {
                         if (_uiState.value.imageUrl.isNotEmpty()) {
-                            //Log.d("ImageSave", "Branch: edit + old/new imageUrl")
+
                             imageRef.uriToBase64(_uiState.value.selectedImageUri!!)
                         } else {
                             if (_uiState.value.selectedImageUri.toString() == "null") {
-                                //Log.d("ImageSave", "Branch: edit + no image")
+
                                 ""
                             } else {
-                                //Log.d("ImageSave", "Branch: edit + new image")
+
                                 imageRef.uriToBase64(_uiState.value.selectedImageUri!!)
                             }
                         }
@@ -221,14 +218,7 @@ class AddBookViewModel @Inject constructor(
         }
     }
 
-    private fun imageToBase64(uri: Uri, contentResolver: ContentResolver): String {
-        val inputStream = contentResolver.openInputStream(uri)
 
-        val bytes = inputStream?.readBytes()
-        return bytes?.let {
-            Base64.encodeToString(it, Base64.DEFAULT)
-        } ?: ""
-    }
 
 
 

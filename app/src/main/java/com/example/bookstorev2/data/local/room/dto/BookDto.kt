@@ -1,6 +1,9 @@
-package com.example.bookstorev2.presentation.ui.state
+package com.example.bookstorev2.data.local.room.dto
 
-data class DetailScreenState(
+import androidx.room.ColumnInfo
+import androidx.room.PrimaryKey
+
+data class BookDto(
     val key: String = "",
     val title: String = "",
     val imageUrl: String = "",
@@ -11,7 +14,5 @@ data class DetailScreenState(
     val author: String = "",
     val favorite: Boolean = false,
     val read: Boolean = false,
-    val selectedImage: String = "",
-    val error: String = ""
-
-    )
+    val selectedImage: String = ""
+)

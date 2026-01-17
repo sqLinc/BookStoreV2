@@ -1,11 +1,11 @@
 package com.example.bookstorev2.di
 
-import android.content.ContentResolver
+import com.example.bookstorev2.data.local.room.BookFirebaseDataSource
+import com.example.bookstorev2.data.local.room.BookRoomDataSource
 import com.example.bookstorev2.data.repositories.BookRepositoryImpl
 import com.example.bookstorev2.data.repositories.UserRepositoryImpl
 import com.example.bookstorev2.domain.repositories.BookRepository
 import com.example.bookstorev2.domain.repositories.UserRepository
-import com.example.bookstorev2.presentation.navigation.ToMainScreenDataObject
 import dagger.Binds
 import dagger.Module
 import dagger.hilt.InstallIn
@@ -17,7 +17,6 @@ import javax.inject.Singleton
 abstract class RepositoryModule {
 
     @Binds
-    @Singleton
     abstract fun bindBookRepository(
         bookRepositoryImpl: BookRepositoryImpl
     ): BookRepository
@@ -27,6 +26,10 @@ abstract class RepositoryModule {
     abstract fun bindUserRepository(
         userRepositoryImpl: UserRepositoryImpl
     ): UserRepository
+
+
+
+
 
 
 

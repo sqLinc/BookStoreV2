@@ -83,9 +83,9 @@ class MainActivity : ComponentActivity() {
                     val bookId = backStackEntry.arguments?.getString("bookId") ?: ""
                     AddBookScreen(
                         bookId = bookId,
-                        onBackClick = {
-                            navController.popBackStack()
-                        },
+//                        onBackClick = {
+//                            navController.popBackStack()
+//                        },
                         onSuccess = {
                             navController.popBackStack()
                         }
@@ -94,10 +94,10 @@ class MainActivity : ComponentActivity() {
 
                 composable(Screen.AddBook.route) {
                     AddBookScreen(
-                        bookId = "", // Пустая строка для новой книги
-                        onBackClick = {
-                            navController.popBackStack()
-                        },
+                        bookId = "",
+//                        onBackClick = {
+//                            navController.popBackStack()
+//                        },
                         onSuccess = {
                             navController.popBackStack()
                         }

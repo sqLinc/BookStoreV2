@@ -9,7 +9,6 @@ import com.example.bookstorev2.domain.usecases.AuthByEmailPassUseCase
 import com.example.bookstorev2.domain.usecases.RegisterByEmailPassUseCase
 import com.example.bookstorev2.presentation.ui.state.LoginMainNavigation
 import com.example.bookstorev2.presentation.ui.state.LoginUiState
-import com.example.bookstorev2.presentation.ui.state.MainAddScreenNavigation
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import javax.inject.Inject

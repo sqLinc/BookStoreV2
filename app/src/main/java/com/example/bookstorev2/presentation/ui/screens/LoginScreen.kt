@@ -23,7 +23,6 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.example.bookstorev2.presentation.ui.state.LoginMainNavigation
-import com.example.bookstorev2.presentation.ui.state.MainAddScreenNavigation
 import com.example.bookstorev2.presentation.viewmodels.LoginViewModel
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -31,7 +30,6 @@ import com.example.bookstorev2.presentation.viewmodels.LoginViewModel
 @Composable
 fun LoginScreen(
     viewModel: LoginViewModel = hiltViewModel(),
-    onBackClick: () -> Unit = {},
     onNavigateToBookList: () -> Unit = {},
 
 
