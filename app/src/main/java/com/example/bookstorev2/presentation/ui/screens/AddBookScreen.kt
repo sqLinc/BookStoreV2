@@ -2,7 +2,6 @@ package com.example.bookstorev2.presentation.ui.screens
 
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
-import android.util.Log
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.layout.Arrangement
@@ -25,31 +24,23 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
-import com.bumptech.glide.Glide.init
 import com.bumptech.glide.integration.compose.ExperimentalGlideComposeApi
 import com.bumptech.glide.integration.compose.GlideImage
-import com.example.bookstorev2.presentation.navigation.onEdit
 import com.example.bookstorev2.presentation.ui.components.ActionButton
 import com.example.bookstorev2.presentation.ui.components.CategoryDropDownMenu
 import com.example.bookstorev2.presentation.ui.state.MainAddScreenNavigation
-import com.example.bookstorev2.presentation.ui.state.MainToAddScreenNav
 import com.example.bookstorev2.presentation.viewmodels.AddBookViewModel
-import com.example.bookstorev2.presentation.viewmodels.BookListViewModel
 
 @OptIn(ExperimentalMaterial3Api::class, ExperimentalGlideComposeApi::class)
 @Composable
 fun AddBookScreen(
-    bookViewModel: BookListViewModel = hiltViewModel(),
     addBookViewModel: AddBookViewModel = hiltViewModel(),
     bookId: String,
-    onBackClick: () -> Unit = {},
     onSuccess: () -> Unit = {}
 ) {
 

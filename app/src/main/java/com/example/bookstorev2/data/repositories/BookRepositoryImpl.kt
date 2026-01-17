@@ -1,8 +1,12 @@
 package com.example.bookstorev2.data.repositories
 
-import android.content.ContentResolver
-import android.net.Uri
-import android.util.Base64
+import android.util.Log
+import com.example.bookstorev2.data.local.room.BookFirebaseDataSource
+import com.example.bookstorev2.data.local.room.BookRoomDataSource
+import com.example.bookstorev2.data.local.room.mapper.bookListToDb
+import com.example.bookstorev2.data.local.room.mapper.dtoListToDb
+import com.example.bookstorev2.data.local.room.mapper.toDb
+import com.example.bookstorev2.data.local.room.mapper.toDomain
 import com.example.bookstorev2.domain.models.Book
 import com.example.bookstorev2.domain.repositories.BookRepository
 import com.example.bookstorev2.presentation.navigation.onSavedSuccess
@@ -14,137 +18,76 @@ import javax.inject.Singleton
 
 @Singleton
 class BookRepositoryImpl @Inject constructor(
-    private val db: FirebaseFirestore,
+    private val room: BookRoomDataSource,
+    private val firebase: BookFirebaseDataSource
 
 ) : BookRepository {
 
-    val path = "books"
 
-    override suspend fun getAllBooks(category: String): List<Book> {
+    override suspend fun getAllBooks(): List<Book> {
+        Log.d("Room", "bookRepo.getAllBooks is working...")
         try {
-            val task = db.collection(path).get().await()
+            val remote = firebase.getBooks()
+            Log.d("Room", "SUCCESS FROM REMOTE")
+            room.saveAll(remote.dtoListToDb())
+            Log.d("Room", "SUCCESS FROM SAVE ALL")
+            val local = room.getBooks()
+            Log.d("Room", "SUCCESS FROM LOCAL")
+            return local.toDomain()
 
-            val list = task.toObjects(Book::class.java)
-            return list
 
         } catch (e: Exception){
+            Log.d("Room", "bookRepo.getAllBooks is FAILED")
             throw e
         }
     }
 
     override suspend fun isFavorite(bookId: String): Boolean {
-        try {
-            val task = db.collection(path).document(bookId).get().await()
-            val book = task.toObject(Book::class.java)
-            return book?.favorite ?: false
-        } catch (e: Exception){
-            throw e
-        }
-
+        return firebase.isFavorite(bookId)
     }
 
     override suspend fun isRead(bookId: String): Boolean {
-        try {
-            val task = db.collection(path).document(bookId).get().await()
-            val book = task.toObject(Book::class.java)
-            return book?.read ?: false
-        } catch (e: Exception){
-            throw e
-        }
-
+        return firebase.isRead(bookId)
     }
 
     override suspend fun setFavoriteStatus(bookId: String, isFavorite: Boolean) {
-        try {
-            db.collection(path).document(bookId)
-                .update("favorite", isFavorite)
-                .await()
-        } catch (e: Exception) {
-            throw e
-        }
-
+        firebase.setFavoriteStatus(bookId, isFavorite)
     }
 
     override suspend fun setReadStatus(bookId: String, isRead: Boolean) {
-        try{
-            db.collection(path).document(bookId)
-                .update("read", isRead).await()
-        } catch (e: Exception){
-            throw e
-        }
+        firebase.setReadStatus(bookId, isRead)
     }
 
-    override suspend fun saveBook(book: Book) : Result<onSavedSuccess>{
-        return try {
-            val key = book.key.ifEmpty { db.collection(path).document().id }
-            db.collection(path).document(key)
-                .set(
-                    book.copy(key = key)
-                )
-                .await()
-            Result.success(
-                onSavedSuccess(
-                    book.key
-                )
-            )
-
-        } catch (e: Exception){
-            throw e
-
-        }
-
+    override suspend fun saveBook(book: Book): Result<onSavedSuccess> {
+        return firebase.saveBook(book)
     }
 
 
     override suspend fun getBookById(bookId: String): Book {
-        return try {
-            val task = db.collection("books").document(bookId).get().await()
-            task.toObject(Book::class.java) ?: throw Exception("Book not found with id: $bookId")
-
-        } catch(e: Exception) {
-            throw e
-        }
+        val remote = firebase.getBookById(bookId)
+        return remote.toDomain()
     }
 
     override suspend fun getFavBooks() : List<Book>{
-        try {
-            val task = db.collection(path).whereEqualTo("favorite", true).get().await()
-            val list = task.toObjects(Book::class.java)
-            return list
-        } catch (e: Exception){
-            throw e
-        }
+        val remote = firebase.getFavBooks()
+        room.saveAll(remote.dtoListToDb())
+        val local = room.getFavBooks()
+        return local.toDomain()
     }
 
     override suspend fun getReadBooks() : List<Book>{
-        try {
-            val task = db.collection(path).whereEqualTo("read", true).get().await()
-            val list = task.toObjects(Book::class.java)
-            return list
-        } catch (e:Exception){
-            throw e
-        }
+        val remote = firebase.getReadBooks()
+        room.saveAll(remote.dtoListToDb())
+        val local = room.getReadBooks()
+        return local.toDomain()
 
     }
 
     override suspend fun getBooksByCategory(category: String) : List<Book>{
-        try {
-            val task = when (category) {
-                "Fantasy" -> db.collection(path).whereEqualTo("category", "Fantasy").get().await()
-                "Detective" -> db.collection(path).whereEqualTo("category", "Detective").get().await()
-                "Thriller" -> db.collection(path).whereEqualTo("category", "Thriller").get().await()
-                "Drama" -> db.collection(path).whereEqualTo("category", "Drama").get().await()
-                "Biopic" -> db.collection(path).whereEqualTo("category", "Biopic").get().await()
-                "Adventures" -> db.collection(path).whereEqualTo("category", "Adventures").get().await()
-
-                else -> null
-            }
-            val list = task!!.toObjects(Book::class.java)
-            return list
-
-        } catch (e: Exception){
-            throw e
-        }
+        val remote = firebase.getBooksByCategory(category)
+        room.saveAll(remote.dtoListToDb())
+        val local = room.getBooksByCategory(category)
+        return local.toDomain()
     }
 
 

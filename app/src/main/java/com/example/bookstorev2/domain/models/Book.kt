@@ -1,7 +1,5 @@
 package com.example.bookstorev2.domain.models
 
-import android.net.Uri
-
 data class Book(
     val key: String = "",
     val title: String = "",
