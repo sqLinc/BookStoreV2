@@ -80,7 +80,7 @@ fun Book.toDto(): BookDto =
         selectedImage = selectedImage
     )
 
-fun List<BookDbEntity>.toDomain(): List<Book> =
+fun List<BookDbEntity>.dbListToDomain(): List<Book> =
     map { it.toDomain() }
 
 fun List<BookDto>.dtoListToDb(): List<BookDbEntity> =
@@ -88,3 +88,5 @@ fun List<BookDto>.dtoListToDb(): List<BookDbEntity> =
 
 fun List<Book>.bookListToDb(): List<BookDbEntity> =
     map {it.toDb()}
+fun List<BookDto>.dtoListToDomain() : List<Book> =
+    map {it.toDomain()}

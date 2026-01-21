@@ -1,5 +1,6 @@
 package com.example.bookstorev2.presentation.ui.screens
 
+import android.util.Log
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -21,15 +22,22 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.rememberDrawerState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.navigation.NavController
+import androidx.navigation.compose.currentBackStackEntryAsState
+import com.example.bookstorev2.domain.models.Book
 import com.example.bookstorev2.presentation.ui.components.BookItem
 import com.example.bookstorev2.presentation.ui.components.DrawerBody
 import com.example.bookstorev2.presentation.ui.components.DrawerHeader
 import com.example.bookstorev2.presentation.ui.state.MainToAddScreenNav
 import com.example.bookstorev2.presentation.viewmodels.BookListViewModel
 import com.example.bookstorev2.presentation.viewmodels.LoginViewModel
+import kotlinx.coroutines.launch
 
 
 @Composable
@@ -37,25 +45,47 @@ fun BookListScreen(
     bookViewModel: BookListViewModel = hiltViewModel(),
     userViewModel: LoginViewModel = hiltViewModel(),
 
-    onLogoutClick: () -> Unit = {},
-    onAdminClick: () -> Unit = {},
-    onSuccess: () -> Unit = {},
+    onLogoutClick: () -> Unit,
+    onAdminClick: () -> Unit,
+    onSuccess: () -> Unit,
     onNavigateToEditBook: (String) -> Unit,
-    onNavigateToDetailScreen: (String) -> Unit
+    onNavigateToDetailScreen: (String) -> Unit,
+    navController: NavController
+
 
 ) {
-    val uiState = bookViewModel.uiState.value
+    val uiState by bookViewModel.uiState.collectAsState()
     val uiUserState = userViewModel.uiState.value
 
-    val drawerState = rememberDrawerState(DrawerValue.Open)
+    val drawerState = rememberDrawerState(DrawerValue.Closed)
 
+    val backStackEntry by navController.currentBackStackEntryAsState()
+
+    val scope = rememberCoroutineScope()
+
+
+    backStackEntry?.let { entry ->
+        val savedStateHandle = entry.savedStateHandle
+        LaunchedEffect(savedStateHandle) {
+            savedStateHandle.getStateFlow<Book?>("new_book", null)
+                .collect { book ->
+                    book?.let {
+                        bookViewModel.updateBookListState(it)
+                        savedStateHandle.remove<Book>("new_book")
+                        Log.d("Nav", "Book after update: $it")
+                    }
+                }
+        }
+    }
 
 
     LaunchedEffect(Unit) {
         userViewModel.onAdminCheck()
-        bookViewModel.loadBooks()
+//        bookViewModel.loadBooks("All")
+
 
     }
+
     LaunchedEffect(key1 = uiState.navigationEvent) {
         when (val event = uiState.navigationEvent) {
             is MainToAddScreenNav.NavigateOnEdit -> {
@@ -76,9 +106,10 @@ fun BookListScreen(
         drawerContent = {
             Column(Modifier.fillMaxWidth(0.7f)) {
                 DrawerHeader()
-                DrawerBody(uiUserState.isAdminState, onAdminClick, onCategoryClick = { item ->
+                DrawerBody(uiUserState.isAdminState, onAdminClick
+                , onCategoryClick = { item ->
                     bookViewModel.loadBooks(item)
-                })
+                }, onLogoutClick, scope, drawerState)
 
 
             }
@@ -86,11 +117,7 @@ fun BookListScreen(
 
     ) {
         Scaffold(
-            floatingActionButton = {
-                FloatingActionButton(onClick = onLogoutClick) {
-                    Icon(Icons.Default.Person, "Login")
-                }
-            }
+
         ) { padding ->
             Box(modifier = Modifier.padding(padding)) {
                 when {
@@ -119,13 +146,14 @@ fun BookListScreen(
                                     book = book,
                                     onFavoriteClick = { bookViewModel.onFavoriteClick(book.key) },
                                     onReadClick = { bookViewModel.onReadClick(book.key) },
-                                    onEditClick = { bookId ->
-                                        onNavigateToEditBook(bookId)
+                                    onEditClick = {
+
+                                        onNavigateToEditBook(book.key)
+                                        Log.d("Nav", "book: $book")
 
                                     },
-                                    onBookClick = { bookId ->
-                                        onNavigateToDetailScreen(bookId)
-                                    }
+                                    onBookClick = {onNavigateToDetailScreen(book.key) }
+
                                 )
                             }
                         }

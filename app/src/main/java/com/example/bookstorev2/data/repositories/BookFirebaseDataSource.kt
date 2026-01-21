@@ -1,4 +1,4 @@
-package com.example.bookstorev2.data.local.room
+package com.example.bookstorev2.data.repositories
 
 import android.util.Log
 import com.example.bookstorev2.data.local.room.dto.BookDto
@@ -7,8 +7,6 @@ import com.example.bookstorev2.presentation.navigation.onSavedSuccess
 import com.google.firebase.firestore.FirebaseFirestore
 import kotlinx.coroutines.tasks.await
 import javax.inject.Inject
-import kotlin.text.get
-import kotlin.text.set
 
 class BookFirebaseDataSource @Inject constructor(
     private val db: FirebaseFirestore
@@ -17,13 +15,9 @@ class BookFirebaseDataSource @Inject constructor(
     val path = "books"
 
     suspend fun getBooks() : List<BookDto>{
-        Log.d("Room", "Firebase  getBooks() is working...")
         try {
-            Log.d("Room", "Firebase getBooks() is TRYING TO GET BOOKS")
             val task = db.collection("books").get().await()
-            Log.d("Room", "Firebase getBooks() SUCCESS TO GET BOOKS")
             val list = task.toObjects(BookDto::class.java)
-            Log.d("Room", "Firebase getBooks() is SUCCESS TO OBJECTS")
             return list
 
 
@@ -53,38 +47,55 @@ class BookFirebaseDataSource @Inject constructor(
         }
     }
 
-    suspend fun setFavoriteStatus(bookId: String, isFavorite: Boolean){
+    suspend fun setFavoriteStatus(bookId: String, isFavorite: Boolean) : Boolean{
         try {
             db.collection(path).document(bookId)
                 .update("favorite", isFavorite)
                 .await()
+            return isFavorite
         } catch (e: Exception) {
             throw e
         }
     }
 
-    suspend fun setReadStatus(bookId: String, isRead: Boolean) {
+    suspend fun setReadStatus(bookId: String, isRead: Boolean) : Boolean {
         try{
             db.collection(path).document(bookId)
                 .update("read", isRead).await()
+            return isRead
         } catch (e: Exception){
             throw e
         }
     }
 
-    suspend fun saveBook(book: Book) : Result<onSavedSuccess>{
+    suspend fun saveBook(book: Book) : Result<Book>{
         return try {
             val key = book.key.ifEmpty { db.collection(path).document().id }
+            val savedBook = book.copy(key = key)
+            Log.d("Nav", "Creating key: $key")
             db.collection(path).document(key)
                 .set(
-                    book.copy(key = key)
+                    savedBook
                 )
                 .await()
+
             Result.success(
-                onSavedSuccess(
-                    book.key
+                Book(
+                    key = savedBook.key,
+                    title = savedBook.title,
+                    imageUrl = savedBook.imageUrl,
+                    category = savedBook.category,
+                    description = savedBook.description,
+                    price = savedBook.price,
+                    date = savedBook.date,
+                    author = savedBook.author,
+                    favorite = savedBook.favorite,
+                    read = savedBook.read,
+                    selectedImage = savedBook.selectedImage
                 )
+
             )
+
 
         } catch (e: Exception){
             throw e
@@ -126,16 +137,8 @@ class BookFirebaseDataSource @Inject constructor(
 
     suspend fun getBooksByCategory(category: String) : List<BookDto>{
         try {
-            val task = when (category) {
-                "Fantasy" -> db.collection(path).whereEqualTo("category", "Fantasy").get().await()
-                "Detective" -> db.collection(path).whereEqualTo("category", "Detective").get().await()
-                "Thriller" -> db.collection(path).whereEqualTo("category", "Thriller").get().await()
-                "Drama" -> db.collection(path).whereEqualTo("category", "Drama").get().await()
-                "Biopic" -> db.collection(path).whereEqualTo("category", "Biopic").get().await()
-                "Adventures" -> db.collection(path).whereEqualTo("category", "Adventures").get().await()
+            val task = db.collection(path).whereEqualTo("category", category).get().await()
 
-                else -> null
-            }
             val list = task!!.toObjects(BookDto::class.java)
             return list
 

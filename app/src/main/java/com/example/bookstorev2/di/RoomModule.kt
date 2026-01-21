@@ -25,7 +25,7 @@ object RoomModule {
         Room.databaseBuilder(
             context,
             AppDataBase::class.java,
-            "database.db"
+            "databaseV3"
         ).build()
 
     @Provides

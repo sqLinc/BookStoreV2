@@ -6,6 +6,7 @@ plugins {
     id("com.google.dagger.hilt.android")
     kotlin("plugin.serialization") version "1.9.24"
     id("com.google.devtools.ksp") version "1.9.24-1.0.20"
+    id ("kotlin-parcelize")
 }
 
 android {

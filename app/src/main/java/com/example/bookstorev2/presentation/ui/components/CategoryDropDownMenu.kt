@@ -43,7 +43,7 @@ fun CategoryDropDownMenu(
             .clickable { expanded.value = !expanded.value }
             .padding(15.dp)
     ){
-        Text(text = selectedOption.value)
+        Text(text = selectedCategory)
         DropdownMenu(
             expanded = expanded.value,
             onDismissRequest = {expanded.value = false}

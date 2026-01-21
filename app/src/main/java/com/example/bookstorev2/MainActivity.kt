@@ -1,13 +1,17 @@
 package com.example.bookstorev2
 
 import android.os.Bundle
+import android.util.Log
+import android.widget.Toast
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
+import androidx.core.view.WindowCompat
 import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
+import com.example.bookstorev2.domain.models.Book
 import com.example.bookstorev2.presentation.navigation.Screen
 import com.example.bookstorev2.presentation.ui.screens.AddBookScreen
 import com.example.bookstorev2.presentation.ui.screens.BookDetailScreen
@@ -47,14 +51,25 @@ class MainActivity : ComponentActivity() {
                             navController.navigate(Screen.AddBook.route)
                         },
                         onNavigateToEditBook = { bookId ->
-                            navController.navigate("${Screen.AddBook.route}/$bookId")
+                            if (bookId.isEmpty() || bookId.isBlank()){
+                                Log.d("Nav", "Id is empty")
+
+                            }
+                            else{
+                                navController.navigate("${Screen.AddBook.route}/$bookId")
+                            }
+
 
                         },
                         onNavigateToDetailScreen = { bookId ->
                             navController.navigate("${Screen.DetailScreen.route}/$bookId")
-                        }
+                        },
+                        navController = navController
                     )
                 }
+
+
+
                 composable(
                     route = "${Screen.DetailScreen.route}/{bookId}",
                     arguments = listOf(
@@ -86,10 +101,15 @@ class MainActivity : ComponentActivity() {
 //                        onBackClick = {
 //                            navController.popBackStack()
 //                        },
-                        onSuccess = {
+                        onSuccess = { book ->
+                            navController.previousBackStackEntry
+                                ?.savedStateHandle
+                                ?.set("new_book", book)
                             navController.popBackStack()
-                        }
+                        },
+                        navController = navController
                     )
+                    Log.d("Nav", "IN NAVIGATION: trying to edit: $bookId")
                 }
 
                 composable(Screen.AddBook.route) {
@@ -98,11 +118,21 @@ class MainActivity : ComponentActivity() {
 //                        onBackClick = {
 //                            navController.popBackStack()
 //                        },
-                        onSuccess = {
+                        onSuccess = { book ->
+                            navController.previousBackStackEntry
+                                ?.savedStateHandle
+                                ?.set("new_book", book)
                             navController.popBackStack()
-                        }
+                            Log.d("Nav", "IN NAVIGATION: trying to create: key:${book?.key} ")
+                        },
+                        navController = navController
                     )
+
                 }
+
+
+
+
 
 
 

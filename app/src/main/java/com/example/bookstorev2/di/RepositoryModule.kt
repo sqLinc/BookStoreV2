@@ -1,6 +1,6 @@
 package com.example.bookstorev2.di
 
-import com.example.bookstorev2.data.local.room.BookFirebaseDataSource
+import com.example.bookstorev2.data.repositories.BookFirebaseDataSource
 import com.example.bookstorev2.data.local.room.BookRoomDataSource
 import com.example.bookstorev2.data.repositories.BookRepositoryImpl
 import com.example.bookstorev2.data.repositories.UserRepositoryImpl

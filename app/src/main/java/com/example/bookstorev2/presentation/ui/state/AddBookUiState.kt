@@ -1,6 +1,7 @@
 package com.example.bookstorev2.presentation.ui.state
 
 import android.net.Uri
+import com.example.bookstorev2.domain.models.Book
 
 data class AddBookUiState(
     val key: String = "",
@@ -15,7 +16,7 @@ data class AddBookUiState(
     var selectedImageUri: Uri? = null,
     val isFavorite: Boolean = false,
     val isRead: Boolean = false,
-    val navigationEvent: MainAddScreenNavigation? = null,
+    val savedBook: Book? = null,
     val error: String = "",
     val editKey: String = "",
     val isEditing: Boolean = false

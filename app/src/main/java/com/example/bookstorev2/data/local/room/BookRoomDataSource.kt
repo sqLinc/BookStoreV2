@@ -34,7 +34,6 @@ class BookRoomDataSource @Inject constructor(
     }
 
     suspend fun saveAll(books: List<BookDbEntity>){
-        Log.d("Room", "TRY TO SAVE ALL")
         dao.insertAllBooks(books)
     }
 

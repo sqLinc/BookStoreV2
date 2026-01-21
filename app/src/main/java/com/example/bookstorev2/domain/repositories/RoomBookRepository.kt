@@ -1,11 +1,8 @@
 package com.example.bookstorev2.domain.repositories
 
 import com.example.bookstorev2.data.local.room.dao.BookDao
-import com.example.bookstorev2.data.local.room.dao.UserDao
 import com.example.bookstorev2.data.local.room.dto.BookDto
-import com.example.bookstorev2.data.local.room.dto.UserDto
 import com.example.bookstorev2.data.local.room.entity.BookDbEntity
-import com.example.bookstorev2.data.local.room.entity.UserDbEntity
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 
