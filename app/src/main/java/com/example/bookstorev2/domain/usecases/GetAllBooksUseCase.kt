@@ -10,12 +10,13 @@ import javax.inject.Inject
 class GetAllBooksUseCase @Inject constructor(
     private val bookRepo: BookRepository
 ) {
-    suspend operator fun invoke(category: String = "") : List<Book> {
+    suspend operator fun invoke(category: String = "All") : List<Book> {
         Log.d("Room", "INVOKED USE CASE")
+        Log.d("Room", category)
         return when (category) {
             "Favorite" -> bookRepo.getFavBooks()
             "Read" -> bookRepo.getReadBooks()
-            "" -> bookRepo.getAllBooks()
+            "All" -> bookRepo.getAllBooks()
 
             else -> bookRepo.getBooksByCategory(category)
 

@@ -3,6 +3,7 @@ package com.example.bookstorev2.presentation.viewmodels
 import android.content.ContentResolver
 import android.net.Uri
 import android.util.Base64
+import android.util.Log
 import androidx.activity.compose.ManagedActivityResultLauncher
 import androidx.compose.runtime.State
 import androidx.compose.runtime.mutableStateOf
@@ -18,6 +19,8 @@ import com.example.bookstorev2.presentation.ui.state.AddBookUiState
 import com.example.bookstorev2.presentation.ui.state.BookListUiState
 import com.example.bookstorev2.presentation.ui.state.MainAddScreenNavigation
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -30,11 +33,11 @@ class AddBookViewModel @Inject constructor(
 
 ) : ViewModel() {
 
-    private val _book = mutableStateOf(BookListUiState())
-    val book: State<BookListUiState> = _book
+//    private val _book = mutableStateOf(BookListUiState())
+//    val book: State<BookListUiState> = _book
 
-    private val _uiState = mutableStateOf(AddBookUiState())
-    val uiState: State<AddBookUiState> = _uiState
+    private val _uiState = MutableStateFlow(AddBookUiState())
+    val uiState: StateFlow<AddBookUiState> = _uiState
 
 
 
@@ -188,10 +191,11 @@ class AddBookViewModel @Inject constructor(
                 )
             )
             result.fold(
-                onSuccess = { userData ->
+                onSuccess = { book ->
                     _uiState.value = _uiState.value.copy(
-                        navigationEvent = MainAddScreenNavigation.NavigateOnSaved(userData)
+                        savedBook = book
                     )
+                    Log.d("Nav", "Book is created: key: ${book.key}")
                     _uiState.value = _uiState.value.copy(
                         isEditing = false
                     )
@@ -219,14 +223,9 @@ class AddBookViewModel @Inject constructor(
     }
 
 
-
-
-
-
-
     fun onNavigationConsumed() {
         _uiState.value = _uiState.value.copy(
-            navigationEvent = null
+            savedBook = null
         )
     }
 

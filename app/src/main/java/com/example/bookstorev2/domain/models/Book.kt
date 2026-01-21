@@ -1,5 +1,10 @@
 package com.example.bookstorev2.domain.models
 
+import android.os.Parcelable
+import kotlinx.parcelize.Parcelize
+import kotlinx.serialization.Serializable
+
+@Parcelize
 data class Book(
     val key: String = "",
     val title: String = "",
@@ -13,4 +18,4 @@ data class Book(
     val read: Boolean = false,
     val selectedImage: String = ""
 
-)
+) : Parcelable

@@ -12,7 +12,7 @@ class AuthByEmailPassUseCase @Inject constructor(
         if (email.isBlank() || password.isBlank()){
             return Result.failure((IllegalArgumentException("Email and password can not be empty!")))
         }
-        if(email.length < 6 || !email.contains("@")){
+        if(email.length < 6 || !email.contains("@gmail.com")){
             return Result.failure((IllegalArgumentException("Invalid email")))
         }
         if (password.length < 8){

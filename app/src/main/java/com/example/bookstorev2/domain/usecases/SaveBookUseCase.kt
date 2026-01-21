@@ -8,7 +8,7 @@ import javax.inject.Inject
 class SaveBookUseCase @Inject constructor(
     private val bookRepo: BookRepository
 ) {
-    suspend operator fun invoke(book: Book) : Result<onSavedSuccess>{
+    suspend operator fun invoke(book: Book) : Result<Book>{
         return bookRepo.saveBook(book)
     }
 }
