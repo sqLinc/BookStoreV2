@@ -19,6 +19,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ExitToApp
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.ExitToApp
+import androidx.compose.material.icons.filled.Info
 import androidx.compose.material.icons.filled.Person
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
@@ -32,6 +33,8 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
@@ -59,6 +62,8 @@ fun DrawerBody(
 
 
 ) {
+
+    val openAlertDialog = remember { mutableStateOf(false) }
 
     val scrollState = rememberScrollState()
 
@@ -138,11 +143,24 @@ fun DrawerBody(
             ExtendedFloatingActionButton(
                 modifier = Modifier
                     .fillMaxWidth(0.6f),
-                onClick = onLogoutClick,
+                onClick = {openAlertDialog.value = true},
                 text = {Text("Log out")},
                 icon = {Icon(Icons.AutoMirrored.Filled.ExitToApp, "Log out")},
                 containerColor = Color.LightGray
             )
+            when{
+                openAlertDialog.value ->
+                    DialogBody(
+                        onDismiss = {openAlertDialog.value = false},
+                        onConfirm = {
+                            openAlertDialog.value = false
+                            onLogoutClick()
+                        },
+                        dialogTitle = "Do you want to log out?",
+                        dialogText = "To Log Out from account press 'Confirm'. Otherwise, press 'Dismiss'",
+                        icon = Icons.Default.Info
+                    )
+            }
 
 
         }

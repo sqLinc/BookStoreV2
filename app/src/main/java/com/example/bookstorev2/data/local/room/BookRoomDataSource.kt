@@ -52,4 +52,8 @@ class BookRoomDataSource @Inject constructor(
     suspend fun getBooksByCategory(category: String) : List<BookDbEntity>{
         return dao.getBooksByCategory(category)
     }
+    suspend fun updatedBook(book: BookDbEntity){
+        dao.insertNewBook(book)
+    }
+
 }

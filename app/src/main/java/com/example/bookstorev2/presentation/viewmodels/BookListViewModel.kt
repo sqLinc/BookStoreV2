@@ -6,6 +6,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.bookstorev2.domain.models.Book
+import com.example.bookstorev2.domain.repositories.BookRepository
 import com.example.bookstorev2.domain.usecases.GetAllBooksUseCase
 import com.example.bookstorev2.domain.usecases.ToggleFavoriteUseCase
 import com.example.bookstorev2.domain.usecases.ToggleReadUseCase
@@ -19,6 +20,7 @@ import javax.inject.Inject
 @HiltViewModel
 class BookListViewModel @Inject constructor(
     private val getAllBooksUseCase: GetAllBooksUseCase,
+    private val bookRepo: BookRepository,
     private val toggleFavoriteUseCase: ToggleFavoriteUseCase,
     private val toggleReadUseCase: ToggleReadUseCase
     ) : ViewModel() {
@@ -31,16 +33,14 @@ class BookListViewModel @Inject constructor(
 
 
 
-    init {
-        loadBooks("All")
-    }
 
 
-    fun loadBooks(category: String = "All") {
+
+    fun loadBooks(category: String = "All", uid: String) {
         viewModelScope.launch {
             _uiState.value = _uiState.value.copy(isLoading = true)
             try {
-                val books = getAllBooksUseCase(category)
+                val books = getAllBooksUseCase(category, uid)
                 _uiState.value = _uiState.value.copy(
                     books = books,
                     isLoading = false
@@ -55,10 +55,11 @@ class BookListViewModel @Inject constructor(
         }
     }
 
-    fun onFavoriteClick(bookId: String) {
+    fun onFavoriteClick(book: Book, uid: String) {
         viewModelScope.launch {
-            val favStatus = toggleFavoriteUseCase(bookId)
-            var updatedBook: Book? = _uiState.value.books.find { it.key == bookId }
+            val favStatus = toggleFavoriteUseCase(book, uid)
+
+            var updatedBook: Book? = _uiState.value.books.find { it.key == book.key }
             updatedBook = updatedBook?.copy(
                 favorite = favStatus
             )
@@ -67,17 +68,19 @@ class BookListViewModel @Inject constructor(
                     if (book.key == updatedBook?.key) updatedBook else book
                 }
             )
+
+            bookRepo.updateLocalBook(updatedBook!!)
+
         }
 
-        _uiState.value = _uiState.value.copy(
-
-        )
     }
 
-    fun onReadClick(bookId: String) {
+    fun onReadClick(book: Book, uid: String) {
         viewModelScope.launch {
-            val readStatus = toggleReadUseCase(bookId)
-            var updatedBook: Book? = _uiState.value.books.find { it.key == bookId }
+            Log.d("readLog", "onReadClick started...")
+            val readStatus = toggleReadUseCase(book, uid)
+            Log.d("readLog", "received readStatus from use case: $readStatus")
+            var updatedBook: Book? = _uiState.value.books.find { it.key == book.key }
             updatedBook = updatedBook?.copy(
                 read = readStatus
             )
@@ -86,13 +89,14 @@ class BookListViewModel @Inject constructor(
                     if (book.key == updatedBook?.key) updatedBook else book
                 }
             )
+            bookRepo.updateLocalBook(updatedBook!!)
 
         }
     }
 
-    fun clearError() {
+    fun clearError(uid: String) {
         _uiState.value = _uiState.value.copy(error = null)
-        loadBooks()
+        loadBooks("All", uid)
     }
 
 

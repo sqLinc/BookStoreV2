@@ -1,5 +1,6 @@
 package com.example.bookstorev2.presentation.ui.screens
 
+import android.util.Log
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
@@ -34,6 +35,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.example.bookstorev2.R
+import com.example.bookstorev2.domain.models.User
 import com.example.bookstorev2.presentation.ui.state.LoginMainNavigation
 import com.example.bookstorev2.presentation.viewmodels.LoginViewModel
 
@@ -43,19 +45,20 @@ import com.example.bookstorev2.presentation.viewmodels.LoginViewModel
 @Composable
 fun LoginScreen(
     viewModel: LoginViewModel = hiltViewModel(),
-    onNavigateToBookList: () -> Unit = {},
+    onSuccess: (User) -> Unit = {},
 
 
-) {
+    ) {
 
     val uiState = viewModel.uiState.value
 
 
-    LaunchedEffect(key1 = uiState.navigationEvent) {
-        when(val event = uiState.navigationEvent){
-            is LoginMainNavigation.NavigateToMainScreen ->{
-                onNavigateToBookList()
-                viewModel.onNavigationConsumed()
+    LaunchedEffect(key1 = uiState.user) {
+        when(val event = uiState.user){
+            is User ->{
+                onSuccess(uiState.user)
+                Log.d("appvm", "Data is successfully sent to onSuccess: ${uiState.user}")
+
             }
             null -> Unit
         }

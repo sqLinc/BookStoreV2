@@ -1,5 +1,6 @@
 package com.example.bookstorev2.domain.usecases
 
+import com.example.bookstorev2.domain.models.User
 import com.example.bookstorev2.domain.repositories.UserRepository
 import com.example.bookstorev2.presentation.navigation.ToMainScreenDataObject
 import javax.inject.Inject
@@ -7,7 +8,7 @@ import javax.inject.Inject
 class RegisterByEmailPassUseCase @Inject constructor(
     private val userRepo: UserRepository
 ) {
-    suspend operator fun invoke(email: String, password: String) : Result<ToMainScreenDataObject>{
+    suspend operator fun invoke(email: String, password: String) : Result<User>{
         if(email.isBlank() || password.isBlank()){
             return Result.failure(IllegalArgumentException("Email and password can not be empty!"))
         }

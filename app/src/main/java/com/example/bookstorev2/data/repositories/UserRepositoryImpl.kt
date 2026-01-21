@@ -1,5 +1,6 @@
 package com.example.bookstorev2.data.repositories
 
+import com.example.bookstorev2.domain.models.User
 import com.example.bookstorev2.domain.repositories.UserRepository
 import com.example.bookstorev2.presentation.navigation.ToMainScreenDataObject
 import com.google.firebase.FirebaseNetworkException
@@ -8,22 +9,26 @@ import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseAuthInvalidUserException
 import com.google.firebase.auth.FirebaseAuthWeakPasswordException
 import com.google.firebase.auth.ktx.auth
+import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
 import kotlinx.coroutines.tasks.await
 import javax.inject.Inject
+import javax.inject.Singleton
 
+@Singleton
 class UserRepositoryImpl @Inject constructor(
-    private val auth: FirebaseAuth
+    private val auth: FirebaseAuth,
+    private val db: FirebaseFirestore
 ) : UserRepository {
-    override suspend fun loginUserByEmailPass(email: String, password: String) : Result<ToMainScreenDataObject>{
+    override suspend fun loginUserByEmailPass(email: String, password: String) : Result<User>{
         return try {
 
             val result = auth.signInWithEmailAndPassword(email, password).await()
             val user = result.user ?: return Result.failure(IllegalArgumentException("This user does not exist!"))
 
             Result.success(
-                ToMainScreenDataObject(
+                User(
                     uid = user.uid,
                     email = user.email ?: ""
                 )
@@ -44,7 +49,7 @@ class UserRepositoryImpl @Inject constructor(
 
     }
 
-    override suspend fun createUserByEmailPass(email: String, password: String): Result<ToMainScreenDataObject>{
+    override suspend fun createUserByEmailPass(email: String, password: String): Result<User>{
         return try {
 
 
@@ -54,7 +59,7 @@ class UserRepositoryImpl @Inject constructor(
 
 
             return Result.success(
-                ToMainScreenDataObject(
+                User(
                     uid = user.uid,
                     email = user.email ?: ""
                 )
@@ -85,6 +90,9 @@ class UserRepositoryImpl @Inject constructor(
         return Firebase.firestore.collection("admin").document(Firebase.auth.currentUser!!.uid).get().await()
             .getBoolean("isAdmin") ?: false
 
+    }
+    override suspend fun onCreatingUser(uid: String){
+        db.collection("users_books").document(uid)
     }
 
 }

@@ -6,6 +6,7 @@ import android.widget.Toast
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.core.view.WindowCompat
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
@@ -17,6 +18,7 @@ import com.example.bookstorev2.presentation.ui.screens.AddBookScreen
 import com.example.bookstorev2.presentation.ui.screens.BookDetailScreen
 import com.example.bookstorev2.presentation.ui.screens.BookListScreen
 import com.example.bookstorev2.presentation.ui.screens.LoginScreen
+import com.example.bookstorev2.presentation.viewmodels.AppViewModel
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
@@ -25,17 +27,23 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         setContent {
             val navController = rememberNavController()
+            val appViewModel: AppViewModel = hiltViewModel()
 
             NavHost(
                 navController = navController,
                 startDestination = Screen.Login.route
+
             ) {
                 composable(Screen.Login.route) {
                     LoginScreen(
-                        onNavigateToBookList = {
+                        onSuccess = { user ->
                             navController.navigate(Screen.BookList.route) {
                                 popUpTo(Screen.Login.route) { inclusive = true }
                             }
+                            Log.d("appvm", "Data is received at MainActivity: $user")
+                            appViewModel.setUser(user)
+                            Log.d("appvm", "Now checking updated appVM: ${appViewModel.user}")
+
                         }
                     )
                 }
@@ -64,7 +72,8 @@ class MainActivity : ComponentActivity() {
                         onNavigateToDetailScreen = { bookId ->
                             navController.navigate("${Screen.DetailScreen.route}/$bookId")
                         },
-                        navController = navController
+                        navController = navController,
+                        appViewModel = appViewModel
                     )
                 }
 
@@ -107,7 +116,12 @@ class MainActivity : ComponentActivity() {
                                 ?.set("new_book", book)
                             navController.popBackStack()
                         },
-                        navController = navController
+                        navController = navController,
+                        onBackClick = {
+                            navController.popBackStack()
+                        },
+                        appViewModel = appViewModel
+
                     )
                     Log.d("Nav", "IN NAVIGATION: trying to edit: $bookId")
                 }
@@ -125,7 +139,11 @@ class MainActivity : ComponentActivity() {
                             navController.popBackStack()
                             Log.d("Nav", "IN NAVIGATION: trying to create: key:${book?.key} ")
                         },
-                        navController = navController
+                        navController = navController,
+                        onBackClick = {
+                            navController.popBackStack()
+                        },
+                        appViewModel = appViewModel
                     )
 
                 }
