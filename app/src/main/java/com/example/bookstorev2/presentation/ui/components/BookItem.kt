@@ -64,7 +64,7 @@ fun BookItem(
     ){
         OutlinedCard(
             modifier = modifier.padding(8.dp)
-                .fillMaxWidth(0.7f),
+                .fillMaxWidth(0.9f),
 
 
             colors = CardDefaults.cardColors(

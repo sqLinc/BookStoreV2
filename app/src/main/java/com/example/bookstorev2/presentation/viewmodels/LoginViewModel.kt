@@ -1,9 +1,11 @@
 package com.example.bookstorev2.presentation.viewmodels
 
+import android.util.Log
 import androidx.compose.runtime.State
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.bookstorev2.domain.models.User
 import com.example.bookstorev2.domain.repositories.UserRepository
 import com.example.bookstorev2.domain.usecases.AuthByEmailPassUseCase
 import com.example.bookstorev2.domain.usecases.RegisterByEmailPassUseCase
@@ -47,16 +49,18 @@ class LoginViewModel @Inject constructor(
     fun onLoginClick() {
          viewModelScope.launch {
 
-
+                 Log.d("appvm", "onLoginClick started...")
+                 Log.d("appvm", "Incoming data: ${_uiState.value.email}, ${_uiState.value.password}")
                  val result = authByEmailPassUseCase(
                      _uiState.value.email,
                      _uiState.value.password,
                  )
+
              
                 result.fold(
                     onSuccess = { userData ->
                         _uiState.value = _uiState.value.copy(
-                            navigationEvent = LoginMainNavigation.NavigateToMainScreen(userData)
+                            user = userData
                         )
 
                     },
@@ -66,6 +70,7 @@ class LoginViewModel @Inject constructor(
                         )
                     }
                 )
+                Log.d("appvm", "Outcoming data: ${_uiState.value.user}")
 
         }
 
@@ -82,8 +87,9 @@ class LoginViewModel @Inject constructor(
             result.fold(
                 onSuccess = { userData ->
                     _uiState.value = _uiState.value.copy(
-                        navigationEvent = LoginMainNavigation.NavigateToMainScreen(userData)
+                        user = userData
                     )
+//                userRepo.onCreatingUser(userData.uid)
                 },
                 onFailure = { e->
                     _uiState.value = _uiState.value.copy(
@@ -102,9 +108,7 @@ class LoginViewModel @Inject constructor(
     fun clearError(){
         _uiState.value = _uiState.value.copy(error = null)
     }
-    fun onNavigationConsumed() {
-        _uiState.value = _uiState.value.copy(navigationEvent = null)
-    }
+
 
 
 

@@ -27,14 +27,19 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.paint
+import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.res.painterResource
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import androidx.navigation.compose.currentBackStackEntryAsState
+import com.example.bookstorev2.R
 import com.example.bookstorev2.domain.models.Book
 import com.example.bookstorev2.presentation.ui.components.BookItem
 import com.example.bookstorev2.presentation.ui.components.DrawerBody
 import com.example.bookstorev2.presentation.ui.components.DrawerHeader
 import com.example.bookstorev2.presentation.ui.state.MainToAddScreenNav
+import com.example.bookstorev2.presentation.viewmodels.AppViewModel
 import com.example.bookstorev2.presentation.viewmodels.BookListViewModel
 import com.example.bookstorev2.presentation.viewmodels.LoginViewModel
 import kotlinx.coroutines.launch
@@ -44,6 +49,7 @@ import kotlinx.coroutines.launch
 fun BookListScreen(
     bookViewModel: BookListViewModel = hiltViewModel(),
     userViewModel: LoginViewModel = hiltViewModel(),
+    appViewModel: AppViewModel = hiltViewModel(),
 
     onLogoutClick: () -> Unit,
     onAdminClick: () -> Unit,
@@ -54,6 +60,10 @@ fun BookListScreen(
 
 
 ) {
+//    val appViewModel: AppViewModel = hiltViewModel()
+    val user by appViewModel.user.collectAsState()
+    Log.d("appvm", "User: $user.toString()")
+
     val uiState by bookViewModel.uiState.collectAsState()
     val uiUserState = userViewModel.uiState.value
 
@@ -76,6 +86,9 @@ fun BookListScreen(
                     }
                 }
         }
+    }
+    LaunchedEffect(user) {
+        bookViewModel.loadBooks("All", appViewModel.user.value?.uid ?: "")
     }
 
 
@@ -108,7 +121,7 @@ fun BookListScreen(
                 DrawerHeader()
                 DrawerBody(uiUserState.isAdminState, onAdminClick
                 , onCategoryClick = { item ->
-                    bookViewModel.loadBooks(item)
+                    bookViewModel.loadBooks(item, appViewModel.user.value?.uid ?: "")
                 }, onLogoutClick, scope, drawerState)
 
 
@@ -119,7 +132,7 @@ fun BookListScreen(
         Scaffold(
 
         ) { padding ->
-            Box(modifier = Modifier.padding(padding)) {
+            Box(modifier = Modifier.padding(padding).paint(painterResource(R.drawable.book_list_bg), contentScale = ContentScale.FillBounds)) {
                 when {
                     uiState.isLoading -> {
                         CircularProgressIndicator()
@@ -132,7 +145,7 @@ fun BookListScreen(
                             verticalArrangement = Arrangement.Center
                         ) {
                             Text("Error:${uiState.error}")
-                            Button(onClick = { bookViewModel.clearError() }) {
+                            Button(onClick = { bookViewModel.clearError(user!!.uid) }) {
                                 Text("Retry")
                             }
                         }
@@ -144,8 +157,8 @@ fun BookListScreen(
                                 BookItem(
                                     uiUserState.isAdminState,
                                     book = book,
-                                    onFavoriteClick = { bookViewModel.onFavoriteClick(book.key) },
-                                    onReadClick = { bookViewModel.onReadClick(book.key) },
+                                    onFavoriteClick = { bookViewModel.onFavoriteClick(book, user?.uid ?: "") },
+                                    onReadClick = { bookViewModel.onReadClick(book, user?.uid ?: "") },
                                     onEditClick = {
 
                                         onNavigateToEditBook(book.key)

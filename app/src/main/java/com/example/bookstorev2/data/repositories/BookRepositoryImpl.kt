@@ -3,6 +3,7 @@ package com.example.bookstorev2.data.repositories
 import android.util.Log
 import com.example.bookstorev2.data.repositories.BookFirebaseDataSource
 import com.example.bookstorev2.data.local.room.BookRoomDataSource
+import com.example.bookstorev2.data.local.room.entity.BookDbEntity
 import com.example.bookstorev2.data.local.room.mapper.bookListToDb
 import com.example.bookstorev2.data.local.room.mapper.dbListToDomain
 import com.example.bookstorev2.data.local.room.mapper.dtoListToDb
@@ -26,10 +27,10 @@ class BookRepositoryImpl @Inject constructor(
 ) : BookRepository {
 
 
-    override suspend fun getAllBooks(): List<Book> {
+    override suspend fun getAllBooks(uid: String): List<Book> {
         Log.d("Room", "TRYING TO GET BOOKS")
         try {
-            val remote = firebase.getBooks()
+            val remote = firebase.getBooks(uid)
             Log.d("Room", "GOT BOOKS FROM REMOTE")
             room.saveAll(remote.dtoListToDb())
             Log.d("Room", "SAVED BOOKS TO ROOM")
@@ -37,24 +38,25 @@ class BookRepositoryImpl @Inject constructor(
 
 
         } catch (e: Exception){
-            throw e
+            val local = room.getBooks()
+            return local.dbListToDomain()
         }
     }
 
-    override suspend fun isFavorite(bookId: String): Boolean {
-        return firebase.isFavorite(bookId)
+    override suspend fun isFavorite(bookId: String, uid: String): Boolean? {
+        return firebase.isFavorite(bookId, uid)
     }
 
-    override suspend fun isRead(bookId: String): Boolean {
-        return firebase.isRead(bookId)
+    override suspend fun isRead(bookId: String, uid: String): Boolean? {
+        return firebase.isRead(bookId, uid)
     }
 
-    override suspend fun setFavoriteStatus(bookId: String, isFavorite: Boolean) : Boolean{
-        return firebase.setFavoriteStatus(bookId, isFavorite)
+    override suspend fun setFavoriteStatus(book: Book, isFavorite: Boolean, uid: String) : Boolean{
+        return firebase.setFavoriteStatus(book, isFavorite, uid)
     }
 
-    override suspend fun setReadStatus(bookId: String, isRead: Boolean) : Boolean {
-        return firebase.setReadStatus(bookId, isRead)
+    override suspend fun setReadStatus(book: Book, isRead: Boolean, uid: String) : Boolean {
+        return firebase.setReadStatus(book, isRead, uid)
     }
 
     override suspend fun saveBook(book: Book): Result<Book> {
@@ -81,6 +83,11 @@ class BookRepositoryImpl @Inject constructor(
     override suspend fun getBooksByCategory(category: String) : List<Book>{
         val local = room.getBooksByCategory(category)
         return local.dbListToDomain()
+    }
+
+    override suspend fun updateLocalBook(book: Book){
+        val local = book.toDb()
+        room.updatedBook(local)
     }
 
 

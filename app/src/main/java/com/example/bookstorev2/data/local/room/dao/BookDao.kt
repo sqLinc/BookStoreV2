@@ -5,13 +5,16 @@ import androidx.room.Dao
 import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
+import androidx.room.Update
+import androidx.room.Upsert
 import com.example.bookstorev2.data.local.room.dto.BookDto
 import com.example.bookstorev2.data.local.room.entity.BookDbEntity
+import com.example.bookstorev2.domain.models.Book
 
 @Dao
 interface BookDao{
 
-    @Insert(entity = BookDbEntity::class)
+    @Upsert(entity = BookDbEntity::class)
     suspend fun insertNewBook(book: BookDbEntity)
 
     @Query("SELECT * FROM book")
@@ -20,7 +23,7 @@ interface BookDao{
     @Query("DELETE FROM book WHERE `key` = :bookId")
     suspend fun deleteBookById(bookId: String)
 
-    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    @Upsert
     suspend fun insertAllBooks(books: List<BookDbEntity>)
 
     @Query("SELECT * FROM book WHERE `key` = :bookId LIMIT 1")
@@ -34,4 +37,5 @@ interface BookDao{
 
     @Query("SELECT * FROM book WHERE category = :category")
     suspend fun getBooksByCategory(category: String) : List<BookDbEntity>
+
 }
