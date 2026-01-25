@@ -38,6 +38,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
@@ -47,6 +48,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import com.bumptech.glide.integration.compose.ExperimentalGlideComposeApi
 import com.bumptech.glide.integration.compose.GlideImage
+import com.example.bookstorev2.R
 import com.example.bookstorev2.domain.models.Book
 import com.example.bookstorev2.presentation.navigation.onSavedSuccess
 import com.example.bookstorev2.presentation.ui.components.ActionButton
@@ -118,7 +120,7 @@ fun AddBookScreen(
     Scaffold(
         topBar = {
             TopAppBar(
-                title = { Text("Adding new book") },
+                title = { stringResource(R.string.new_book_bar_text) },
             )
         },
 
@@ -152,7 +154,7 @@ fun AddBookScreen(
 
 
             Text(
-                text = "Add new book",
+                text = stringResource(R.string.new_book_text),
                 color = Color.Black,
                 fontSize = 25.sp,
                 fontWeight = FontWeight.Bold,
@@ -172,35 +174,35 @@ fun AddBookScreen(
             Spacer(modifier = Modifier.height(16.dp))
             OutlinedTextField(
                 value = uiState.title,
-                label = {Text(text = "Title")},
+                label = {Text(text = stringResource(R.string.new_book_title))},
                 modifier = Modifier.fillMaxWidth(),
                 onValueChange = {addBookViewModel.onTitleChange(it)}
             )
             Spacer(modifier = Modifier.height(16.dp))
             OutlinedTextField(
                 value = uiState.price,
-                label = {Text(text = "Price")},
+                label = {Text(text = stringResource(R.string.new_book_price))},
                 modifier = Modifier.fillMaxWidth(),
                 onValueChange = {addBookViewModel.onPriceChange(it)}
             )
             Spacer(modifier = Modifier.height(16.dp))
             OutlinedTextField(
                 value = uiState.description,
-                label = {Text(text = "Description")},
+                label = {Text(text = stringResource(R.string.new_book_description))},
                 modifier = Modifier.fillMaxWidth(),
                 onValueChange = {addBookViewModel.onDescriptionChange(it)}
             )
             Spacer(modifier = Modifier.height(16.dp))
             OutlinedTextField(
                 value = uiState.author,
-                label = {Text(text = "Author")},
+                label = {Text(text = stringResource(R.string.new_book_author))},
                 modifier = Modifier.fillMaxWidth(),
                 onValueChange = {addBookViewModel.onAuthorChange(it)}
             )
             Spacer(modifier = Modifier.height(16.dp))
             OutlinedTextField(
                 value = uiState.date,
-                label = {Text(text = "Published year")},
+                label = {Text(text = stringResource(R.string.new_book_published))},
                 modifier = Modifier.fillMaxWidth(),
                 onValueChange = {addBookViewModel.onDateChange(it)}
             )
@@ -214,14 +216,14 @@ fun AddBookScreen(
             }
             Spacer(modifier = Modifier.height(16.dp))
             ActionButton(
-                "Choose book cover"
+                stringResource(R.string.new_book_choose_image)
             ){
                 addBookViewModel.onChooseImage(imagePickerLauncher)
 
             }
             Spacer(modifier = Modifier.height(16.dp))
             ActionButton(
-                "Save book"
+                stringResource(R.string.new_book_save)
             ){
                 addBookViewModel.onSaveClick()
 //                uiState.savedBook?.let { book ->
@@ -243,7 +245,7 @@ fun AddBookScreen(
                     containerColor = Color.LightGray
             )
             ) {
-                Text(text = "Cancel")
+                Text(text = stringResource(R.string.new_book_cancel))
             }
             when{
                 openAlertDialog.value ->
@@ -253,9 +255,11 @@ fun AddBookScreen(
                             openAlertDialog.value = false
                             onBackClick()
                         },
-                        dialogTitle = "Do you want to stop adding new book?",
-                        dialogText = "Confirm  by pressing 'Confirm'. If you want to continue to add book press 'Dismiss'",
-                        icon = Icons.Default.Info
+                        dialogTitle = stringResource(R.string.new_book_dialog_top_text),
+                        dialogText = stringResource(R.string.new_book_dialog_text),
+                        icon = Icons.Default.Info,
+                        dismissText = stringResource(R.string.button_dismiss),
+                        confirmText = stringResource(R.string.button_confirm)
                     )
             }
 

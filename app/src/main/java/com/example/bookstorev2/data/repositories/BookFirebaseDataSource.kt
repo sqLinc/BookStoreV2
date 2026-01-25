@@ -1,10 +1,14 @@
 package com.example.bookstorev2.data.repositories
 
 import android.util.Log
+
 import com.example.bookstorev2.data.local.room.dto.BookDto
 import com.example.bookstorev2.domain.models.Book
 import com.example.bookstorev2.presentation.navigation.onSavedSuccess
+import com.google.firebase.firestore.DocumentSnapshot
 import com.google.firebase.firestore.FirebaseFirestore
+import com.google.firebase.firestore.QuerySnapshot
+import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.tasks.await
 import javax.inject.Inject
 
@@ -15,21 +19,20 @@ class BookFirebaseDataSource @Inject constructor(
     val path = "books"
     val users_books = "users_books"
 
+
+
+    suspend fun getFavIds(uid: String) : List<String>{
+        return db.collection("users").document(uid).collection("favorite").get().await().documents.map { it.id }
+    }
+
+    suspend fun getReadIds(uid: String): List<String>{
+        return db.collection("users").document(uid).collection("read").get().await().documents.map { it.id }
+    }
+
     suspend fun getBooks(uid: String) : List<BookDto>{
         try {
 
-            val favorite = db.collection(users_books).document(uid).collection("collection").get().await()
-            val fav_list = favorite.toObjects(BookDto::class.java)
-
-            val ids = fav_list.map { it.key }
-            val books = db.collection("books").get().await()
-            val books_list = books.toObjects(BookDto::class.java)
-
-            val all = books_list
-                .map { it }
-                .filter { it.key !in ids }
-            val all_books = all + fav_list
-            return all_books
+            return db.collection("books").get().await().toObjects(BookDto::class.java)
 
 
 
@@ -38,92 +41,52 @@ class BookFirebaseDataSource @Inject constructor(
         }
     }
 
-    suspend fun isFavorite(bookId: String, uid: String) : Boolean?{
+    suspend fun isFavorite(bookId: String, uid: String) : Boolean {
         try {
-
-            return if (db.collection(users_books).document(uid).collection("collection").document(bookId).get().await().exists()){
-                db.collection(users_books).document(uid).collection("collection").document(bookId).get().await().getBoolean("favorite")
-            } else{
-                false
-            }
-
+            return db.collection("users").document(uid).collection("favorite").document(bookId).get().await().exists()
 
         } catch (e: Exception){
             throw e
         }
     }
 
-    suspend fun isRead(bookId: String, uid: String) : Boolean? {
+    suspend fun isRead(bookId: String, uid: String) : Boolean {
         try {
-            return if (db.collection(users_books).document(uid).collection("collection").document(bookId).get().await().exists()){
-                db.collection(users_books).document(uid).collection("collection").document(bookId).get().await().getBoolean("read")
-            } else{
-                false
-            }
+            return db.collection("users").document(uid).collection("read").document(bookId).get().await().exists()
+
         } catch (e: Exception){
             throw e
         }
     }
 
-    suspend fun setFavoriteStatus(book: Book, isFavorite: Boolean, uid: String) : Boolean{
+    suspend fun setFavoriteStatus(bookId: String, isFavorite: Boolean, uid: String) : Boolean{
         try {
-            if (!isFavorite && !book.read){
-                db.collection(users_books)
-                    .document(uid)
-                    .collection("collection")
-                    .document(book.key)
-                    .delete()
-                    .await()
+            if (isFavorite){
+                db.collection("users").document(uid).collection("favorite").document(bookId).set(emptyMap<String, Any>()).await()
+                return true
             }
-            if(!isFavorite && book.read){
-                db.collection(users_books).document(uid).collection("collection").document(book.key)
-                    .update("favorite", false)
-                    .await()
-            }
-            if (isFavorite && !book.read){
-                db.collection(users_books).document(uid).collection("collection").document(book.key).set(book).await()
-                db.collection(users_books).document(uid).collection("collection").document(book.key).update("favorite", true).await()
-
-            }
-            if (isFavorite && book.read){
-                db.collection(users_books).document(uid).collection("collection").document(book.key)
-                    .update("favorite", true)
-                    .await()
+            else{
+                db.collection("users").document(uid).collection("favorite").document(bookId).delete()
+                return false
             }
 
-            return isFavorite
+
         } catch (e: Exception) {
             throw e
         }
     }
 
-    suspend fun setReadStatus(book: Book, isRead: Boolean, uid: String) : Boolean {
-        Log.d("readLog", "setReadStatus is started...")
+    suspend fun setReadStatus(bookId: String, isRead: Boolean, uid: String) : Boolean {
         try {
-            if (!isRead && !book.favorite){
-                db.collection(users_books)
-                    .document(uid)
-                    .collection("collection")
-                    .document(book.key)
-                    .delete()
-                    .await()
+            if (isRead){
+                db.collection("users").document(uid).collection("read").document(bookId).set(emptyMap<String, Any>()).await()
+                return true
             }
-            if (!isRead && book.favorite){
-                db.collection(users_books).document(uid).collection("collection").document(book.key)
-                    .update("read", false)
-                    .await()
-            }
-            if (isRead && !book.favorite){
-                db.collection(users_books).document(uid).collection("collection").document(book.key).set(book).await()
-                db.collection(users_books).document(uid).collection("collection").document(book.key).update("read", true).await()
-            }
-            if (isRead && book.favorite){
-                db.collection(users_books).document(uid).collection("collection").document(book.key)
-                    .update("read", true)
-                    .await()
+            else{
+                db.collection("users").document(uid).collection("read").document(bookId).delete()
+                return false
             }
 
-            return isRead
 
         } catch (e: Exception) {
             throw e

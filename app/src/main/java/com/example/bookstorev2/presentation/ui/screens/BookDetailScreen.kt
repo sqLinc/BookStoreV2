@@ -31,6 +31,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.layout.ModifierLocalBeyondBoundsLayout
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -101,23 +102,23 @@ fun BookDetailScreen(
                 )
                 HorizontalDivider(thickness = 4.dp, color = Color.LightGray)
                 Text(
-                    text = "Цена: ${uiState.price}",
+                    text = stringResource(R.string.new_book_title) + ": ${uiState.price}",
                     fontWeight = FontWeight.Bold,
                     fontSize = 30.sp
                 )
                 Spacer(modifier = Modifier.height(10.dp))
                 Text(
-                    text = "Автор: ${uiState.author}",
+                    text = stringResource(R.string.new_book_author) + ": ${uiState.author}",
                     fontWeight = FontWeight.Bold,
                     fontSize = 18.sp
                 )
                 Text(
-                    text = "Год издания: ${uiState.date}",
+                    text = stringResource(R.string.new_book_title) + ": ${uiState.date}",
                     fontWeight = FontWeight.Bold,
                     fontSize = 18.sp
                 )
                 Text(
-                    text = "Категория: ${uiState.category}",
+                    text = stringResource(R.string.new_book_title) + ": ${uiState.category}",
                     fontWeight = FontWeight.Bold,
                     fontSize = 18.sp
                 )

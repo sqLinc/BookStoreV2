@@ -21,4 +21,3 @@ dependencyResolutionManagement {
 
 rootProject.name = "BookStoreV2"
 include(":app")
- 

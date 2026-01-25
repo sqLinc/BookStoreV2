@@ -11,11 +11,13 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.Font
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.example.bookstorev2.R
 
 @Composable
 fun DrawerHeader() {
@@ -26,7 +28,7 @@ fun DrawerHeader() {
     ) {
         Spacer(modifier = Modifier.height(10.dp))
         Text(
-            text = "Book Store",
+            text = stringResource(R.string.drawer_body_app_name),
             fontSize = 30.sp,
             fontWeight = FontWeight.Bold,
             color = Color.White

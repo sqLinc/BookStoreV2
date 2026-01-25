@@ -8,9 +8,9 @@ import javax.inject.Inject
 class ToggleFavoriteUseCase @Inject constructor(
     private val bookRepo: BookRepository
 ) {
-    suspend operator fun invoke(book: Book, uid: String) : Boolean {
-        val currentStatus = bookRepo.isFavorite(book.key, uid)
+    suspend operator fun invoke(bookId: String, uid: String) : Boolean {
+        val currentStatus = bookRepo.isFavorite(bookId, uid)
         Log.d("fav", "CURRENTStatus is: $currentStatus")
-        return bookRepo.setFavoriteStatus(book, !currentStatus!!, uid)
+        return bookRepo.setFavoriteStatus(bookId, !currentStatus!!, uid)
     }
 }
