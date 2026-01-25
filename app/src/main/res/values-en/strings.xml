@@ -23,7 +23,6 @@
     <string name="log_out_button">Log out</string>
     <string name="logout_dialog_top_text">Do you want to log out</string>
     <string name="logout_dialog_text">To log out from account press \'Confirm\'. Otherwise, press \'Dismiss\'</string>
-    <string name="button_dismiss">Dismiss</string>
     <string name="button_confirm">Confirm</string>
     <string name="new_book_bar_text">Adding new book</string>
     <string name="new_book_text">Add new book</string>
@@ -43,8 +42,7 @@
     <string name="new_book_cancel">Cancel</string>
     <string name="new_book_dialog_top_text">Do you want to stop adding new book?</string>
     <string name="new_book_dialog_text">Confirm by pressing \'Confirm\'. If you want to continue to add book press \'Dismiss\'</string>
-    <string name="default_web_client_id" translatable="false">413406039850-l675be8985nvlklcvt2u0jept3l3on98.apps.googleusercontent.com</string>
-
+    <string name="button_dismiss">Dismiss</string>
 
 
 </resources>

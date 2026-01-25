@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Магазин Книг V2</string>
+    <string name="login_top_bar">Добро пожаловать</string>
+    <string name="email_field">Почта</string>
+    <string name="password_field">Пароль</string>
+    <string name="login_button">Войти</string>
+    <string name="register_button">Зарегистрироваться</string>
+    <string name="book_price">Цена</string>
+    <string name="book_author">Автор</string>
+    <string name="book_date">Дата публикации</string>
+    <string name="drawer_body_app_name">Магазин Книг</string>
+    <string name="drawer_body_categories">Категории</string>
+    <string name="drawer_body_all">Все</string>
+    <string name="drawer_body_favorite">Избранные</string>
+    <string name="drawer_body_read">Прочитанные</string>
+    <string name="drawer_body_fantasy">Фентези</string>
+    <string name="drawer_body_detective">Детектив</string>
+    <string name="drawer_body_thriller">Триллер</string>
+    <string name="drawer_body_drama">Драма</string>
+    <string name="drawer_body_biopic">Биография</string>
+    <string name="drawer_body_adventure">Приключения</string>
+    <string name="add_book_button">Добавить новую книгу</string>
+    <string name="log_out_button">Выход</string>
+    <string name="logout_dialog_top_text">Вы хотите выйти из аккаунта</string>
+    <string name="logout_dialog_text">Чтобы выйти из аккаунта нажмите \'Подтверить\'. В противном случае, нажмите \'Отмена\'</string>
+    <string name="logout_dialog_confirm">Подтвердить</string>
+    <string name="button_confirm">Подвердить</string>
+    <string name="new_book_bar_text">Добавление новой книги</string>
+    <string name="new_book_text">Добавь новую книгу</string>
+    <string name="new_book_fantasy">Фентези</string>
+    <string name="new_book_detective">Детектив</string>
+    <string name="new_book_thriller">Триллер</string>
+    <string name="new_book_drama">Драма</string>
+    <string name="new_book_biopic">Биография</string>
+    <string name="new_book_adventure">Приключения</string>
+    <string name="new_book_title">Название</string>
+    <string name="new_book_price">Цена</string>
+    <string name="new_book_description">Описание</string>
+    <string name="new_book_author">Автор</string>
+    <string name="new_book_published">Дата выхода</string>
+    <string name="new_book_choose_image">Выберите обложку книги</string>
+    <string name="new_book_save">Сохранить книгу</string>
+    <string name="new_book_cancel">Отмена</string>
+    <string name="new_book_dialog_top_text">Вы хотите прекратить создание новой книги?</string>
+    <string name="new_book_dialog_text">Подтвердите нажатием \'Подтвердить\'. Если Вы хотите продолжить добавление новой книги, нажмите \'Отмена\'</string>
+    <string name="button_dismiss">Отмена</string>
+
+</resources>

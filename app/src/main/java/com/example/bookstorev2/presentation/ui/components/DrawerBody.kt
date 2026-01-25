@@ -1,5 +1,6 @@
 package com.example.bookstorev2.presentation.ui.components
 
+import LangDropDownMenu
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
@@ -31,19 +32,28 @@ import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Switch
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ModifierLocalBeyondBoundsLayout
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.example.bookstorev2.R
+import com.example.bookstorev2.data.repositories.SettingsRepository
+import com.example.bookstorev2.presentation.viewmodels.SettingsViewModel
 import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 
 @Composable
@@ -54,7 +64,10 @@ fun DrawerBody(
     onCategoryClick: (String) -> Unit,
     onLogoutClick: () -> Unit,
     scope: CoroutineScope,
-    drawerState: DrawerState
+    drawerState: DrawerState,
+    settingsViewModel: SettingsViewModel,
+    language: String
+
 
 
 
@@ -63,22 +76,31 @@ fun DrawerBody(
 
 ) {
 
+    //var language by remember { mutableStateOf("en") }
+    var isDarkTheme by remember { mutableStateOf(false) }
+
     val openAlertDialog = remember { mutableStateOf(false) }
 
     val scrollState = rememberScrollState()
 
     val categoryList = listOf(
-        "All",
-        "Favorite",
-        "Read",
-        "Fantasy",
-        "Detective",
-        "Thriller",
-        "Drama",
-        "Biopic",
-        "Adventures"
+        stringResource(R.string.drawer_body_all),
+        stringResource(R.string.drawer_body_favorite),
+        stringResource(R.string.drawer_body_read),
+        stringResource(R.string.drawer_body_fantasy),
+        stringResource(R.string.drawer_body_detective),
+        stringResource(R.string.drawer_body_thriller),
+        stringResource(R.string.drawer_body_drama),
+        stringResource(R.string.drawer_body_biopic),
+        stringResource(R.string.drawer_body_adventure)
 
     )
+
+    LaunchedEffect(Unit) {
+        settingsViewModel.isDarkTheme.collectLatest { value ->
+            isDarkTheme = value
+        }
+    }
 
     Box(modifier = Modifier.fillMaxSize().background(Color.Gray)){
         Column(
@@ -87,7 +109,7 @@ fun DrawerBody(
         ){
             Spacer(modifier = Modifier.height(16.dp))
             Text(
-                text = "Categories",
+                text = stringResource(R.string.drawer_body_categories),
                 fontSize = 25.sp,
                 color = Color.Black,
                 fontWeight = FontWeight.Bold
@@ -135,8 +157,8 @@ fun DrawerBody(
                         drawerState.close()
                     }
                 },
-                icon = {Icon(Icons.Default.Add, "Add New Book")},
-                text = {Text("Add New Book")},
+                icon = {Icon(Icons.Default.Add, stringResource(R.string.add_book_button))},
+                text = {Text(stringResource(R.string.add_book_button))},
                 containerColor = Color.LightGray
             )
 
@@ -144,9 +166,26 @@ fun DrawerBody(
                 modifier = Modifier
                     .fillMaxWidth(0.6f),
                 onClick = {openAlertDialog.value = true},
-                text = {Text("Log out")},
+                text = {Text(stringResource(R.string.log_out_button))},
                 icon = {Icon(Icons.AutoMirrored.Filled.ExitToApp, "Log out")},
                 containerColor = Color.LightGray
+            )
+            Switch(
+                checked = isDarkTheme,
+                onCheckedChange = { newValue ->
+                    isDarkTheme = newValue
+                    scope.launch {
+                        settingsViewModel.setDark(newValue)
+                    }
+                }
+            )
+            LangDropDownMenu(
+                language,
+                onOptionSelected = { selected ->
+                    scope.launch {
+                        settingsViewModel.setLanguage(selected)
+                    }
+                }
             )
             when{
                 openAlertDialog.value ->
@@ -155,10 +194,13 @@ fun DrawerBody(
                         onConfirm = {
                             openAlertDialog.value = false
                             onLogoutClick()
+                            settingsViewModel.deleteUser()
                         },
-                        dialogTitle = "Do you want to log out?",
-                        dialogText = "To Log Out from account press 'Confirm'. Otherwise, press 'Dismiss'",
-                        icon = Icons.Default.Info
+                        dialogTitle = stringResource(R.string.logout_dialog_top_text),
+                        dialogText = stringResource(R.string.logout_dialog_text),
+                        icon = Icons.Default.Info,
+                        confirmText = stringResource(R.string.button_confirm),
+                        dismissText = stringResource(R.string.button_dismiss)
                     )
             }
 

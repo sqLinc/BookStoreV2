@@ -1,17 +1,24 @@
 package com.example.bookstorev2.presentation.viewmodels
 
 import android.util.Log
+import androidx.browser.R
 import androidx.compose.runtime.State
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.bookstorev2.data.repositories.SettingsRepository
 import com.example.bookstorev2.domain.models.User
 import com.example.bookstorev2.domain.repositories.UserRepository
 import com.example.bookstorev2.domain.usecases.AuthByEmailPassUseCase
 import com.example.bookstorev2.domain.usecases.RegisterByEmailPassUseCase
 import com.example.bookstorev2.presentation.ui.state.LoginMainNavigation
 import com.example.bookstorev2.presentation.ui.state.LoginUiState
+import com.google.android.gms.auth.api.signin.GoogleSignIn
+import com.google.android.gms.auth.api.signin.GoogleSignInClient
+import com.google.android.gms.auth.api.signin.GoogleSignInOptions
+import com.google.firebase.auth.FirebaseUser
 import dagger.hilt.android.lifecycle.HiltViewModel
+import io.grpc.Context
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -19,7 +26,8 @@ import javax.inject.Inject
 class LoginViewModel @Inject constructor(
     private val authByEmailPassUseCase: AuthByEmailPassUseCase,
     private val registerByEmailPassUseCase: RegisterByEmailPassUseCase,
-    private val userRepo: UserRepository
+    private val userRepo: UserRepository,
+    private val settingRepo: SettingsRepository
 
 ) : ViewModel() {
 
@@ -62,6 +70,9 @@ class LoginViewModel @Inject constructor(
                         _uiState.value = _uiState.value.copy(
                             user = userData
                         )
+                        settingRepo.setEmail(userData.email)
+                        settingRepo.setUid(userData.uid)
+
 
                     },
                     onFailure = { e->
@@ -89,7 +100,9 @@ class LoginViewModel @Inject constructor(
                     _uiState.value = _uiState.value.copy(
                         user = userData
                     )
-//                userRepo.onCreatingUser(userData.uid)
+                    settingRepo.setEmail(userData.email)
+                    settingRepo.setUid(userData.uid)
+//
                 },
                 onFailure = { e->
                     _uiState.value = _uiState.value.copy(
@@ -109,7 +122,25 @@ class LoginViewModel @Inject constructor(
         _uiState.value = _uiState.value.copy(error = null)
     }
 
+    fun getGoogleSignInClient(context: android.content.Context, string: String): GoogleSignInClient {
+        val gso = GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
+            .requestIdToken(string)
+            .requestEmail()
+            .build()
+        return GoogleSignIn.getClient(context, gso)
+    }
 
+    fun onGoogleSuccess(user: FirebaseUser){
+        _uiState.value = _uiState.value.copy(
+            user = User(user.uid, user.email!!)
+        )
+        viewModelScope.launch {
+            settingRepo.setEmail(user.email!!)
+            settingRepo.setUid(user.uid)
+        }
+        Log.d("GoogleAuth", "Google success: " + _uiState.value.user.toString())
+
+    }
 
 
 

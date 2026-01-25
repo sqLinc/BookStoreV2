@@ -4,6 +4,7 @@ import android.content.Context
 import android.content.Intent
 import android.net.Uri
 import android.util.Base64
+import androidx.compose.ui.platform.LocalContext
 import com.example.bookstorev2.domain.repositories.ImageRefactorRepository
 import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.Dispatchers
@@ -15,6 +16,7 @@ class ImageRefactor @Inject constructor(
 ) : ImageRefactorRepository {
 
     private val cv = context.contentResolver
+
 
     override suspend fun uriToBase64(uri: Uri): String {
         return withContext(Dispatchers.IO) {

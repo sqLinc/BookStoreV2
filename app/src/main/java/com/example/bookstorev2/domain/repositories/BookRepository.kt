@@ -1,12 +1,16 @@
 package com.example.bookstorev2.domain.repositories
 
+
 import com.example.bookstorev2.data.local.room.entity.BookDbEntity
 import com.example.bookstorev2.domain.models.Book
 import com.example.bookstorev2.presentation.navigation.onSavedSuccess
+import com.google.firebase.firestore.DocumentSnapshot
+import com.google.firebase.firestore.QuerySnapshot
+import kotlinx.coroutines.flow.Flow
 
 interface BookRepository {
-    suspend fun setFavoriteStatus(book: Book, isFavorite: Boolean, uid: String) : Boolean
-    suspend fun setReadStatus(book: Book, isRead: Boolean, uid: String) : Boolean
+    suspend fun setFavoriteStatus(bookId: String, isFavorite: Boolean, uid: String) : Boolean
+    suspend fun setReadStatus(bookId: String, isRead: Boolean, uid: String) : Boolean
 
     suspend fun saveBook(book: Book) : Result<Book>
     suspend fun getAllBooks(uid: String): List<Book>
@@ -18,6 +22,10 @@ interface BookRepository {
     suspend fun getReadBooks() : List<Book>
     suspend fun getBooksByCategory(category: String) : List<Book>
     suspend fun updateLocalBook(book: Book)
+
+    suspend fun getFavIds(uid: String) : List<String>
+    suspend fun getReadIds(uid: String) : List<String>
+    suspend fun saveAllToLocal(books: List<Book>)
 
 
 

@@ -3,24 +3,23 @@ package com.example.bookstorev2.di
 import android.content.Context
 import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.Preferences
-import com.example.bookstorev2.data.repositories.ImageRefactor
-import com.example.bookstorev2.data.repositories.SettingsRepository
-import com.example.bookstorev2.domain.repositories.ImageRefactorRepository
+import com.example.bookstorev2.data.repositories.dataStore
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
+import javax.inject.Singleton
 
 @Module
 @InstallIn(SingletonComponent::class)
-object DataModule {
+object DataStoreModule {
 
     @Provides
-    fun providesImageRefactor(
+    @Singleton
+    fun provideDataStore(
         @ApplicationContext context: Context
-    ) : ImageRefactorRepository = ImageRefactor(context)
-
-
-
+    ): DataStore<Preferences> {
+        return context.dataStore
+    }
 }
