@@ -1,24 +1,12 @@
 package com.example.bookstorev2.data.repositories
 
-import android.util.Log
-
-import com.example.bookstorev2.data.repositories.BookFirebaseDataSource
-import com.example.bookstorev2.data.local.room.BookRoomDataSource
-import com.example.bookstorev2.data.local.room.entity.BookDbEntity
 import com.example.bookstorev2.data.local.room.mapper.bookListToDb
 import com.example.bookstorev2.data.local.room.mapper.dbListToDomain
-import com.example.bookstorev2.data.local.room.mapper.dtoListToDb
 import com.example.bookstorev2.data.local.room.mapper.dtoListToDomain
 import com.example.bookstorev2.data.local.room.mapper.toDb
 import com.example.bookstorev2.data.local.room.mapper.toDomain
 import com.example.bookstorev2.domain.models.Book
 import com.example.bookstorev2.domain.repositories.BookRepository
-import com.example.bookstorev2.presentation.navigation.onSavedSuccess
-import com.google.firebase.firestore.DocumentSnapshot
-import com.google.firebase.firestore.FirebaseFirestore
-import com.google.firebase.firestore.QuerySnapshot
-import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.tasks.await
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -27,7 +15,6 @@ import javax.inject.Singleton
 class BookRepositoryImpl @Inject constructor(
     private val room: BookRoomDataSource,
     private val firebase: BookFirebaseDataSource
-
 ) : BookRepository {
 
 
@@ -39,27 +26,22 @@ class BookRepositoryImpl @Inject constructor(
         return firebase.getReadIds(uid)
     }
 
-
-    override suspend fun getAllBooks(uid: String): List<Book> {
-        Log.d("Room", "TRYING TO GET BOOKS")
+    override suspend fun getAllBooks(): List<Book> {
         try {
-            val remote = firebase.getBooks(uid)
-            Log.d("Room", "GOT BOOKS FROM REMOTE")
-            Log.d("Room", "SAVED BOOKS TO ROOM")
+            val remote = firebase.getBooks()
             return remote.dtoListToDomain()
 
-
-        } catch (e: Exception){
+        } catch (_: Exception){
             val local = room.getBooks()
             return local.dbListToDomain()
         }
     }
 
-    override suspend fun isFavorite(bookId: String, uid: String): Boolean? {
+    override suspend fun isFavorite(bookId: String, uid: String): Boolean {
         return firebase.isFavorite(bookId, uid)
     }
 
-    override suspend fun isRead(bookId: String, uid: String): Boolean? {
+    override suspend fun isRead(bookId: String, uid: String): Boolean {
         return firebase.isRead(bookId, uid)
     }
 
@@ -75,7 +57,6 @@ class BookRepositoryImpl @Inject constructor(
         return firebase.saveBook(book)
     }
 
-
     override suspend fun getBookById(bookId: String): Book {
         val remote = firebase.getBookById(bookId)
         return remote.toDomain()
@@ -89,7 +70,6 @@ class BookRepositoryImpl @Inject constructor(
     override suspend fun getReadBooks() : List<Book>{
         val local = room.getReadBooks()
         return local.dbListToDomain()
-
     }
 
     override suspend fun getBooksByCategory(category: String) : List<Book>{
@@ -104,6 +84,10 @@ class BookRepositoryImpl @Inject constructor(
     override suspend fun saveAllToLocal(books: List<Book>){
         val toDb = books.bookListToDb()
         room.saveAll(toDb)
+    }
+
+    override suspend fun deleteAllFromLocal() {
+        room.deleteAllFromLocal()
     }
 
 

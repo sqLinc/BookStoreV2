@@ -1,15 +1,9 @@
 package com.example.bookstorev2.data.local.room.dao
 
-import android.R
 import androidx.room.Dao
-import androidx.room.Insert
-import androidx.room.OnConflictStrategy
 import androidx.room.Query
-import androidx.room.Update
 import androidx.room.Upsert
-import com.example.bookstorev2.data.local.room.dto.BookDto
 import com.example.bookstorev2.data.local.room.entity.BookDbEntity
-import com.example.bookstorev2.domain.models.Book
 
 @Dao
 interface BookDao{
@@ -37,5 +31,8 @@ interface BookDao{
 
     @Query("SELECT * FROM book WHERE category = :category")
     suspend fun getBooksByCategory(category: String) : List<BookDbEntity>
+
+    @Query("DELETE FROM book")
+    suspend fun deleteAllFromLocal()
 
 }

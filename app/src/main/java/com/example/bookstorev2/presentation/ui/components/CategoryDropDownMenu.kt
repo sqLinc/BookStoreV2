@@ -35,10 +35,6 @@ fun CategoryDropDownMenu(
         stringResource(R.string.new_book_drama),
         stringResource(R.string.new_book_biopic),
         stringResource(R.string.new_book_adventure),
-
-
-
-
     )
 
     Box(
@@ -58,13 +54,11 @@ fun CategoryDropDownMenu(
                 DropdownMenuItem(text = {
                     Text(text = option)
                 }, onClick = {
-
-
                     onOptionSelected(option)
                     selectedOption.value = option
                     expanded.value = false
-
-                })
+                    }
+                )
             }
         }
 

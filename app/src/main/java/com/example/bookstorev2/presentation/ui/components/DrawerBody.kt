@@ -1,6 +1,5 @@
 package com.example.bookstorev2.presentation.ui.components
 
-import LangDropDownMenu
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
@@ -19,41 +18,25 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ExitToApp
 import androidx.compose.material.icons.filled.Add
-import androidx.compose.material.icons.filled.ExitToApp
 import androidx.compose.material.icons.filled.Info
-import androidx.compose.material.icons.filled.Person
-import androidx.compose.material3.Button
-import androidx.compose.material3.ButtonDefaults
-import androidx.compose.material3.Card
-import androidx.compose.material3.CardDefaults
+import androidx.compose.material.icons.filled.Settings
 import androidx.compose.material3.DrawerState
 import androidx.compose.material3.ExtendedFloatingActionButton
-import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Switch
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.layout.ModifierLocalBeyondBoundsLayout
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.bookstorev2.R
-import com.example.bookstorev2.data.repositories.SettingsRepository
-import com.example.bookstorev2.presentation.viewmodels.SettingsViewModel
 import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 
 @Composable
@@ -65,22 +48,9 @@ fun DrawerBody(
     onLogoutClick: () -> Unit,
     scope: CoroutineScope,
     drawerState: DrawerState,
-    settingsViewModel: SettingsViewModel,
-    language: String
-
-
-
-
-
-
-
+    onNavigateToSettings: () -> Unit = {}
 ) {
-
-    //var language by remember { mutableStateOf("en") }
-    var isDarkTheme by remember { mutableStateOf(false) }
-
     val openAlertDialog = remember { mutableStateOf(false) }
-
     val scrollState = rememberScrollState()
 
     val categoryList = listOf(
@@ -93,15 +63,7 @@ fun DrawerBody(
         stringResource(R.string.drawer_body_drama),
         stringResource(R.string.drawer_body_biopic),
         stringResource(R.string.drawer_body_adventure)
-
     )
-
-    LaunchedEffect(Unit) {
-        settingsViewModel.isDarkTheme.collectLatest { value ->
-            isDarkTheme = value
-        }
-    }
-
     Box(modifier = Modifier.fillMaxSize().background(Color.Gray)){
         Column(
             modifier = Modifier.fillMaxSize().verticalScroll(scrollState),
@@ -116,19 +78,13 @@ fun DrawerBody(
             )
             Spacer(modifier = Modifier.height(16.dp))
             Box(modifier = Modifier.fillMaxWidth().height(1.dp).background(Color.Gray))
-
-
-
             LazyColumn(
                 modifier = Modifier.weight(1f)
             ) {
-
                 items(categoryList){ item ->
-
                         Column(modifier = Modifier.fillMaxWidth().clickable {
                             onCategoryClick(item)
                         }) {
-
                             Spacer(modifier = Modifier.height(12.dp))
                             Text(
                                 text = item,
@@ -141,17 +97,13 @@ fun DrawerBody(
                             HorizontalDivider()
                             Box(modifier = Modifier.fillMaxWidth().height(1.dp).background(Color.Gray))
                         }
-
-
                 }
             }
             if (isAdminState) ExtendedFloatingActionButton (
-
                 modifier = Modifier
                     .padding(5.dp)
-                    .fillMaxWidth(0.6f),
+                    .fillMaxWidth(0.5f),
                 onClick = {
-
                     onAdminClick()
                     scope.launch {
                         drawerState.close()
@@ -161,32 +113,30 @@ fun DrawerBody(
                 text = {Text(stringResource(R.string.add_book_button))},
                 containerColor = Color.LightGray
             )
-
             ExtendedFloatingActionButton(
                 modifier = Modifier
-                    .fillMaxWidth(0.6f),
+                    .padding(5.dp)
+                    .fillMaxWidth(0.5f),
                 onClick = {openAlertDialog.value = true},
                 text = {Text(stringResource(R.string.log_out_button))},
-                icon = {Icon(Icons.AutoMirrored.Filled.ExitToApp, "Log out")},
+                icon = {Icon(Icons.AutoMirrored.Filled.ExitToApp, "")},
                 containerColor = Color.LightGray
             )
-            Switch(
-                checked = isDarkTheme,
-                onCheckedChange = { newValue ->
-                    isDarkTheme = newValue
+            ExtendedFloatingActionButton(
+                modifier = Modifier
+                    .padding(5.dp)
+                    .fillMaxWidth(0.5f),
+                onClick = {
+                    onNavigateToSettings()
                     scope.launch {
-                        settingsViewModel.setDark(newValue)
+                        drawerState.close()
                     }
-                }
+                          },
+                text = {Text(stringResource(R.string.settings_button))},
+                icon = {Icon(Icons.Default.Settings, "")},
+                containerColor = Color.LightGray
             )
-            LangDropDownMenu(
-                language,
-                onOptionSelected = { selected ->
-                    scope.launch {
-                        settingsViewModel.setLanguage(selected)
-                    }
-                }
-            )
+
             when{
                 openAlertDialog.value ->
                     DialogBody(
@@ -194,7 +144,9 @@ fun DrawerBody(
                         onConfirm = {
                             openAlertDialog.value = false
                             onLogoutClick()
-                            settingsViewModel.deleteUser()
+                            scope.launch {
+                                drawerState.close()
+                            }
                         },
                         dialogTitle = stringResource(R.string.logout_dialog_top_text),
                         dialogText = stringResource(R.string.logout_dialog_text),

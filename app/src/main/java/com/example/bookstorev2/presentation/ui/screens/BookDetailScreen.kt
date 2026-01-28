@@ -1,7 +1,6 @@
 package com.example.bookstorev2.presentation.ui.screens
 
 import android.graphics.BitmapFactory
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
@@ -29,7 +28,6 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.paint
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.layout.ModifierLocalBeyondBoundsLayout
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
@@ -79,7 +77,7 @@ fun BookDetailScreen(
             )
         ) {
             GlideImage(
-                model = bitmap ?: Text("Image is not existed"), contentDescription = "BG",
+                model = bitmap ?: Text(stringResource(R.string.error_no_image)), contentDescription = "BG",
                 modifier = Modifier.fillMaxWidth().height(250.dp).clip(RoundedCornerShape(15.dp))
             )
         }

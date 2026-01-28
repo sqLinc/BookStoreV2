@@ -7,23 +7,17 @@ import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.icons.filled.Info
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.ExtendedFloatingActionButton
-import androidx.compose.material3.FabPosition
-import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.HorizontalDivider
-import androidx.compose.material3.Icon
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
@@ -45,18 +39,14 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
-import androidx.navigation.NavController
 import com.bumptech.glide.integration.compose.ExperimentalGlideComposeApi
 import com.bumptech.glide.integration.compose.GlideImage
 import com.example.bookstorev2.R
 import com.example.bookstorev2.domain.models.Book
-import com.example.bookstorev2.presentation.navigation.onSavedSuccess
 import com.example.bookstorev2.presentation.ui.components.ActionButton
 import com.example.bookstorev2.presentation.ui.components.CategoryDropDownMenu
 import com.example.bookstorev2.presentation.ui.components.DialogBody
-import com.example.bookstorev2.presentation.ui.state.MainAddScreenNavigation
 import com.example.bookstorev2.presentation.viewmodels.AddBookViewModel
-import com.example.bookstorev2.presentation.viewmodels.AppViewModel
 
 @OptIn(ExperimentalMaterial3Api::class, ExperimentalGlideComposeApi::class)
 @Composable
@@ -65,12 +55,7 @@ fun AddBookScreen(
     bookId: String,
     onSuccess: (Book?) -> Unit = {},
     onBackClick: () -> Unit = {},
-    navController: NavController,
-    appViewModel: AppViewModel = hiltViewModel()
 ) {
-
-    val user by appViewModel.user.collectAsState()
-
 
     val openAlertDialog = remember { mutableStateOf(false) }
     val uiState by addBookViewModel.uiState.collectAsState()
@@ -80,9 +65,7 @@ fun AddBookScreen(
             is Book -> {
                 onSuccess(uiState.savedBook)
                 addBookViewModel.onNavigationConsumed()
-
             }
-
             null -> Unit
 
         }
@@ -93,9 +76,6 @@ fun AddBookScreen(
             addBookViewModel.onBookIdUpdate(bookId)
         }
     }
-
-
-
 
     val imageBitMap = remember {
         var bitmap: Bitmap? = null
@@ -111,11 +91,7 @@ fun AddBookScreen(
         uiState.selectedImageUri = uri
         addBookViewModel.onImageUrlChange(uri.toString())
         addBookViewModel.onSelectedUriChange(uri)
-
-
-
     }
-
 
     Scaffold(
         topBar = {
@@ -124,12 +100,10 @@ fun AddBookScreen(
             )
         },
 
-
-
     ) { paddingValues ->
 
         GlideImage(
-            model = imageBitMap.value ?: uiState.selectedImageUri, contentDescription = "Book image",
+            model = imageBitMap.value ?: uiState.selectedImageUri, contentDescription = "",
             modifier = Modifier.fillMaxSize(),
             contentScale = ContentScale.Crop,
             alpha = 0.4f
@@ -143,16 +117,6 @@ fun AddBookScreen(
             horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.Center
         ) {
-//            ExtendedFloatingActionButton(
-//                onClick = {
-//                    onBackClick()
-//                },
-//                modifier = Modifier.padding(16.dp),
-//                icon = {Icon(Icons.Default.ArrowBack, "Cancel adding new book")},
-//                text = {Text("Cancel")}
-//            )
-
-
             Text(
                 text = stringResource(R.string.new_book_text),
                 color = Color.Black,
@@ -161,14 +125,12 @@ fun AddBookScreen(
                 fontFamily = FontFamily.Serif
             )
 
-
             Spacer(modifier = Modifier.height(16.dp))
 
             CategoryDropDownMenu(
                 uiState.category,
                 onOptionSelected = { selected ->
                     addBookViewModel.onCategoryChange(selected)
-
                 }
             )
             Spacer(modifier = Modifier.height(16.dp))
@@ -211,7 +173,6 @@ fun AddBookScreen(
                     text = uiState.error,
                     color = Color.Red,
                     textAlign = TextAlign.Center
-
                 )
             }
             Spacer(modifier = Modifier.height(16.dp))
@@ -226,13 +187,6 @@ fun AddBookScreen(
                 stringResource(R.string.new_book_save)
             ){
                 addBookViewModel.onSaveClick()
-//                uiState.savedBook?.let { book ->
-//                    navController.previousBackStackEntry
-//                        ?.savedStateHandle
-//                        ?.set("new_book", book)
-//                    navController.popBackStack()
-//                }
-
             }
 
             Spacer(modifier = Modifier.height(16.dp))

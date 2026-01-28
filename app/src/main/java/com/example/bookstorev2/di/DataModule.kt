@@ -1,10 +1,7 @@
 package com.example.bookstorev2.di
 
 import android.content.Context
-import androidx.datastore.core.DataStore
-import androidx.datastore.preferences.core.Preferences
-import com.example.bookstorev2.data.repositories.ImageRefactor
-import com.example.bookstorev2.data.repositories.SettingsRepository
+import com.example.bookstorev2.data.repositories.ImageRefactorRepositoryImpl
 import com.example.bookstorev2.domain.repositories.ImageRefactorRepository
 import dagger.Module
 import dagger.Provides
@@ -19,7 +16,7 @@ object DataModule {
     @Provides
     fun providesImageRefactor(
         @ApplicationContext context: Context
-    ) : ImageRefactorRepository = ImageRefactor(context)
+    ) : ImageRefactorRepository = ImageRefactorRepositoryImpl(context)
 
 
 

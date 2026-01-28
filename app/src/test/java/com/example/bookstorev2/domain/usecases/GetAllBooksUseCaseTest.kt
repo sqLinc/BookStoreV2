@@ -20,12 +20,12 @@ const val CATEGORY = "Drama"
 class GetAllBooksUseCaseTest {
 
     private lateinit var bookRepo: BookRepository
-    private lateinit var useCase: GetAllBooksUseCase
+    private lateinit var useCase: GetBooksUseCase
 
     @Before
     fun setUp(){
         bookRepo = mock()
-        useCase = GetAllBooksUseCase(bookRepo)
+        useCase = GetBooksUseCase(bookRepo)
     }
 
     @Test

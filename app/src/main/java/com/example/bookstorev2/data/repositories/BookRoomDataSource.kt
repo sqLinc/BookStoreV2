@@ -1,10 +1,7 @@
-package com.example.bookstorev2.data.local.room
+package com.example.bookstorev2.data.repositories
 
-import android.util.Log
 import com.example.bookstorev2.data.local.room.dao.BookDao
 import com.example.bookstorev2.data.local.room.entity.BookDbEntity
-import com.example.bookstorev2.domain.models.Book
-import com.example.bookstorev2.presentation.navigation.onSavedSuccess
 import javax.inject.Inject
 
 class BookRoomDataSource @Inject constructor(
@@ -13,24 +10,6 @@ class BookRoomDataSource @Inject constructor(
 
     suspend fun getBooks() : List<BookDbEntity> {
         return dao.getAllBooks()
-    }
-
-    suspend fun saveBook(book: BookDbEntity) : Result<onSavedSuccess>{
-        return try {
-            dao.insertNewBook(book)
-            Result.success(
-                onSavedSuccess(
-                    book.key
-                )
-            )
-        } catch (e: Exception){
-            throw e
-        }
-
-    }
-
-    suspend fun deleteBook(bookId: String){
-        dao.deleteBookById(bookId)
     }
 
     suspend fun saveAll(books: List<BookDbEntity>){
@@ -54,6 +33,9 @@ class BookRoomDataSource @Inject constructor(
     }
     suspend fun updatedBook(book: BookDbEntity){
         dao.insertNewBook(book)
+    }
+    suspend fun deleteAllFromLocal(){
+        dao.deleteAllFromLocal()
     }
 
 }

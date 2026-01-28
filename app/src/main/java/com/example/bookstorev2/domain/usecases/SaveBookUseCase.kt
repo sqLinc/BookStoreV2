@@ -2,7 +2,6 @@ package com.example.bookstorev2.domain.usecases
 
 import com.example.bookstorev2.domain.models.Book
 import com.example.bookstorev2.domain.repositories.BookRepository
-import com.example.bookstorev2.presentation.navigation.onSavedSuccess
 import javax.inject.Inject
 
 class SaveBookUseCase @Inject constructor(

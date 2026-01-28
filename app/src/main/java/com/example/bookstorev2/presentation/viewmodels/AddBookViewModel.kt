@@ -1,23 +1,15 @@
 package com.example.bookstorev2.presentation.viewmodels
 
-import android.content.ContentResolver
 import android.net.Uri
-import android.util.Base64
-import android.util.Log
 import androidx.activity.compose.ManagedActivityResultLauncher
-import androidx.compose.runtime.State
-import androidx.compose.runtime.mutableStateOf
 import androidx.core.net.toUri
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.bookstorev2.domain.models.Book
 import com.example.bookstorev2.domain.repositories.BookRepository
 import com.example.bookstorev2.domain.repositories.ImageRefactorRepository
-import com.example.bookstorev2.domain.usecases.GetBookByIdUseCase
 import com.example.bookstorev2.domain.usecases.SaveBookUseCase
 import com.example.bookstorev2.presentation.ui.state.AddBookUiState
-import com.example.bookstorev2.presentation.ui.state.BookListUiState
-import com.example.bookstorev2.presentation.ui.state.MainAddScreenNavigation
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -28,28 +20,12 @@ import javax.inject.Inject
 class AddBookViewModel @Inject constructor(
     private val bookRepo: BookRepository,
     private val saveBook: SaveBookUseCase,
-    private val getBook: GetBookByIdUseCase,
     private val imageRef: ImageRefactorRepository
 
 ) : ViewModel() {
 
-//    private val _book = mutableStateOf(BookListUiState())
-//    val book: State<BookListUiState> = _book
-
     private val _uiState = MutableStateFlow(AddBookUiState())
     val uiState: StateFlow<AddBookUiState> = _uiState
-
-
-
-
-    suspend fun onEditBook(bookId: String){
-        if (bookId.isNotEmpty()){
-            getBook(bookId)
-        }
-    }
-
-
-
 
 
     fun onTitleChange(title: String) {
@@ -84,12 +60,7 @@ class AddBookViewModel @Inject constructor(
     }
 
     suspend fun onBookIdUpdate(bookId: String) {
-
-
-
         val book = bookRepo.getBookById(bookId)
-
-
 
         _uiState.value = _uiState.value.copy(
             description = book.description
@@ -144,29 +115,21 @@ class AddBookViewModel @Inject constructor(
                     title = _uiState.value.title,
 
                     imageUrl = when {
-                    _uiState.value.isEditing == false -> {
+                    !_uiState.value.isEditing -> {
                         if (_uiState.value.selectedImageUri != null) {
-
-
-
                             imageRef.uriToBase64(_uiState.value.selectedImageUri!!)
-
                         } else {
-
                             ""
                         }
                     }
 
                     else -> {
                         if (_uiState.value.imageUrl.isNotEmpty()) {
-
                             imageRef.uriToBase64(_uiState.value.selectedImageUri!!)
                         } else {
                             if (_uiState.value.selectedImageUri.toString() == "null") {
-
                                 ""
                             } else {
-
                                 imageRef.uriToBase64(_uiState.value.selectedImageUri!!)
                             }
                         }
@@ -183,11 +146,7 @@ class AddBookViewModel @Inject constructor(
                     selectedImage = when {
                         _uiState.value.selectedImageUri != null -> _uiState.value.selectedImageUri!!
                         else -> null
-
-
                     }.toString()
-
-
                 )
             )
             result.fold(
@@ -195,14 +154,9 @@ class AddBookViewModel @Inject constructor(
                     _uiState.value = _uiState.value.copy(
                         savedBook = book
                     )
-                    Log.d("Nav", "Book is created: key: ${book.key}")
                     _uiState.value = _uiState.value.copy(
                         isEditing = false
                     )
-
-
-
-
                 },
                 onFailure = { e ->
                     _uiState.value = _uiState.value.copy(
@@ -212,7 +166,6 @@ class AddBookViewModel @Inject constructor(
 
                 }
             )
-
         }
     }
 
@@ -222,15 +175,11 @@ class AddBookViewModel @Inject constructor(
         }
     }
 
-
     fun onNavigationConsumed() {
         _uiState.value = _uiState.value.copy(
             savedBook = null
         )
     }
-
-
-
 
 }
 

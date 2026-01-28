@@ -43,6 +43,28 @@
     <string name="new_book_dialog_top_text">Do you want to stop adding new book?</string>
     <string name="new_book_dialog_text">Confirm by pressing \'Confirm\'. If you want to continue to add book press \'Dismiss\'</string>
     <string name="button_dismiss">Dismiss</string>
+    <string name="error_invalid_email">Invalid email</string>
+    <string name="error_user_not_found">User is not found</string>
+    <string name="error_wrong_password">Wrong password</string>
+    <string name="error_email_used">Email is already taken</string>
+    <string name="error_weak_password">Password is too weak</string>
+    <string name="error_permission">Permission denied</string>
+    <string name="error_not_found">Not found</string>
+    <string name="error_network">Network error</string>
+    <string name="error_book_not_found">Book is not found by this id:</string>
+    <string name="error_security">Unpredictable security error</string>
+    <string name="error_unknown">Some unknown error. Check log for details</string>
+    <string name="settings_button">Settings</string>
+    <string name="error_no_image">Image is not existed</string>
+    <string name="error_retry">Retry</string>
+    <string name="login_with_google">Sign in with Google</string>
+    <string name="app_theme">App theme:</string>
+    <string name="app_cache">Clear cache:</string>
+    <string name="delete_account">Delete account:</string>
+    <string name="dialog_title_cache">Do you want to delete cache from your device?</string>
+    <string name="dialog_text_cache">By deleting cache from device, you delete all data from local database and can not access to books if you are offline</string>
+    <string name="dialog_title_account_delete">Do you want to delete your account?</string>
+    <string name="dialog_text_account_delete">WARNING! Deleting your account leads to deleting all of yours favorite, read and purchased books!</string>
 
 
 </resources>
