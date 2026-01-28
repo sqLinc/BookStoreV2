@@ -1,6 +1,5 @@
 package com.example.bookstorev2.presentation.ui.components
 
-import android.R
 import android.graphics.BitmapFactory
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -10,9 +9,7 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.foundation.layout.wrapContentWidth
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
@@ -23,8 +20,6 @@ import androidx.compose.material.icons.outlined.Done
 import androidx.compose.material.icons.outlined.Favorite
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
-import androidx.compose.material3.DrawerState
-import androidx.compose.material3.DrawerValue
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
@@ -34,16 +29,12 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import com.bumptech.glide.integration.compose.ExperimentalGlideComposeApi
 import com.bumptech.glide.integration.compose.GlideImage
 import com.example.bookstorev2.domain.models.Book
-import kotlinx.coroutines.CoroutineScope
 
 
 @OptIn(ExperimentalGlideComposeApi::class)
@@ -89,7 +80,7 @@ fun BookItem(
                     )
                 ) {
                     GlideImage(
-                        model = bitmap ?: "", contentDescription = "BG",
+                        model = bitmap ?: "", contentDescription = "",
                         modifier = Modifier.fillMaxWidth().height(250.dp).clip(RoundedCornerShape(15.dp)).clickable {
                             onBookClick(book.key)
                         }
@@ -146,7 +137,7 @@ fun BookItem(
                                 Icons.Filled.Favorite
                             else
                                 Icons.Outlined.Favorite,
-                            contentDescription = "Favorite",
+                            contentDescription = "",
                             tint = if (book.favorite) Color.Red else Color.Gray
                         )
                     }
@@ -154,7 +145,7 @@ fun BookItem(
                     if (isAdmin) IconButton(onClick = {onEditClick(book.key)}) {
                         Icon(
                             imageVector = Icons.Filled.Create,
-                            contentDescription = "Edit book",
+                            contentDescription = "",
                             tint = Color.Black
                         )
                     }
@@ -165,7 +156,7 @@ fun BookItem(
                                 Icons.Filled.Done
                             else
                                 Icons.Outlined.Done,
-                            contentDescription = "Read",
+                            contentDescription = "",
                             tint = if (book.read) Color.Green else Color.Gray
                         )
                     }

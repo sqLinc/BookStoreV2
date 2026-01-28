@@ -2,7 +2,6 @@ package com.example.bookstorev2.domain.usecases
 
 import com.example.bookstorev2.domain.models.User
 import com.example.bookstorev2.domain.repositories.UserRepository
-import com.example.bookstorev2.presentation.navigation.ToMainScreenDataObject
 import javax.inject.Inject
 
 class AuthByEmailPassUseCase @Inject constructor(

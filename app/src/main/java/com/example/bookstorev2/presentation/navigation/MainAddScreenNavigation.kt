@@ -1,8 +1,7 @@
-package com.example.bookstorev2.presentation.ui.state
+package com.example.bookstorev2.presentation.navigation
 
 import android.os.Parcelable
 import com.example.bookstorev2.domain.models.Book
-import com.example.bookstorev2.presentation.navigation.onSavedSuccess
 import kotlinx.parcelize.Parcelize
 
 @Parcelize

@@ -24,7 +24,6 @@
     <string name="log_out_button">Выход</string>
     <string name="logout_dialog_top_text">Вы хотите выйти из аккаунта</string>
     <string name="logout_dialog_text">Чтобы выйти из аккаунта нажмите \'Подтверить\'. В противном случае, нажмите \'Отмена\'</string>
-    <string name="logout_dialog_confirm">Подтвердить</string>
     <string name="button_confirm">Подвердить</string>
     <string name="new_book_bar_text">Добавление новой книги</string>
     <string name="new_book_text">Добавь новую книгу</string>
@@ -45,5 +44,27 @@
     <string name="new_book_dialog_top_text">Вы хотите прекратить создание новой книги?</string>
     <string name="new_book_dialog_text">Подтвердите нажатием \'Подтвердить\'. Если Вы хотите продолжить добавление новой книги, нажмите \'Отмена\'</string>
     <string name="button_dismiss">Отмена</string>
+    <string name="error_invalid_email">Некорректный электронный адрес</string>
+    <string name="error_user_not_found">Пользователь не найден</string>
+    <string name="error_wrong_password">Неправильный пароль</string>
+    <string name="error_email_used">Эта электронная почта уже занята</string>
+    <string name="error_permission">Отказано в доступе</string>
+    <string name="error_not_found">Не найден</string>
+    <string name="error_weak_password">Слабый пароль</string>
+    <string name="error_network">Отсутствует соединение с интернетом</string>
+    <string name="error_book_not_found">Книга не найдена с таким id:</string>
+    <string name="error_security">Неожиданная ошибка в связи с доступом</string>
+    <string name="error_unknown">Неожиданная ошибка. Проверьте логи для подробностей</string>
+    <string name="settings_button">Настройки</string>
+    <string name="error_no_image">Изображение не существует</string>
+    <string name="error_retry">Повторить</string>
+    <string name="login_with_google">Вход через Google</string>
+    <string name="app_theme">Тема приложения:</string>
+    <string name="app_cache">Очистить кэш:</string>
+    <string name="delete_account">Удалить аккаунт:</string>
+    <string name="dialog_title_cache">Вы хотите очистить кэш с Вашего устройства?</string>
+    <string name="dialog_text_cache">Удаляя кэш с устройства, Вы так же удаляете все данные с локальной БД</string>
+    <string name="dialog_title_account_delete">Вы хотите удалить свой аккаунт?</string>
+    <string name="dialog_text_account_delete">ВНИМАНИЕ! Удаляя аккаунт, Вы так же удаляете и все свои купленные книги</string>
 
 </resources>

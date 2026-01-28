@@ -1,8 +1,5 @@
 package com.example.bookstorev2.data.local.room.dto
 
-import androidx.room.ColumnInfo
-import androidx.room.PrimaryKey
-
 data class BookDto(
     val key: String = "",
     val title: String = "",

@@ -1,7 +1,7 @@
 package com.example.bookstorev2.presentation.viewmodels
 
 import android.util.Log
-import androidx.browser.R
+import androidx.activity.result.ActivityResult
 import androidx.compose.runtime.State
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
@@ -11,14 +11,9 @@ import com.example.bookstorev2.domain.models.User
 import com.example.bookstorev2.domain.repositories.UserRepository
 import com.example.bookstorev2.domain.usecases.AuthByEmailPassUseCase
 import com.example.bookstorev2.domain.usecases.RegisterByEmailPassUseCase
-import com.example.bookstorev2.presentation.ui.state.LoginMainNavigation
 import com.example.bookstorev2.presentation.ui.state.LoginUiState
-import com.google.android.gms.auth.api.signin.GoogleSignIn
-import com.google.android.gms.auth.api.signin.GoogleSignInClient
-import com.google.android.gms.auth.api.signin.GoogleSignInOptions
 import com.google.firebase.auth.FirebaseUser
 import dagger.hilt.android.lifecycle.HiltViewModel
-import io.grpc.Context
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -27,7 +22,7 @@ class LoginViewModel @Inject constructor(
     private val authByEmailPassUseCase: AuthByEmailPassUseCase,
     private val registerByEmailPassUseCase: RegisterByEmailPassUseCase,
     private val userRepo: UserRepository,
-    private val settingRepo: SettingsRepository
+    private val settingRepo: SettingsRepository,
 
 ) : ViewModel() {
 
@@ -39,7 +34,7 @@ class LoginViewModel @Inject constructor(
         val isAdmin = userRepo.isAdmin()
         if (isAdmin){
             _uiState.value = _uiState.value.copy(
-                isAdminState = isAdmin
+                isAdminState = true
             )
         }
 
@@ -56,9 +51,6 @@ class LoginViewModel @Inject constructor(
 
     fun onLoginClick() {
          viewModelScope.launch {
-
-                 Log.d("appvm", "onLoginClick started...")
-                 Log.d("appvm", "Incoming data: ${_uiState.value.email}, ${_uiState.value.password}")
                  val result = authByEmailPassUseCase(
                      _uiState.value.email,
                      _uiState.value.password,
@@ -81,7 +73,6 @@ class LoginViewModel @Inject constructor(
                         )
                     }
                 )
-                Log.d("appvm", "Outcoming data: ${_uiState.value.user}")
 
         }
 
@@ -111,10 +102,6 @@ class LoginViewModel @Inject constructor(
                 }
             )
 
-
-
-
-
         }
     }
 
@@ -122,12 +109,24 @@ class LoginViewModel @Inject constructor(
         _uiState.value = _uiState.value.copy(error = null)
     }
 
-    fun getGoogleSignInClient(context: android.content.Context, string: String): GoogleSignInClient {
-        val gso = GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
-            .requestIdToken(string)
-            .requestEmail()
-            .build()
-        return GoogleSignIn.getClient(context, gso)
+    fun onLoginWithGoogleClick(context: android.content.Context, clientId: String){
+        viewModelScope.launch {
+            val contract = userRepo.loginByGoogle(context, clientId)
+            contract.fold(
+                onSuccess = { result ->
+                    _uiState.value = _uiState.value.copy(
+                        contract = result,
+                        isGoogle = true
+                    )
+                },
+                onFailure = { e->
+                    _uiState.value = _uiState.value.copy(
+                        error = e.message
+                    )
+                }
+            )
+        }
+
     }
 
     fun onGoogleSuccess(user: FirebaseUser){
@@ -138,10 +137,27 @@ class LoginViewModel @Inject constructor(
             settingRepo.setEmail(user.email!!)
             settingRepo.setUid(user.uid)
         }
-        Log.d("GoogleAuth", "Google success: " + _uiState.value.user.toString())
 
     }
 
+    fun loginLauncher(result: ActivityResult){
+        viewModelScope.launch {
+            val user = userRepo.googleLauncher(result)
 
+            user.fold(
+                onSuccess = { user ->
+                    onGoogleSuccess(user)
+                    _uiState.value = _uiState.value.copy(
+                        isGoogle = false
+                    )
+                },
+                onFailure = { e ->
+                    _uiState.value = _uiState.value.copy(
+                        error = e.message
+                    )
+                }
+            )
+        }
+    }
 
 }

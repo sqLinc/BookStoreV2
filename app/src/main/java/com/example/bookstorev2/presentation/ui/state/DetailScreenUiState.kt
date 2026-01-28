@@ -1,10 +1,6 @@
-package com.example.bookstorev2.presentation.navigation
+package com.example.bookstorev2.presentation.ui.state
 
-import android.os.Parcelable
-import kotlinx.parcelize.Parcelize
-
-@Parcelize
-data class onSavedSuccess(
+data class DetailScreenUiState(
     val key: String = "",
     val title: String = "",
     val imageUrl: String = "",
@@ -15,5 +11,7 @@ data class onSavedSuccess(
     val author: String = "",
     val favorite: Boolean = false,
     val read: Boolean = false,
-    val selectedImage: String = ""
-) : Parcelable
+    val selectedImage: String = "",
+    val error: String = ""
+
+    )

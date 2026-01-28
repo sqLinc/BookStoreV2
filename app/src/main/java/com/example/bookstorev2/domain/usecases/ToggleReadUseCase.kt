@@ -1,7 +1,5 @@
 package com.example.bookstorev2.domain.usecases
 
-import android.util.Log
-import com.example.bookstorev2.domain.models.Book
 import com.example.bookstorev2.domain.repositories.BookRepository
 import javax.inject.Inject
 
@@ -10,7 +8,6 @@ class ToggleReadUseCase @Inject constructor(
 ) {
     suspend operator fun invoke(bookId: String, uid: String) : Boolean{
         val currentReadStatus = bookRepo.isRead(bookId, uid)
-        Log.d("readLog", "currentStatus is received: $currentReadStatus")
         return bookRepo.setReadStatus(bookId, !currentReadStatus!!, uid)
     }
 }

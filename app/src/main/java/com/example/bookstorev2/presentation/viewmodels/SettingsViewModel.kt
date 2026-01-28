@@ -3,9 +3,10 @@ package com.example.bookstorev2.presentation.viewmodels
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.bookstorev2.data.repositories.SettingsRepository
+import com.example.bookstorev2.domain.repositories.BookRepository
+import com.example.bookstorev2.domain.repositories.UserRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.SharingStarted
-import kotlinx.coroutines.flow.WhileSubscribed
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -13,26 +14,28 @@ import javax.inject.Inject
 
 @HiltViewModel
 class SettingsViewModel @Inject constructor(
-    private val repo: SettingsRepository
+    private val settingsRepo: SettingsRepository,
+    private val bookRepo: BookRepository,
+    private val userRepo: UserRepository
 ) : ViewModel() {
 
-    val isDarkTheme = repo.isDarkThemeFlow.stateIn(
+    val isDarkTheme = settingsRepo.isDarkThemeFlow.stateIn(
         viewModelScope,
         SharingStarted.WhileSubscribed(5000),
         false
     )
 
-    val language = repo.language.stateIn(
+    val language = settingsRepo.language.stateIn(
         viewModelScope,
         SharingStarted.WhileSubscribed(5000),
         "en"
     )
-    val uid = repo.uid.stateIn(
+    val uid = settingsRepo.uid.stateIn(
         viewModelScope,
         SharingStarted.WhileSubscribed(5000),
         ""
     )
-    val email = repo.email.stateIn(
+    val email = settingsRepo.email.stateIn(
         viewModelScope,
         SharingStarted.WhileSubscribed(5000),
         ""
@@ -40,28 +43,29 @@ class SettingsViewModel @Inject constructor(
 
     fun setDark(value: Boolean) {
         viewModelScope.launch {
-            repo.setDarkTheme(value)
+            settingsRepo.setDarkTheme(value)
         }
     }
 
     fun setLanguage(lang: String) {
         viewModelScope.launch {
-            repo.setLanguage(lang)
+            settingsRepo.setLanguage(lang)
         }
     }
     fun deleteUser(){
         viewModelScope.launch {
-            repo.deleteUser()
+            settingsRepo.deleteUser()
         }
     }
-    fun setEmail(email: String){
+
+    fun onCacheDelete(){
         viewModelScope.launch {
-            repo.setEmail(email)
+            bookRepo.deleteAllFromLocal()
         }
     }
-    fun setUid(uid: String){
+    fun onAccountDelete(){
         viewModelScope.launch {
-            repo.setUid(uid)
+            userRepo.deleteAccount()
         }
     }
 }

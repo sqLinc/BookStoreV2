@@ -7,11 +7,9 @@ import androidx.datastore.preferences.core.booleanPreferencesKey
 import androidx.datastore.preferences.core.edit
 import androidx.datastore.preferences.core.stringPreferencesKey
 import androidx.datastore.preferences.preferencesDataStore
-import com.example.bookstorev2.domain.models.User
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
 import javax.inject.Inject
-import javax.inject.Singleton
 
 val Context.dataStore: DataStore<Preferences> by preferencesDataStore(name = "settings")
 
@@ -23,7 +21,9 @@ object PreferencesKeys {
 }
 
 
-class SettingsRepository @Inject constructor (private val dataStore: DataStore<Preferences>) {
+class SettingsRepository @Inject constructor (
+    private val dataStore: DataStore<Preferences>
+)  {
 
     val isDarkThemeFlow: Flow<Boolean> = dataStore.data
         .map { preferences ->
