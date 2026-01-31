@@ -20,7 +20,10 @@ import com.example.bookstorev2.R
 @Composable
 fun DrawerHeader() {
     Column(
-        Modifier.fillMaxWidth().height(50.dp).background(Color.DarkGray),
+        Modifier
+            .fillMaxWidth()
+            .height(50.dp)
+            .background(Color.DarkGray),
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.Center
     ) {

@@ -17,27 +17,26 @@ import androidx.compose.ui.unit.dp
 fun LangDropDownMenu(
     selectedCategory: String,
     onOptionSelected: (String) -> Unit
-    )
-{
+) {
     val expanded = remember { mutableStateOf(false) }
     val selectedOption = remember { mutableStateOf(selectedCategory) }
-    val categories = listOf (
+    val categories = listOf(
         "ru",
         "en"
-        )
+    )
 
     Box(
         modifier = Modifier
             .padding(5.dp)
-    ){
-        IconButton(onClick = {expanded.value = !expanded.value}) {
+    ) {
+        IconButton(onClick = { expanded.value = !expanded.value }) {
             Icon(Icons.Default.MoreVert, "")
         }
         DropdownMenu(
             expanded = expanded.value,
-            onDismissRequest = {expanded.value = false}
-        ){
-            categories.forEach{ option ->
+            onDismissRequest = { expanded.value = false }
+        ) {
+            categories.forEach { option ->
                 DropdownMenuItem(text = {
                     Text(text = option)
                 }, onClick = {

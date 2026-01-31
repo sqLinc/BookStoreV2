@@ -1,7 +1,6 @@
 package com.example.bookstorev2.presentation.ui.screens
 
 
-
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -34,7 +33,6 @@ import androidx.navigation.compose.currentBackStackEntryAsState
 import com.example.bookstorev2.R
 import com.example.bookstorev2.domain.models.Book
 import com.example.bookstorev2.domain.models.User
-import com.example.bookstorev2.presentation.navigation.MainToAddScreenNav
 import com.example.bookstorev2.presentation.ui.components.BookItem
 import com.example.bookstorev2.presentation.ui.components.DrawerBody
 import com.example.bookstorev2.presentation.ui.components.DrawerHeader
@@ -46,7 +44,6 @@ fun BookListScreen(
     bookViewModel: BookListViewModel = hiltViewModel(),
     onLogoutClick: () -> Unit,
     onAdminClick: () -> Unit,
-    onSuccess: () -> Unit,
     onNavigateToEditBook: (String) -> Unit,
     onNavigateToDetailScreen: (String) -> Unit,
     navController: NavController,
@@ -80,18 +77,6 @@ fun BookListScreen(
         bookViewModel.onAdminCheck()
     }
 
-    LaunchedEffect(key1 = uiState.navigationEvent) {
-        when (val event = uiState.navigationEvent) {
-            is MainToAddScreenNav.NavigateOnEdit -> {
-                onSuccess()
-                bookViewModel.onNavigationConsumed()
-            }
-            null -> Unit
-
-        }
-
-    }
-
     ModalNavigationDrawer(
         drawerState = drawerState,
         modifier = Modifier.fillMaxWidth(),
@@ -103,7 +88,7 @@ fun BookListScreen(
                     onAdminClick,
                     onCategoryClick = { item ->
                         bookViewModel.onCategoryChange(item)
-                                      },
+                    },
                     onLogoutClick,
                     scope,
                     drawerState,
@@ -117,10 +102,12 @@ fun BookListScreen(
 
         ) { padding ->
             Box(
-                modifier = Modifier.padding(padding).paint(
-                    painterResource(R.drawable.book_list_bg),
-                    contentScale = ContentScale.FillBounds
-                )
+                modifier = Modifier
+                    .padding(padding)
+                    .paint(
+                        painterResource(R.drawable.book_list_bg),
+                        contentScale = ContentScale.FillBounds
+                    )
             ) {
                 when {
                     uiState.isLoading -> {
@@ -141,53 +128,53 @@ fun BookListScreen(
                     }
 
                     else -> {
-                                LazyColumn {
-                                    items(uiState.books) { book ->
-                                        if (uiState.category == "All") {
-                                            BookItem(
-                                                uiState.isAdmin,
-                                                book = book,
-                                                onFavoriteClick = {
-                                                    bookViewModel.onFavoriteClick(
-                                                        book,
-                                                        user.uid
-                                                    )
-                                                },
-                                                onReadClick = {
-                                                    bookViewModel.onReadClick(
-                                                        book,
-                                                        user.uid
-                                                    )
-                                                },
-                                                onEditClick = { onNavigateToEditBook(book.key) },
-                                                onBookClick = { onNavigateToDetailScreen(book.key) }
+                        LazyColumn {
+                            items(uiState.books) { book ->
+                                if (uiState.category == "All") {
+                                    BookItem(
+                                        uiState.isAdmin,
+                                        book = book,
+                                        onFavoriteClick = {
+                                            bookViewModel.onFavoriteClick(
+                                                book,
+                                                user.uid
                                             )
-                                        } else {
-                                            if (book.category == uiState.category) {
-                                                BookItem(
-                                                    uiState.isAdmin,
-                                                    book = book,
-                                                    onFavoriteClick = {
-                                                        bookViewModel.onFavoriteClick(
-                                                            book,
-                                                            user.uid
-                                                        )
-                                                    },
-                                                    onReadClick = {
-                                                        bookViewModel.onReadClick(
-                                                            book,
-                                                            user.uid
-                                                        )
-                                                    },
-                                                    onEditClick = { onNavigateToEditBook(book.key) },
-                                                    onBookClick = { onNavigateToDetailScreen(book.key) }
+                                        },
+                                        onReadClick = {
+                                            bookViewModel.onReadClick(
+                                                book,
+                                                user.uid
+                                            )
+                                        },
+                                        onEditClick = { onNavigateToEditBook(book.key) },
+                                        onBookClick = { onNavigateToDetailScreen(book.key) }
+                                    )
+                                } else {
+                                    if (book.category == uiState.category) {
+                                        BookItem(
+                                            uiState.isAdmin,
+                                            book = book,
+                                            onFavoriteClick = {
+                                                bookViewModel.onFavoriteClick(
+                                                    book,
+                                                    user.uid
                                                 )
-                                            }
-                                        }
-
+                                            },
+                                            onReadClick = {
+                                                bookViewModel.onReadClick(
+                                                    book,
+                                                    user.uid
+                                                )
+                                            },
+                                            onEditClick = { onNavigateToEditBook(book.key) },
+                                            onBookClick = { onNavigateToDetailScreen(book.key) }
+                                        )
                                     }
-
                                 }
+
+                            }
+
+                        }
                     }
                 }
             }

@@ -6,35 +6,37 @@ import javax.inject.Inject
 
 class BookRoomDataSource @Inject constructor(
     private val dao: BookDao
-)  {
+) {
 
-    suspend fun getBooks() : List<BookDbEntity> {
+    suspend fun getBooks(): List<BookDbEntity> {
         return dao.getAllBooks()
     }
 
-    suspend fun saveAll(books: List<BookDbEntity>){
+    suspend fun saveAll(books: List<BookDbEntity>) {
         dao.insertAllBooks(books)
     }
 
-    suspend fun getBookById(bookId: String) : BookDbEntity {
+    suspend fun getBookById(bookId: String): BookDbEntity {
         return dao.getBookById(bookId)
     }
 
-    suspend fun getFavBooks() : List<BookDbEntity> {
+    suspend fun getFavBooks(): List<BookDbEntity> {
         return dao.getFavBooks()
     }
 
-    suspend fun getReadBooks() : List<BookDbEntity> {
+    suspend fun getReadBooks(): List<BookDbEntity> {
         return dao.getReadBooks()
     }
 
-    suspend fun getBooksByCategory(category: String) : List<BookDbEntity>{
+    suspend fun getBooksByCategory(category: String): List<BookDbEntity> {
         return dao.getBooksByCategory(category)
     }
-    suspend fun updatedBook(book: BookDbEntity){
+
+    suspend fun updatedBook(book: BookDbEntity) {
         dao.insertNewBook(book)
     }
-    suspend fun deleteAllFromLocal(){
+
+    suspend fun deleteAllFromLocal() {
         dao.deleteAllFromLocal()
     }
 

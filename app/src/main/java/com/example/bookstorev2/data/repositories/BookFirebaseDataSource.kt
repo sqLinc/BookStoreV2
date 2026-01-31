@@ -16,7 +16,7 @@ class BookFirebaseDataSource @Inject constructor(
     private val db: FirebaseFirestore
 ) {
 
-    suspend fun getFavIds(uid: String) : List<String>{
+    suspend fun getFavIds(uid: String): List<String> {
         return db
             .collection(USERS)
             .document(uid)
@@ -27,7 +27,7 @@ class BookFirebaseDataSource @Inject constructor(
             .map { it.id }
     }
 
-    suspend fun getReadIds(uid: String): List<String>{
+    suspend fun getReadIds(uid: String): List<String> {
         return db
             .collection(USERS)
             .document(uid)
@@ -37,19 +37,19 @@ class BookFirebaseDataSource @Inject constructor(
             .documents.map { it.id }
     }
 
-    suspend fun getBooks() : List<BookDto>{
+    suspend fun getBooks(): List<BookDto> {
         try {
             return db
                 .collection(BOOKS)
                 .get()
                 .await()
                 .toObjects(BookDto::class.java)
-        } catch (e: Exception){
+        } catch (e: Exception) {
             throw e.toAppException()
         }
     }
 
-    suspend fun isFavorite(bookId: String, uid: String) : Boolean {
+    suspend fun isFavorite(bookId: String, uid: String): Boolean {
         try {
             return db
                 .collection(USERS)
@@ -59,12 +59,12 @@ class BookFirebaseDataSource @Inject constructor(
                 .get()
                 .await()
                 .exists()
-        } catch (e: Exception){
+        } catch (e: Exception) {
             throw e.toAppException()
         }
     }
 
-    suspend fun isRead(bookId: String, uid: String) : Boolean {
+    suspend fun isRead(bookId: String, uid: String): Boolean {
         try {
             return db
                 .collection(USERS)
@@ -74,14 +74,14 @@ class BookFirebaseDataSource @Inject constructor(
                 .get()
                 .await()
                 .exists()
-        } catch (e: Exception){
+        } catch (e: Exception) {
             throw e.toAppException()
         }
     }
 
-    suspend fun setFavoriteStatus(bookId: String, isFavorite: Boolean, uid: String) : Boolean{
+    suspend fun setFavoriteStatus(bookId: String, isFavorite: Boolean, uid: String): Boolean {
         try {
-            if (isFavorite){
+            if (isFavorite) {
                 db
                     .collection(USERS)
                     .document(uid)
@@ -90,8 +90,7 @@ class BookFirebaseDataSource @Inject constructor(
                     .set(emptyMap<String, Any>())
                     .await()
                 return true
-            }
-            else{
+            } else {
                 db
                     .collection(USERS)
                     .document(uid)
@@ -107,9 +106,9 @@ class BookFirebaseDataSource @Inject constructor(
         }
     }
 
-    suspend fun setReadStatus(bookId: String, isRead: Boolean, uid: String) : Boolean {
+    suspend fun setReadStatus(bookId: String, isRead: Boolean, uid: String): Boolean {
         try {
-            if (isRead){
+            if (isRead) {
                 db
                     .collection(USERS)
                     .document(uid)
@@ -118,8 +117,7 @@ class BookFirebaseDataSource @Inject constructor(
                     .set(emptyMap<String, Any>())
                     .await()
                 return true
-            }
-            else{
+            } else {
                 db
                     .collection(USERS)
                     .document(uid)
@@ -135,13 +133,13 @@ class BookFirebaseDataSource @Inject constructor(
         }
     }
 
-    suspend fun saveBook(book: Book) : Result<Book>{
+    suspend fun saveBook(book: Book): Result<Book> {
         return try {
             val key = book.key.ifEmpty {
                 db
-                .collection(BOOKS)
-                .document()
-                .id
+                    .collection(BOOKS)
+                    .document()
+                    .id
             }
             val savedBook = book.copy(key = key)
             db
@@ -154,7 +152,7 @@ class BookFirebaseDataSource @Inject constructor(
                 Book(
                     key = savedBook.key,
                     title = savedBook.title,
-                    imageUrl = savedBook.imageUrl,
+                    base64Image = savedBook.base64Image,
                     category = savedBook.category,
                     description = savedBook.description,
                     price = savedBook.price,
@@ -162,12 +160,12 @@ class BookFirebaseDataSource @Inject constructor(
                     author = savedBook.author,
                     favorite = savedBook.favorite,
                     read = savedBook.read,
-                    selectedImage = savedBook.selectedImage
+                    imageUri = savedBook.imageUri
                 )
             )
 
 
-        } catch (e: Exception){
+        } catch (e: Exception) {
             throw e.toAppException()
         }
     }
@@ -179,9 +177,10 @@ class BookFirebaseDataSource @Inject constructor(
                 .document(bookId)
                 .get()
                 .await()
-            task.toObject(BookDto::class.java) ?: throw Exception("${R.string.error_book_not_found} $bookId")
+            task.toObject(BookDto::class.java)
+                ?: throw Exception("${R.string.error_book_not_found} $bookId")
 
-        } catch(e: Exception) {
+        } catch (e: Exception) {
             throw e.toAppException()
         }
     }

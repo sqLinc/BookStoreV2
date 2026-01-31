@@ -8,7 +8,7 @@ fun BookDbEntity.toDomain(): Book =
     Book(
         key = key,
         title = title,
-        imageUrl = imageUrl,
+        base64Image = base64Image,
         category = category,
         description = description,
         price = price,
@@ -16,14 +16,14 @@ fun BookDbEntity.toDomain(): Book =
         author = author,
         favorite = favorite,
         read = read,
-        selectedImage = selectedImage
+        imageUri = imageUri
     )
 
 fun BookDto.toDomain(): Book =
     Book(
         key = key,
         title = title,
-        imageUrl = imageUrl,
+        base64Image = base64Image,
         category = category,
         description = description,
         price = price,
@@ -31,14 +31,14 @@ fun BookDto.toDomain(): Book =
         author = author,
         favorite = favorite,
         read = read,
-        selectedImage = selectedImage
+        imageUri = imageUri
     )
 
 fun Book.toDb(): BookDbEntity =
     BookDbEntity(
         key = key,
         title = title,
-        imageUrl = imageUrl,
+        base64Image = base64Image!!,
         category = category,
         description = description,
         price = price,
@@ -46,7 +46,7 @@ fun Book.toDb(): BookDbEntity =
         author = author,
         favorite = favorite,
         read = read,
-        selectedImage = selectedImage
+        imageUri = imageUri
     )
 
 fun List<BookDbEntity>.dbListToDomain(): List<Book> =
@@ -54,7 +54,7 @@ fun List<BookDbEntity>.dbListToDomain(): List<Book> =
 
 
 fun List<Book>.bookListToDb(): List<BookDbEntity> =
-    map {it.toDb()}
+    map { it.toDb() }
 
-fun List<BookDto>.dtoListToDomain() : List<Book> =
-    map {it.toDomain()}
+fun List<BookDto>.dtoListToDomain(): List<Book> =
+    map { it.toDomain() }

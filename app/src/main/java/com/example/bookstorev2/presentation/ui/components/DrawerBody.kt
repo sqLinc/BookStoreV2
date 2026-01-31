@@ -64,11 +64,15 @@ fun DrawerBody(
         stringResource(R.string.drawer_body_biopic),
         stringResource(R.string.drawer_body_adventure)
     )
-    Box(modifier = Modifier.fillMaxSize().background(Color.Gray)){
+    Box(modifier = Modifier
+        .fillMaxSize()
+        .background(Color.Gray)) {
         Column(
-            modifier = Modifier.fillMaxSize().verticalScroll(scrollState),
+            modifier = Modifier
+                .fillMaxSize()
+                .verticalScroll(scrollState),
             horizontalAlignment = Alignment.CenterHorizontally
-        ){
+        ) {
             Spacer(modifier = Modifier.height(16.dp))
             Text(
                 text = stringResource(R.string.drawer_body_categories),
@@ -77,29 +81,41 @@ fun DrawerBody(
                 fontWeight = FontWeight.Bold
             )
             Spacer(modifier = Modifier.height(16.dp))
-            Box(modifier = Modifier.fillMaxWidth().height(1.dp).background(Color.Gray))
+            Box(modifier = Modifier
+                .fillMaxWidth()
+                .height(1.dp)
+                .background(Color.Gray))
             LazyColumn(
                 modifier = Modifier.weight(1f)
             ) {
-                items(categoryList){ item ->
-                        Column(modifier = Modifier.fillMaxWidth().clickable {
+                items(categoryList) { item ->
+                    Column(modifier = Modifier
+                        .fillMaxWidth()
+                        .clickable {
                             onCategoryClick(item)
                         }) {
-                            Spacer(modifier = Modifier.height(12.dp))
-                            Text(
-                                text = item,
-                                color = Color.White,
-                                fontSize = 20.sp,
-                                fontWeight = FontWeight.Bold,
-                                modifier = Modifier.fillMaxWidth().wrapContentWidth()
-                            )
-                            Spacer(modifier = Modifier.height(12.dp).size(1.dp))
-                            HorizontalDivider()
-                            Box(modifier = Modifier.fillMaxWidth().height(1.dp).background(Color.Gray))
-                        }
+                        Spacer(modifier = Modifier.height(12.dp))
+                        Text(
+                            text = item,
+                            color = Color.White,
+                            fontSize = 20.sp,
+                            fontWeight = FontWeight.Bold,
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .wrapContentWidth()
+                        )
+                        Spacer(modifier = Modifier
+                            .height(12.dp)
+                            .size(1.dp))
+                        HorizontalDivider()
+                        Box(modifier = Modifier
+                            .fillMaxWidth()
+                            .height(1.dp)
+                            .background(Color.Gray))
+                    }
                 }
             }
-            if (isAdminState) ExtendedFloatingActionButton (
+            if (isAdminState) ExtendedFloatingActionButton(
                 modifier = Modifier
                     .padding(5.dp)
                     .fillMaxWidth(0.5f),
@@ -109,17 +125,17 @@ fun DrawerBody(
                         drawerState.close()
                     }
                 },
-                icon = {Icon(Icons.Default.Add, stringResource(R.string.add_book_button))},
-                text = {Text(stringResource(R.string.add_book_button))},
+                icon = { Icon(Icons.Default.Add, stringResource(R.string.add_book_button)) },
+                text = { Text(stringResource(R.string.add_book_button)) },
                 containerColor = Color.LightGray
             )
             ExtendedFloatingActionButton(
                 modifier = Modifier
                     .padding(5.dp)
                     .fillMaxWidth(0.5f),
-                onClick = {openAlertDialog.value = true},
-                text = {Text(stringResource(R.string.log_out_button))},
-                icon = {Icon(Icons.AutoMirrored.Filled.ExitToApp, "")},
+                onClick = { openAlertDialog.value = true },
+                text = { Text(stringResource(R.string.log_out_button)) },
+                icon = { Icon(Icons.AutoMirrored.Filled.ExitToApp, "") },
                 containerColor = Color.LightGray
             )
             ExtendedFloatingActionButton(
@@ -131,16 +147,16 @@ fun DrawerBody(
                     scope.launch {
                         drawerState.close()
                     }
-                          },
-                text = {Text(stringResource(R.string.settings_button))},
-                icon = {Icon(Icons.Default.Settings, "")},
+                },
+                text = { Text(stringResource(R.string.settings_button)) },
+                icon = { Icon(Icons.Default.Settings, "") },
                 containerColor = Color.LightGray
             )
 
-            when{
+            when {
                 openAlertDialog.value ->
                     DialogBody(
-                        onDismiss = {openAlertDialog.value = false},
+                        onDismiss = { openAlertDialog.value = false },
                         onConfirm = {
                             openAlertDialog.value = false
                             onLogoutClick()

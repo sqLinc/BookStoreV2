@@ -1,7 +1,7 @@
 package com.example.bookstorev2.presentation.viewmodels
 
 import android.net.Uri
-import androidx.activity.compose.ManagedActivityResultLauncher
+import android.util.Log
 import androidx.core.net.toUri
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -33,7 +33,7 @@ class AddBookViewModel @Inject constructor(
     }
 
     fun onImageUrlChange(imageUrl: String) {
-        _uiState.value = _uiState.value.copy(imageUrl = imageUrl)
+        _uiState.value = _uiState.value.copy(base64Image = imageUrl)
     }
 
     fun onCategoryChange(category: String) {
@@ -55,8 +55,24 @@ class AddBookViewModel @Inject constructor(
     fun onAuthorChange(author: String) {
         _uiState.value = _uiState.value.copy(author = author)
     }
+
     fun onSelectedUriChange(selectedImageUri: Uri?) {
-        _uiState.value = _uiState.value.copy(selectedImageUri = selectedImageUri)
+        viewModelScope.launch {
+            val size = imageRef.getFileSize(selectedImageUri!!)
+            val base64Image = imageRef.uriToBase64(selectedImageUri)
+            if (size > 1_048_487L) {
+                _uiState.value = _uiState.value.copy(
+                    error = "Image is too big"
+                )
+            } else {
+                _uiState.value = _uiState.value.copy(
+                    imageUri = selectedImageUri,
+                    base64Image = base64Image!!,
+                    error = ""
+                )
+            }
+        }
+
     }
 
     suspend fun onBookIdUpdate(bookId: String) {
@@ -73,7 +89,7 @@ class AddBookViewModel @Inject constructor(
             key = book.key
         )
         _uiState.value = _uiState.value.copy(
-            imageUrl = book.imageUrl
+            base64Image = book.base64Image!!
 
         )
         _uiState.value = _uiState.value.copy(
@@ -96,46 +112,19 @@ class AddBookViewModel @Inject constructor(
             isFavorite = book.favorite
         )
         _uiState.value = _uiState.value.copy(
-            selectedImageUri = when {
-                book.selectedImage != "null" -> book.selectedImage.toUri()
-                else -> null
-            }
-        )
-        _uiState.value = _uiState.value.copy(
-            isEditing = true
+            imageUri = book.imageUri.toUri()
         )
 
     }
 
     fun onSaveClick() {
+
         viewModelScope.launch {
             val result = saveBook(
                 book = Book(
                     key = _uiState.value.key,
                     title = _uiState.value.title,
-
-                    imageUrl = when {
-                    !_uiState.value.isEditing -> {
-                        if (_uiState.value.selectedImageUri != null) {
-                            imageRef.uriToBase64(_uiState.value.selectedImageUri!!)
-                        } else {
-                            ""
-                        }
-                    }
-
-                    else -> {
-                        if (_uiState.value.imageUrl.isNotEmpty()) {
-                            imageRef.uriToBase64(_uiState.value.selectedImageUri!!)
-                        } else {
-                            if (_uiState.value.selectedImageUri.toString() == "null") {
-                                ""
-                            } else {
-                                imageRef.uriToBase64(_uiState.value.selectedImageUri!!)
-                            }
-                        }
-                    }
-                }
-                ,
+                    base64Image = _uiState.value.base64Image,
                     category = _uiState.value.category,
                     description = _uiState.value.description,
                     price = _uiState.value.price,
@@ -143,35 +132,18 @@ class AddBookViewModel @Inject constructor(
                     author = _uiState.value.author,
                     read = _uiState.value.isRead,
                     favorite = _uiState.value.isFavorite,
-                    selectedImage = when {
-                        _uiState.value.selectedImageUri != null -> _uiState.value.selectedImageUri!!
-                        else -> null
-                    }.toString()
+                    imageUri = _uiState.value.imageUri.toString()
                 )
             )
             result.fold(
-                onSuccess = { book ->
-                    _uiState.value = _uiState.value.copy(
-                        savedBook = book
-                    )
-                    _uiState.value = _uiState.value.copy(
-                        isEditing = false
-                    )
+                onSuccess = { savedBook ->
+                    _uiState.value = _uiState.value.copy(savedBook = savedBook)
                 },
                 onFailure = { e ->
-                    _uiState.value = _uiState.value.copy(
-                        error = e.message ?: "Error while saving book"
-
-                    )
-
+                    _uiState.value = _uiState.value.copy(error = e.message ?: "Save error")
                 }
             )
-        }
-    }
 
-    fun onChooseImage(imagePickerLauncher: ManagedActivityResultLauncher<String, Uri?>) {
-        viewModelScope.launch {
-            imagePickerLauncher.launch("image/*")
         }
     }
 

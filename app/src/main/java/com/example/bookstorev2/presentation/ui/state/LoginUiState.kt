@@ -3,8 +3,8 @@ package com.example.bookstorev2.presentation.ui.state
 import com.example.bookstorev2.domain.models.User
 import com.google.android.gms.auth.api.signin.GoogleSignInClient
 
-data class LoginUiState (
-    val uid: String =  "",
+data class LoginUiState(
+    val uid: String = "",
     val email: String = "",
     val password: String = "",
     val isLoading: Boolean = false,

@@ -18,8 +18,6 @@ class App : Application() {
         ).appDatabase()
 
 
-
-
     }
 
 }

@@ -1,5 +1,6 @@
 package com.example.bookstorev2.presentation.viewmodels
 
+import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.bookstorev2.domain.models.Book
@@ -25,15 +26,13 @@ class BookListViewModel @Inject constructor(
 ) : ViewModel() {
 
 
-
     private val _uiState = MutableStateFlow(BookListUiState())
     val uiState: StateFlow<BookListUiState> = _uiState
 
 
-
-    suspend fun onAdminCheck(){
+    suspend fun onAdminCheck() {
         val isAdmin = userRepo.isAdmin()
-        if (isAdmin){
+        if (isAdmin) {
             _uiState.value = _uiState.value.copy(
                 isAdmin = true
             )
@@ -66,7 +65,6 @@ class BookListViewModel @Inject constructor(
                 bookRepo.saveAllToLocal(_uiState.value.books)
 
             } catch (e: Exception) {
-
                 _uiState.value = _uiState.value.copy(
                     error = "Failed to load books",
                     isLoading = false
@@ -78,7 +76,6 @@ class BookListViewModel @Inject constructor(
     fun onFavoriteClick(book: Book, uid: String) {
         viewModelScope.launch {
             val favStatus = toggleFavoriteUseCase(book.key, uid)
-
 
 
             var updatedBook: Book? = _uiState.value.books.find { it.key == book.key }
@@ -102,7 +99,6 @@ class BookListViewModel @Inject constructor(
             val readStatus = toggleReadUseCase(book.key, uid)
 
 
-
             var updatedBook: Book? = _uiState.value.books.find { it.key == book.key }
             updatedBook = updatedBook?.copy(
                 read = readStatus
@@ -124,39 +120,27 @@ class BookListViewModel @Inject constructor(
     }
 
 
-    fun onNavigationConsumed(){
-        _uiState.value = _uiState.value.copy(
-            navigationEvent = null
-        )
-    }
-
-    fun updateBookListState(updated: Book){
-       if (_uiState.value.books.any { it.key == updated.key }){
-           _uiState.value = _uiState.value.copy(
-               books = _uiState.value.books.map { book ->
-                   if(book.key == updated.key) updated else book
-               }
-           )
-       } else{
-           _uiState.value = _uiState.value.copy(
-               books = _uiState.value.books + updated
-           )
-       }
+    fun updateBookListState(updated: Book) {
+        if (_uiState.value.books.any { it.key == updated.key }) {
+            _uiState.value = _uiState.value.copy(
+                books = _uiState.value.books.map { book ->
+                    if (book.key == updated.key) updated else book
+                }
+            )
+        } else {
+            _uiState.value = _uiState.value.copy(
+                books = _uiState.value.books + updated
+            )
+        }
 
 
     }
-    fun onCategoryChange(category: String){
+
+    fun onCategoryChange(category: String) {
         _uiState.value = _uiState.value.copy(
             category = category
         )
     }
-
-
-
-
-
-
-
 
 
 }

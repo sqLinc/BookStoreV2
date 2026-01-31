@@ -1,7 +1,7 @@
 package com.example.bookstorev2.domain.models
 
 
-data class User (
+data class User(
     val uid: String,
     val email: String
 )

@@ -23,12 +23,12 @@ fun CategoryDropDownMenu(
     selectedCategory: String,
     onOptionSelected: (String) -> Unit,
 
-) {
+    ) {
 
 
     val expanded = remember { mutableStateOf(false) }
     val selectedOption = remember { mutableStateOf(selectedCategory) }
-    val categories = listOf (
+    val categories = listOf(
         stringResource(R.string.new_book_fantasy),
         stringResource(R.string.new_book_detective),
         stringResource(R.string.new_book_thriller),
@@ -44,20 +44,20 @@ fun CategoryDropDownMenu(
             .background(Color.White)
             .clickable { expanded.value = !expanded.value }
             .padding(15.dp)
-    ){
+    ) {
         Text(text = selectedCategory)
         DropdownMenu(
             expanded = expanded.value,
-            onDismissRequest = {expanded.value = false}
-        ){
-            categories.forEach{ option ->
+            onDismissRequest = { expanded.value = false }
+        ) {
+            categories.forEach { option ->
                 DropdownMenuItem(text = {
                     Text(text = option)
                 }, onClick = {
                     onOptionSelected(option)
                     selectedOption.value = option
                     expanded.value = false
-                    }
+                }
                 )
             }
         }

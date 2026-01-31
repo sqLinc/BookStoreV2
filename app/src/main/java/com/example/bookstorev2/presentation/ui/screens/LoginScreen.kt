@@ -1,6 +1,5 @@
 package com.example.bookstorev2.presentation.ui.screens
 
-import android.util.Log
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.layout.Arrangement
@@ -27,7 +26,6 @@ import androidx.compose.ui.draw.paint
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
@@ -57,8 +55,8 @@ fun LoginScreen(
 
 
     LaunchedEffect(key1 = uiState.user) {
-        when(val event = uiState.user){
-            is User ->{
+        when (uiState.user) {
+            is User -> {
                 onSuccess(uiState.user)
             }
             null -> Unit
@@ -70,11 +68,10 @@ fun LoginScreen(
         }
     }
 
-
     Scaffold(
         topBar = {
             TopAppBar(
-                title = { Text(stringResource(R.string.login_top_bar))}
+                title = { Text(stringResource(R.string.login_top_bar)) }
             )
         }
     ) { paddingValues ->
@@ -146,7 +143,10 @@ fun LoginScreen(
                 }
                 OutlinedButton(
                     onClick = {
-                        viewModel.onLoginWithGoogleClick(context, context.getString(R.string.default_web_client_id) )
+                        viewModel.onLoginWithGoogleClick(
+                            context,
+                            context.getString(R.string.default_web_client_id)
+                        )
                     },
                     modifier = Modifier.fillMaxWidth(0.5f),
                     enabled = !uiState.isLoading

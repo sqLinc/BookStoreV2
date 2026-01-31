@@ -18,14 +18,14 @@ class BookDetailViewModel @Inject constructor(
     private val _uiState = mutableStateOf(DetailScreenUiState())
     val uiState: State<DetailScreenUiState> = _uiState
 
-    fun getBook(bookId: String){
+    fun getBook(bookId: String) {
         viewModelScope.launch {
             try {
                 val book = bookRepo.getBookById(bookId)
                 _uiState.value = _uiState.value.copy(
                     key = book.key,
                     title = book.title,
-                    imageUrl = book.imageUrl,
+                    base64Image = book.base64Image!!,
                     category = book.category,
                     description = book.description,
                     price = book.price,
@@ -35,8 +35,7 @@ class BookDetailViewModel @Inject constructor(
                     read = book.read
                 )
 
-            }
-            catch (e: Exception){
+            } catch (e: Exception) {
                 _uiState.value = _uiState.value.copy(
                     error = e.message ?: "Error"
                 )
@@ -44,11 +43,6 @@ class BookDetailViewModel @Inject constructor(
         }
 
     }
-
-
-
-
-
 
 
 }
