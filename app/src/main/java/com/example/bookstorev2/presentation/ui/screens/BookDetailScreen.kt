@@ -56,13 +56,18 @@ fun BookDetailScreen(
     }
 
     Column(
-        modifier = Modifier.fillMaxWidth().paint(painterResource(R.drawable.detail_screen_bg), contentScale = ContentScale.FillBounds)
+        modifier = Modifier
+            .fillMaxWidth()
+            .paint(
+                painterResource(R.drawable.detail_screen_bg),
+                contentScale = ContentScale.FillBounds
+            )
     ) {
 
-        val base64Image = android.util.Base64.decode(uiState.imageUrl, android.util.Base64.DEFAULT)
+        val base64Image = android.util.Base64.decode(uiState.base64Image, android.util.Base64.DEFAULT)
         val bitmap = BitmapFactory.decodeByteArray(base64Image, 0, base64Image.size)
 
-        IconButton(onClick = onBackClick){
+        IconButton(onClick = onBackClick) {
             Icon(
                 imageVector = Icons.Filled.ArrowBack,
                 contentDescription = ""
@@ -70,15 +75,22 @@ fun BookDetailScreen(
             )
         }
         Card(
-            modifier = Modifier.wrapContentWidth().wrapContentHeight().padding(16.dp),
+            modifier = Modifier
+                .wrapContentWidth()
+                .wrapContentHeight()
+                .padding(16.dp),
             elevation = CardDefaults.cardElevation(4.dp),
-            colors =  CardDefaults.cardColors(
+            colors = CardDefaults.cardColors(
                 containerColor = MaterialTheme.colorScheme.surface
             )
         ) {
             GlideImage(
-                model = bitmap ?: Text(stringResource(R.string.error_no_image)), contentDescription = "BG",
-                modifier = Modifier.fillMaxWidth().height(250.dp).clip(RoundedCornerShape(15.dp))
+                model = bitmap ?: Text(stringResource(R.string.error_no_image)),
+                contentDescription = "BG",
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .height(250.dp)
+                    .clip(RoundedCornerShape(15.dp))
             )
         }
         Card(
@@ -89,7 +101,7 @@ fun BookDetailScreen(
             colors = CardDefaults.cardColors(
                 containerColor = MaterialTheme.colorScheme.surfaceVariant
             )
-        ){
+        ) {
             Column(
                 modifier = Modifier.padding(16.dp)
             ) {
@@ -121,9 +133,13 @@ fun BookDetailScreen(
                     fontSize = 18.sp
                 )
                 Spacer(modifier = Modifier.height(20.dp))
-                OutlinedCard(modifier = Modifier.fillMaxSize(), elevation = CardDefaults.cardElevation(1.dp), colors = CardDefaults.cardColors(
-                    containerColor = MaterialTheme.colorScheme.surfaceVariant
-                )) {
+                OutlinedCard(
+                    modifier = Modifier.fillMaxSize(),
+                    elevation = CardDefaults.cardElevation(1.dp),
+                    colors = CardDefaults.cardColors(
+                        containerColor = MaterialTheme.colorScheme.surfaceVariant
+                    )
+                ) {
 
                     Text(
                         text = uiState.description,
@@ -134,11 +150,8 @@ fun BookDetailScreen(
                 }
 
 
-
             }
         }
-
-
 
 
     }

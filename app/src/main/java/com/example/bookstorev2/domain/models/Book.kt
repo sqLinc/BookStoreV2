@@ -7,7 +7,7 @@ import kotlinx.parcelize.Parcelize
 data class Book(
     val key: String = "",
     val title: String = "",
-    val imageUrl: String = "",
+    val base64Image: String? = "",
     val category: String = "",
     val description: String = "",
     val price: String = "",
@@ -15,6 +15,6 @@ data class Book(
     val author: String = "",
     val favorite: Boolean = false,
     val read: Boolean = false,
-    val selectedImage: String = ""
+    val imageUri: String = ""
 
 ) : Parcelable

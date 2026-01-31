@@ -8,7 +8,7 @@ import androidx.room.PrimaryKey
 data class BookDbEntity(
     @PrimaryKey val key: String = "",
     val title: String = "",
-    @ColumnInfo(name = "image_url") val imageUrl: String = "",
+    @ColumnInfo(name = "base_64_image") val base64Image: String = "",
     val category: String = "",
     val description: String = "",
     val price: String = "",
@@ -16,5 +16,5 @@ data class BookDbEntity(
     val author: String = "",
     val favorite: Boolean = false,
     val read: Boolean = false,
-    @ColumnInfo(name = "selected_image") val selectedImage: String = ""
+    @ColumnInfo(name = "image_uri") val imageUri: String = ""
 )

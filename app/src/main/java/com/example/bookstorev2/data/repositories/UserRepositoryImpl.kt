@@ -29,11 +29,12 @@ import kotlin.coroutines.suspendCoroutine
 class UserRepositoryImpl @Inject constructor(
     private val auth: FirebaseAuth,
 ) : UserRepository {
-    override suspend fun loginUserByEmailPass(email: String, password: String) : Result<User>{
+    override suspend fun loginUserByEmailPass(email: String, password: String): Result<User> {
         return try {
 
             val result = auth.signInWithEmailAndPassword(email, password).await()
-            val user = result.user ?: return Result.failure(IllegalArgumentException("This user does not exist!"))
+            val user = result.user
+                ?: return Result.failure(IllegalArgumentException("This user does not exist!"))
 
             Result.success(
                 User(
@@ -42,16 +43,17 @@ class UserRepositoryImpl @Inject constructor(
                 )
             )
 
-        } catch (e: Exception){
+        } catch (e: Exception) {
             Result.failure(Exception(e.toAppException()))
         }
     }
 
-    override suspend fun createUserByEmailPass(email: String, password: String): Result<User>{
+    override suspend fun createUserByEmailPass(email: String, password: String): Result<User> {
         return try {
 
             val result = auth.createUserWithEmailAndPassword(email, password).await()
-            val user = result.user ?: return Result.failure(IllegalArgumentException("Can not create user!"))
+            val user = result.user
+                ?: return Result.failure(IllegalArgumentException("Can not create user!"))
 
 
             return Result.success(
@@ -60,12 +62,15 @@ class UserRepositoryImpl @Inject constructor(
                     email = user.email!!
                 )
             )
-        } catch (e: Exception){
+        } catch (e: Exception) {
             Result.failure(Exception(e.toAppException()))
         }
     }
 
-    override suspend fun loginByGoogle(context: Context, clientId: String): Result<GoogleSignInClient> {
+    override suspend fun loginByGoogle(
+        context: Context,
+        clientId: String
+    ): Result<GoogleSignInClient> {
         return try {
             val gso = GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
                 .requestIdToken(clientId)
@@ -74,7 +79,7 @@ class UserRepositoryImpl @Inject constructor(
             return Result.success(
                 GoogleSignIn.getClient(context, gso)
             )
-        } catch (e: Exception){
+        } catch (e: Exception) {
             Result.failure(Exception(e.toAppException()))
         }
 
@@ -90,35 +95,35 @@ class UserRepositoryImpl @Inject constructor(
             .getBoolean(IS_ADMIN) ?: false
     }
 
-    override suspend fun googleLauncher(result: ActivityResult) : Result<FirebaseUser> = suspendCoroutine{ cont ->
-        try {
-            if (result.resultCode == Activity.RESULT_OK) {
-                val task = GoogleSignIn.getSignedInAccountFromIntent(result.data)
-                val account = task.getResult(ApiException::class.java)
-                val credential = GoogleAuthProvider.getCredential(account.idToken, null)
-                FirebaseAuth.getInstance()
-                    .signInWithCredential(credential)
-                    .addOnSuccessListener { result ->
-                        val user = result.user
-                        cont.resume(Result.success(user!!))
-                    }
+    override suspend fun googleLauncher(result: ActivityResult): Result<FirebaseUser> =
+        suspendCoroutine { cont ->
+            try {
+                if (result.resultCode == Activity.RESULT_OK) {
+                    val task = GoogleSignIn.getSignedInAccountFromIntent(result.data)
+                    val account = task.getResult(ApiException::class.java)
+                    val credential = GoogleAuthProvider.getCredential(account.idToken, null)
+                    FirebaseAuth.getInstance()
+                        .signInWithCredential(credential)
+                        .addOnSuccessListener { result ->
+                            val user = result.user
+                            cont.resume(Result.success(user!!))
+                        }
+                } else {
+                    Log.d("GoogleAuth", "Result is not OK")
+                }
+            } catch (e: Exception) {
+                throw e.toAppException()
             }
-            else{
-                Log.d("GoogleAuth", "Result is not OK")
-            }
-        } catch(e: Exception){
-            throw e.toAppException()
+
+
         }
-
-
-    }
 
     override suspend fun deleteAccount() {
         try {
             val user = Firebase.auth.currentUser!!
             user.delete()
 
-        } catch (e: Exception){
+        } catch (e: Exception) {
             throw e.toAppException()
         }
     }

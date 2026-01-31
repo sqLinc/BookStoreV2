@@ -1,8 +1,6 @@
 package com.example.bookstorev2.presentation.ui.screens
 
-import android.graphics.Bitmap
 import android.graphics.BitmapFactory
-import android.util.Base64
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.layout.Arrangement
@@ -61,13 +59,13 @@ fun AddBookScreen(
     val uiState by addBookViewModel.uiState.collectAsState()
 
     LaunchedEffect(key1 = uiState.savedBook) {
-        when(val event = uiState.savedBook){
+        when (uiState.savedBook) {
             is Book -> {
                 onSuccess(uiState.savedBook)
                 addBookViewModel.onNavigationConsumed()
             }
-            null -> Unit
 
+            null -> Unit
         }
 
     }
@@ -77,20 +75,13 @@ fun AddBookScreen(
         }
     }
 
-    val imageBitMap = remember {
-        var bitmap: Bitmap? = null
-        val base64Image = Base64.decode(uiState.imageUrl, Base64.DEFAULT)
-        bitmap = BitmapFactory.decodeByteArray(base64Image, 0 , base64Image.size)
-        mutableStateOf(bitmap)
-    }
 
     val imagePickerLauncher = rememberLauncherForActivityResult(
-        contract = ActivityResultContracts.GetContent()
+        contract = ActivityResultContracts.OpenDocument()
     ) { uri ->
-        imageBitMap.value = null
-        uiState.selectedImageUri = uri
-        addBookViewModel.onImageUrlChange(uri.toString())
-        addBookViewModel.onSelectedUriChange(uri)
+        if (uri != null) {
+            addBookViewModel.onSelectedUriChange(uri)
+        }
     }
 
     Scaffold(
@@ -100,13 +91,16 @@ fun AddBookScreen(
             )
         },
 
-    ) { paddingValues ->
+        ) { paddingValues ->
+
+        val base64Image =
+            android.util.Base64.decode(uiState.base64Image, android.util.Base64.DEFAULT)
+        val bitmap = BitmapFactory.decodeByteArray(base64Image, 0, base64Image.size)
 
         GlideImage(
-            model = imageBitMap.value ?: uiState.selectedImageUri, contentDescription = "",
-            modifier = Modifier.fillMaxSize(),
-            contentScale = ContentScale.Crop,
-            alpha = 0.4f
+            model = uiState.imageUri ?: bitmap,
+            contentDescription = "",
+            contentScale = ContentScale.Crop
         )
 
         Column(
@@ -136,39 +130,39 @@ fun AddBookScreen(
             Spacer(modifier = Modifier.height(16.dp))
             OutlinedTextField(
                 value = uiState.title,
-                label = {Text(text = stringResource(R.string.new_book_title))},
+                label = { Text(text = stringResource(R.string.new_book_title)) },
                 modifier = Modifier.fillMaxWidth(),
-                onValueChange = {addBookViewModel.onTitleChange(it)}
+                onValueChange = { addBookViewModel.onTitleChange(it) }
             )
             Spacer(modifier = Modifier.height(16.dp))
             OutlinedTextField(
                 value = uiState.price,
-                label = {Text(text = stringResource(R.string.new_book_price))},
+                label = { Text(text = stringResource(R.string.new_book_price)) },
                 modifier = Modifier.fillMaxWidth(),
-                onValueChange = {addBookViewModel.onPriceChange(it)}
+                onValueChange = { addBookViewModel.onPriceChange(it) }
             )
             Spacer(modifier = Modifier.height(16.dp))
             OutlinedTextField(
                 value = uiState.description,
-                label = {Text(text = stringResource(R.string.new_book_description))},
+                label = { Text(text = stringResource(R.string.new_book_description)) },
                 modifier = Modifier.fillMaxWidth(),
-                onValueChange = {addBookViewModel.onDescriptionChange(it)}
+                onValueChange = { addBookViewModel.onDescriptionChange(it) }
             )
             Spacer(modifier = Modifier.height(16.dp))
             OutlinedTextField(
                 value = uiState.author,
-                label = {Text(text = stringResource(R.string.new_book_author))},
+                label = { Text(text = stringResource(R.string.new_book_author)) },
                 modifier = Modifier.fillMaxWidth(),
-                onValueChange = {addBookViewModel.onAuthorChange(it)}
+                onValueChange = { addBookViewModel.onAuthorChange(it) }
             )
             Spacer(modifier = Modifier.height(16.dp))
             OutlinedTextField(
                 value = uiState.date,
-                label = {Text(text = stringResource(R.string.new_book_published))},
+                label = { Text(text = stringResource(R.string.new_book_published)) },
                 modifier = Modifier.fillMaxWidth(),
-                onValueChange = {addBookViewModel.onDateChange(it)}
+                onValueChange = { addBookViewModel.onDateChange(it) }
             )
-            if (uiState.error.isNotEmpty()){
+            if (uiState.error.isNotEmpty()) {
                 Text(
                     text = uiState.error,
                     color = Color.Red,
@@ -178,14 +172,14 @@ fun AddBookScreen(
             Spacer(modifier = Modifier.height(16.dp))
             ActionButton(
                 stringResource(R.string.new_book_choose_image)
-            ){
-                addBookViewModel.onChooseImage(imagePickerLauncher)
+            ) {
+                imagePickerLauncher.launch(arrayOf("image/*"))
 
             }
             Spacer(modifier = Modifier.height(16.dp))
             ActionButton(
                 stringResource(R.string.new_book_save)
-            ){
+            ) {
                 addBookViewModel.onSaveClick()
             }
 
@@ -194,17 +188,19 @@ fun AddBookScreen(
             Spacer(modifier = Modifier.height(16.dp))
             Button(
                 onClick = { openAlertDialog.value = true },
-                modifier = Modifier.fillMaxWidth(0.6f).padding(bottom = 1.dp),
+                modifier = Modifier
+                    .fillMaxWidth(0.6f)
+                    .padding(bottom = 1.dp),
                 colors = ButtonDefaults.buttonColors(
                     containerColor = Color.LightGray
-            )
+                )
             ) {
                 Text(text = stringResource(R.string.new_book_cancel))
             }
-            when{
+            when {
                 openAlertDialog.value ->
                     DialogBody(
-                        onDismiss = {openAlertDialog.value = false},
+                        onDismiss = { openAlertDialog.value = false },
                         onConfirm = {
                             openAlertDialog.value = false
                             onBackClick()
@@ -216,7 +212,6 @@ fun AddBookScreen(
                         confirmText = stringResource(R.string.button_confirm)
                     )
             }
-
 
 
         }

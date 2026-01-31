@@ -3,7 +3,7 @@ package com.example.bookstorev2.exceptions
 import com.google.firebase.auth.FirebaseAuthException
 import com.google.firebase.firestore.FirebaseFirestoreException
 
-fun Throwable.toAppException() : AppException =
+fun Throwable.toAppException(): AppException =
     when (this) {
         is FirebaseAuthException -> mapAuth(this)
         is FirebaseFirestoreException -> mapFirestore(this)
@@ -13,7 +13,7 @@ fun Throwable.toAppException() : AppException =
     }
 
 private fun mapAuth(e: FirebaseAuthException): AppException.Auth =
-    when(e.errorCode) {
+    when (e.errorCode) {
         "ERROR_INVALID_EMAIL" -> AppException.Auth.InvalidEmail()
         "ERROR_USER_NOT_FOUND" -> AppException.Auth.UserNotFound()
         "ERROR_WRONG_PASSWORD" -> AppException.Auth.WrongPassword()

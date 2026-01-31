@@ -8,7 +8,7 @@ import javax.inject.Inject
 class GetBooksUseCase @Inject constructor(
     private val bookRepo: BookRepository
 ) {
-    suspend operator fun invoke(category: String = "All") : List<Book> {
+    suspend operator fun invoke(category: String = "All"): List<Book> {
         return when (category) {
             "Favorite" -> bookRepo.getFavBooks()
             "Read" -> bookRepo.getReadBooks()

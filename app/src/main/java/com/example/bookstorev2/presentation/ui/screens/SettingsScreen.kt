@@ -63,16 +63,18 @@ fun SettingsScreen(
 
     Box(
         modifier = Modifier.fillMaxSize(),
-    ){
+    ) {
         Column(
             modifier = Modifier.padding(10.dp),
-        ){
+        ) {
             Row(
-                modifier = Modifier.fillMaxWidth().padding(8.dp),
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(8.dp),
                 horizontalArrangement = Arrangement.SpaceBetween,
                 verticalAlignment = Alignment.CenterVertically
             ) {
-                IconButton(onClick = onBackClick){
+                IconButton(onClick = onBackClick) {
                     Icon(
                         imageVector = Icons.Filled.ArrowBack,
                         contentDescription = ""
@@ -89,10 +91,12 @@ fun SettingsScreen(
             }
             Spacer(modifier = Modifier.height(30.dp))
             Row(
-                modifier = Modifier.fillMaxWidth().padding(8.dp),
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(8.dp),
                 horizontalArrangement = Arrangement.SpaceBetween,
                 verticalAlignment = Alignment.CenterVertically
-            ){
+            ) {
                 Text(
                     text = stringResource(R.string.app_theme),
                     style = MaterialTheme.typography.bodyMedium,
@@ -110,17 +114,19 @@ fun SettingsScreen(
             }
             HorizontalDivider()
             Row(
-                modifier = Modifier.fillMaxWidth().padding(8.dp),
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(8.dp),
                 horizontalArrangement = Arrangement.SpaceBetween,
                 verticalAlignment = Alignment.CenterVertically
-            ){
+            ) {
                 Text(
                     text = stringResource(R.string.app_cache),
                     style = MaterialTheme.typography.bodyMedium,
                     fontWeight = FontWeight.Bold
                 )
                 IconButton(
-                    onClick = {cacheAlertDialog.value = true}
+                    onClick = { cacheAlertDialog.value = true }
 
                 ) {
                     Icon(
@@ -131,10 +137,12 @@ fun SettingsScreen(
             }
             HorizontalDivider()
             Row(
-                modifier = Modifier.fillMaxWidth().padding(8.dp),
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(8.dp),
                 horizontalArrangement = Arrangement.SpaceBetween,
                 verticalAlignment = Alignment.CenterVertically
-            ){
+            ) {
                 Text(
                     text = stringResource(R.string.delete_account),
                     style = MaterialTheme.typography.bodyMedium,
@@ -153,10 +161,10 @@ fun SettingsScreen(
                 }
             }
 
-            when{
+            when {
                 cacheAlertDialog.value ->
                     DialogBody(
-                        onDismiss = {cacheAlertDialog.value = false},
+                        onDismiss = { cacheAlertDialog.value = false },
                         onConfirm = {
                             cacheAlertDialog.value = false
                             settingsViewModel.onCacheDelete()
@@ -168,10 +176,10 @@ fun SettingsScreen(
                         dismissText = stringResource(R.string.button_dismiss)
                     )
             }
-            when{
+            when {
                 accountAlertDialog.value ->
                     DialogBody(
-                        onDismiss = {accountAlertDialog.value = false},
+                        onDismiss = { accountAlertDialog.value = false },
                         onConfirm = {
                             settingsViewModel.onAccountDelete()
                             onDeletingSuccess()
@@ -184,8 +192,6 @@ fun SettingsScreen(
                     )
             }
         }
-
-
 
 
     }

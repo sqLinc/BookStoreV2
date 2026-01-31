@@ -52,18 +52,20 @@ class SettingsViewModel @Inject constructor(
             settingsRepo.setLanguage(lang)
         }
     }
-    fun deleteUser(){
+
+    fun deleteUser() {
         viewModelScope.launch {
             settingsRepo.deleteUser()
         }
     }
 
-    fun onCacheDelete(){
+    fun onCacheDelete() {
         viewModelScope.launch {
             bookRepo.deleteAllFromLocal()
         }
     }
-    fun onAccountDelete(){
+
+    fun onAccountDelete() {
         viewModelScope.launch {
             userRepo.deleteAccount()
         }

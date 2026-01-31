@@ -1,6 +1,7 @@
 package com.example.bookstorev2.presentation.ui.components
 
 import android.graphics.BitmapFactory
+import android.util.Log
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -48,13 +49,14 @@ fun BookItem(
     onBookClick: (String) -> Unit,
     modifier: Modifier = Modifier,
 
-) {
+    ) {
     Box(
         modifier = Modifier.fillMaxSize(),
         contentAlignment = Alignment.Center
-    ){
+    ) {
         OutlinedCard(
-            modifier = modifier.padding(8.dp)
+            modifier = modifier
+                .padding(8.dp)
                 .fillMaxWidth(0.9f),
 
 
@@ -64,13 +66,13 @@ fun BookItem(
             elevation = CardDefaults.cardElevation(
                 defaultElevation = 15.dp
             )
-        ){
+        ) {
 
             Column(
                 modifier = Modifier.padding(16.dp)
 
             ) {
-                val base64Image = android.util.Base64.decode(book.imageUrl, android.util.Base64.DEFAULT)
+                val base64Image = android.util.Base64.decode(book.base64Image, android.util.Base64.DEFAULT)
                 val bitmap = BitmapFactory.decodeByteArray(base64Image, 0, base64Image.size)
 
                 Card(
@@ -81,16 +83,20 @@ fun BookItem(
                 ) {
                     GlideImage(
                         model = bitmap ?: "", contentDescription = "",
-                        modifier = Modifier.fillMaxWidth().height(250.dp).clip(RoundedCornerShape(15.dp)).clickable {
-                            onBookClick(book.key)
-                        }
-
-
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .height(250.dp)
+                            .clip(RoundedCornerShape(15.dp))
+                            .clickable {
+                                onBookClick(book.key)
+                            }
                     )
                 }
 
                 Row(
-                    modifier = Modifier.fillMaxWidth().padding(8.dp),
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(8.dp),
                     horizontalArrangement = Arrangement.Center,
                     verticalAlignment = Alignment.CenterVertically
                 ) {
@@ -98,12 +104,13 @@ fun BookItem(
                         text = book.title,
                         style = MaterialTheme.typography.headlineLarge,
                         fontWeight = FontWeight.Bold,
-
                         )
                 }
 
                 Row(
-                    modifier = Modifier.fillMaxWidth().padding(8.dp),
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(8.dp),
                     horizontalArrangement = Arrangement.SpaceBetween,
                     verticalAlignment = Alignment.CenterVertically
                 ) {
@@ -111,27 +118,20 @@ fun BookItem(
                         text = book.author,
                         style = MaterialTheme.typography.bodyMedium,
                         fontWeight = FontWeight.Bold
-
-
-                        )
+                    )
 
                     Text(
                         text = book.price,
                         style = MaterialTheme.typography.bodyMedium,
                         fontWeight = FontWeight.Bold
-
-
-                        )
-
+                    )
                 }
-
-
                 Row(
                     modifier = Modifier.fillMaxWidth(),
                     horizontalArrangement = Arrangement.SpaceBetween,
                     verticalAlignment = Alignment.CenterVertically
-                ){
-                    IconButton(onClick = onFavoriteClick){
+                ) {
+                    IconButton(onClick = onFavoriteClick) {
                         Icon(
                             imageVector = if (book.favorite)
                                 Icons.Filled.Favorite
@@ -142,7 +142,9 @@ fun BookItem(
                         )
                     }
 
-                    if (isAdmin) IconButton(onClick = {onEditClick(book.key)}) {
+                    if (isAdmin) IconButton(onClick = {
+                        onEditClick(book.key)
+                    }) {
                         Icon(
                             imageVector = Icons.Filled.Create,
                             contentDescription = "",
@@ -150,7 +152,7 @@ fun BookItem(
                         )
                     }
 
-                    IconButton(onClick = onReadClick){
+                    IconButton(onClick = onReadClick) {
                         Icon(
                             imageVector = if (book.read)
                                 Icons.Filled.Done

@@ -21,9 +21,9 @@ object PreferencesKeys {
 }
 
 
-class SettingsRepository @Inject constructor (
+class SettingsRepository @Inject constructor(
     private val dataStore: DataStore<Preferences>
-)  {
+) {
 
     val isDarkThemeFlow: Flow<Boolean> = dataStore.data
         .map { preferences ->
@@ -46,12 +46,14 @@ class SettingsRepository @Inject constructor (
             preferences[PreferencesKeys.LANGUAGE] = language
         }
     }
-    suspend fun setUid(uid: String){
+
+    suspend fun setUid(uid: String) {
         dataStore.edit { preferences ->
             preferences[PreferencesKeys.UID] = uid
         }
     }
-    suspend fun setEmail(email: String){
+
+    suspend fun setEmail(email: String) {
         dataStore.edit { preferences ->
             preferences[PreferencesKeys.EMAIL] = email
         }
@@ -67,7 +69,7 @@ class SettingsRepository @Inject constructor (
 
         }
 
-    suspend fun deleteUser(){
+    suspend fun deleteUser() {
         dataStore.edit { preferences ->
             preferences[PreferencesKeys.UID] = ""
             preferences[PreferencesKeys.EMAIL] = ""

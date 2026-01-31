@@ -12,5 +12,5 @@ import com.example.bookstorev2.data.local.room.entity.BookDbEntity
     ]
 )
 abstract class AppDataBase : RoomDatabase() {
-    abstract fun bookDao() : BookDao
+    abstract fun bookDao(): BookDao
 }

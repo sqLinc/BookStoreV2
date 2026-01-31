@@ -16,8 +16,7 @@ object DataModule {
     @Provides
     fun providesImageRefactor(
         @ApplicationContext context: Context
-    ) : ImageRefactorRepository = ImageRefactorRepositoryImpl(context)
-
+    ): ImageRefactorRepository = ImageRefactorRepositoryImpl(context)
 
 
 }

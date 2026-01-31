@@ -31,7 +31,7 @@ class BookRepositoryImpl @Inject constructor(
             val remote = firebase.getBooks()
             return remote.dtoListToDomain()
 
-        } catch (_: Exception){
+        } catch (_: Exception) {
             val local = room.getBooks()
             return local.dbListToDomain()
         }
@@ -45,11 +45,15 @@ class BookRepositoryImpl @Inject constructor(
         return firebase.isRead(bookId, uid)
     }
 
-    override suspend fun setFavoriteStatus(bookId: String, isFavorite: Boolean, uid: String) : Boolean{
+    override suspend fun setFavoriteStatus(
+        bookId: String,
+        isFavorite: Boolean,
+        uid: String
+    ): Boolean {
         return firebase.setFavoriteStatus(bookId, isFavorite, uid)
     }
 
-    override suspend fun setReadStatus(bookId: String, isRead: Boolean, uid: String) : Boolean {
+    override suspend fun setReadStatus(bookId: String, isRead: Boolean, uid: String): Boolean {
         return firebase.setReadStatus(bookId, isRead, uid)
     }
 
@@ -62,26 +66,27 @@ class BookRepositoryImpl @Inject constructor(
         return remote.toDomain()
     }
 
-    override suspend fun getFavBooks() : List<Book>{
+    override suspend fun getFavBooks(): List<Book> {
         val local = room.getFavBooks()
         return local.dbListToDomain()
     }
 
-    override suspend fun getReadBooks() : List<Book>{
+    override suspend fun getReadBooks(): List<Book> {
         val local = room.getReadBooks()
         return local.dbListToDomain()
     }
 
-    override suspend fun getBooksByCategory(category: String) : List<Book>{
+    override suspend fun getBooksByCategory(category: String): List<Book> {
         val local = room.getBooksByCategory(category)
         return local.dbListToDomain()
     }
 
-    override suspend fun updateLocalBook(book: Book){
+    override suspend fun updateLocalBook(book: Book) {
         val local = book.toDb()
         room.updatedBook(local)
     }
-    override suspend fun saveAllToLocal(books: List<Book>){
+
+    override suspend fun saveAllToLocal(books: List<Book>) {
         val toDb = books.bookListToDb()
         room.saveAll(toDb)
     }
@@ -89,8 +94,6 @@ class BookRepositoryImpl @Inject constructor(
     override suspend fun deleteAllFromLocal() {
         room.deleteAllFromLocal()
     }
-
-
 
 
 }

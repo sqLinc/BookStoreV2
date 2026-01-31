@@ -52,6 +52,4 @@ sealed class AppException(
     }
 
 
-
-
 }

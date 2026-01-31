@@ -7,10 +7,10 @@ import com.google.android.gms.auth.api.signin.GoogleSignInClient
 import com.google.firebase.auth.FirebaseUser
 
 interface UserRepository {
-    suspend fun isAdmin() : Boolean
-    suspend fun loginUserByEmailPass(email: String, password: String) : Result<User>
-    suspend fun createUserByEmailPass(email: String, password: String) : Result<User>
-    suspend fun loginByGoogle(context: Context, clientId: String) : Result<GoogleSignInClient>
-    suspend fun googleLauncher(result: ActivityResult) :  Result<FirebaseUser>
+    suspend fun isAdmin(): Boolean
+    suspend fun loginUserByEmailPass(email: String, password: String): Result<User>
+    suspend fun createUserByEmailPass(email: String, password: String): Result<User>
+    suspend fun loginByGoogle(context: Context, clientId: String): Result<GoogleSignInClient>
+    suspend fun googleLauncher(result: ActivityResult): Result<FirebaseUser>
     suspend fun deleteAccount()
 }

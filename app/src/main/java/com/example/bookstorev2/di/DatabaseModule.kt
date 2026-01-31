@@ -11,6 +11,7 @@ object DatabaseModule {
     fun init(context: Context) {
         applicationContext = context
     }
+
     private val appDataBase: AppDataBase by lazy {
         Room.databaseBuilder(applicationContext, AppDataBase::class.java, "databaseV3")
             .build()

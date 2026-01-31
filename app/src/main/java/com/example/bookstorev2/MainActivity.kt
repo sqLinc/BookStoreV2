@@ -52,149 +52,133 @@ class MainActivity : ComponentActivity() {
                 if (lastLanguage != language) {
                     setLocale(this@MainActivity, language)
                     recreate()
-                    lastLanguage = language
                 }
             }
-            val startRoute = when{
+            val startRoute = when {
                 uid.isEmpty() -> Screen.Login.route
                 else -> Screen.BookList.route
             }
-                MaterialTheme(
-                    colorScheme = if (isDarkTheme) darkColorScheme() else lightColorScheme()
+            MaterialTheme(
+                colorScheme = if (isDarkTheme) darkColorScheme() else lightColorScheme()
+            ) {
+
+                Surface(
+                    modifier = Modifier.fillMaxSize(),
+                    color = MaterialTheme.colorScheme.background
                 ) {
+                    NavHost(
+                        navController = navController,
+                        startDestination = startRoute
 
-                        Surface(
-                            modifier = Modifier.fillMaxSize(),
-                            color = MaterialTheme.colorScheme.background
-                        ) {
-                            NavHost(
-                                navController = navController,
-                                startDestination = startRoute
-
-                            ) {
-                                composable(Screen.Login.route) {
-                                    LoginScreen(
-                                        onSuccess = {
-                                            navController.navigate(Screen.BookList.route) {
-                                                popUpTo(Screen.Login.route) { inclusive = true }
-                                            }
-                                        }
-                                    )
+                    ) {
+                        composable(Screen.Login.route) {
+                            LoginScreen(
+                                onSuccess = {
+                                    navController.navigate(Screen.BookList.route) {
+                                        popUpTo(Screen.Login.route) { inclusive = true }
+                                    }
                                 }
-                                composable(Screen.BookList.route) {
-                                    BookListScreen(
-                                        onLogoutClick = {
-                                            navController.navigate(Screen.Login.route)
-                                            settingsViewModel.deleteUser()
-                                        },
-                                        onAdminClick = {
-                                            navController.navigate(Screen.AddBook.route)
-                                        },
-                                        onSuccess = {
-                                            navController.navigate(Screen.AddBook.route)
-                                        },
-                                        onNavigateToEditBook = { bookId ->
-                                            if (bookId.isEmpty() || bookId.isBlank()){
-                                            }
-                                            else{
-                                                navController.navigate("${Screen.AddBook.route}/$bookId")
-                                            }
-                                        },
-                                        onNavigateToDetailScreen = { bookId ->
-                                            navController.navigate("${Screen.DetailScreen.route}/$bookId")
-                                        },
-                                        navController = navController,
-                                        user = user,
-                                        onNavigateToSettings = {
-                                            navController.navigate(Screen.SettingsScreen.route)
-                                        }
-
-                                        )
-                                }
-                                composable(
-                                    route = "${Screen.DetailScreen.route}/{bookId}",
-                                    arguments = listOf(
-                                        navArgument("bookId") {
-                                            type = NavType.StringType
-                                        }
-                                    )
-                                ) { backStackEntry ->
-                                    val bookId = backStackEntry.arguments?.getString("bookId") ?: ""
-                                    BookDetailScreen(
-                                        onBackClick = {
-                                            navController.navigate(Screen.BookList.route)
-                                        },
-                                        bookId = bookId
-                                    )
-
-                                }
-                                composable(
-                                    route = "${Screen.AddBook.route}/{bookId}",
-                                    arguments = listOf(
-                                        navArgument("bookId") {
-                                            type = NavType.StringType
-                                        }
-                                    )
-                                ){ backStackEntry ->
-                                    val bookId = backStackEntry.arguments?.getString("bookId") ?: ""
-                                    AddBookScreen(
-                                        bookId = bookId,
-                                        onSuccess = { book ->
-                                            navController.previousBackStackEntry
-                                                ?.savedStateHandle
-                                                ?.set("new_book", book)
-                                            navController.popBackStack()
-                                        },
-                                        onBackClick = {
-                                            navController.popBackStack()
-                                        },
-                                    )
-                                }
-
-                                composable(Screen.AddBook.route) {
-                                    AddBookScreen(
-                                        bookId = "",
-                                        onSuccess = { book ->
-                                            navController.previousBackStackEntry
-                                                ?.savedStateHandle
-                                                ?.set("new_book", book)
-                                            navController.popBackStack()
-                                        },
-                                        onBackClick = {
-                                            navController.popBackStack()
-                                        },
-                                    )
-
-                                }
-                                composable(Screen.SettingsScreen.route){
-                                    SettingsScreen(
-                                        onBackClick = {
-                                            navController.popBackStack()
-                                        },
-                                        language = language,
-                                        settingsViewModel = settingsViewModel,
-                                        onDeletingSuccess = {
-                                            navController.navigate(Screen.Login.route)
-                                            settingsViewModel.deleteUser()
-                                        }
-                                    )
-                                }
-
-
-
-
-
-
-
-
-
-
-                            }
+                            )
                         }
-                    }
+                        composable(Screen.BookList.route) {
+                            BookListScreen(
+                                onLogoutClick = {
+                                    navController.navigate(Screen.Login.route)
+                                    settingsViewModel.deleteUser()
+                                },
+                                onAdminClick = {
+                                    navController.navigate(Screen.AddBook.route)
+                                },
+                                onNavigateToEditBook = { bookId ->
+                                    navController.navigate("${Screen.AddBook.route}/$bookId")
+                                },
+                                onNavigateToDetailScreen = { bookId ->
+                                    navController.navigate("${Screen.DetailScreen.route}/$bookId")
+                                },
+                                navController = navController,
+                                user = user,
+                                onNavigateToSettings = {
+                                    navController.navigate(Screen.SettingsScreen.route)
+                                }
 
+                            )
+                        }
+                        composable(
+                            route = "${Screen.DetailScreen.route}/{bookId}",
+                            arguments = listOf(
+                                navArgument("bookId") {
+                                    type = NavType.StringType
+                                }
+                            )
+                        ) { backStackEntry ->
+                            val bookId = backStackEntry.arguments?.getString("bookId") ?: ""
+                            BookDetailScreen(
+                                onBackClick = {
+                                    navController.navigate(Screen.BookList.route)
+                                },
+                                bookId = bookId
+                            )
+
+                        }
+                        composable(
+                            route = "${Screen.AddBook.route}/{bookId}",
+                            arguments = listOf(
+                                navArgument("bookId") {
+                                    type = NavType.StringType
+                                }
+                            )
+                        ) { backStackEntry ->
+                            val bookId = backStackEntry.arguments?.getString("bookId") ?: ""
+                            AddBookScreen(
+                                bookId = bookId,
+                                onSuccess = { book ->
+                                    navController.previousBackStackEntry
+                                        ?.savedStateHandle
+                                        ?.set("new_book", book)
+                                    navController.popBackStack()
+                                },
+                                onBackClick = {
+                                    navController.popBackStack()
+                                },
+                            )
+                        }
+
+                        composable(Screen.AddBook.route) {
+                            AddBookScreen(
+                                bookId = "",
+                                onSuccess = { book ->
+                                    navController.previousBackStackEntry
+                                        ?.savedStateHandle
+                                        ?.set("new_book", book)
+                                    navController.popBackStack()
+                                },
+                                onBackClick = {
+                                    navController.popBackStack()
+                                },
+                            )
+
+                        }
+                        composable(Screen.SettingsScreen.route) {
+                            SettingsScreen(
+                                onBackClick = {
+                                    navController.popBackStack()
+                                },
+                                language = language,
+                                settingsViewModel = settingsViewModel,
+                                onDeletingSuccess = {
+                                    navController.navigate(Screen.Login.route)
+                                    settingsViewModel.deleteUser()
+                                }
+                            )
+                        }
+
+
+                    }
                 }
             }
 
-
         }
+    }
+
+
+}

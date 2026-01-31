@@ -6,7 +6,7 @@ import javax.inject.Inject
 class ToggleReadUseCase @Inject constructor(
     private val bookRepo: BookRepository
 ) {
-    suspend operator fun invoke(bookId: String, uid: String) : Boolean{
+    suspend operator fun invoke(bookId: String, uid: String): Boolean {
         val currentReadStatus = bookRepo.isRead(bookId, uid)
         return bookRepo.setReadStatus(bookId, !currentReadStatus!!, uid)
     }
