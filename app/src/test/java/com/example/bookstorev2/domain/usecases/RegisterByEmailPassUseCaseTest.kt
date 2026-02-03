@@ -1,7 +1,7 @@
 package com.example.bookstorev2.domain.usecases
 
+import com.example.bookstorev2.domain.models.User
 import com.example.bookstorev2.domain.repositories.UserRepository
-import com.example.bookstorev2.presentation.navigation.ToMainScreenDataObject
 import kotlinx.coroutines.test.runTest
 import org.junit.Assert
 import org.junit.Assert.assertEquals
@@ -30,7 +30,7 @@ class RegisterByEmailPassUseCaseTest {
 
         val email = "test@gmail.com"
         val password = "test_password"
-        val expected = Result.success(ToMainScreenDataObject("test_uid", email))
+        val expected = Result.success(User("test_uid", email))
 
         Mockito.`when`(userRepo.createUserByEmailPass(email, password)).thenReturn(expected)
 
@@ -83,7 +83,7 @@ class RegisterByEmailPassUseCaseTest {
 
         val actual = useCase(email, password)
 
-        Assert.assertTrue(actual.isFailure)
+        assertTrue(actual.isFailure)
         val exception = actual.exceptionOrNull()
         Assert.assertNotNull(exception)
         Assert.assertTrue(exception is IllegalArgumentException)

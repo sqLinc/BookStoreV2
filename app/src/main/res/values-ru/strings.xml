@@ -66,5 +66,6 @@
     <string name="dialog_text_cache">Удаляя кэш с устройства, Вы так же удаляете все данные с локальной БД</string>
     <string name="dialog_title_account_delete">Вы хотите удалить свой аккаунт?</string>
     <string name="dialog_text_account_delete">ВНИМАНИЕ! Удаляя аккаунт, Вы так же удаляете и все свои купленные книги</string>
+    <string name="settings_email">Почта</string>
 
 </resources>

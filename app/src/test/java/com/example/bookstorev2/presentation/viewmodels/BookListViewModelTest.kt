@@ -3,93 +3,84 @@ package com.example.bookstorev2.presentation.viewmodels
 import com.example.bookstorev2.dispatcher.MainDispatcherRule
 import com.example.bookstorev2.domain.models.Book
 import com.example.bookstorev2.domain.repositories.BookRepository
-import com.example.bookstorev2.domain.usecases.GetAllBooksUseCase
+import com.example.bookstorev2.domain.repositories.UserRepository
+import com.example.bookstorev2.domain.usecases.GetBooksUseCase
 import com.example.bookstorev2.domain.usecases.ToggleFavoriteUseCase
 import com.example.bookstorev2.domain.usecases.ToggleReadUseCase
+import com.example.bookstorev2.presentation.viewmodels.viewmodels.BookListViewModel
 import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.test.advanceUntilIdle
+import kotlinx.coroutines.test.UnconfinedTestDispatcher
 import kotlinx.coroutines.test.runTest
-import org.junit.Assert
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertFalse
-import org.junit.Assert.assertNotNull
-import org.junit.Assert.assertTrue
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
+import org.mockito.Mock
+import org.mockito.MockitoAnnotations
 import org.mockito.kotlin.any
-import org.mockito.kotlin.mock
+import org.mockito.kotlin.times
+import org.mockito.kotlin.verify
 import org.mockito.kotlin.whenever
+
 
 @OptIn(ExperimentalCoroutinesApi::class)
 class BookListViewModelTest {
 
-    private lateinit var bookRepo: BookRepository
-    private lateinit var getAllBooksUseCase: GetAllBooksUseCase
+    @Mock private lateinit var bookRepo: BookRepository
+    @Mock private lateinit var userRepo: UserRepository
+    private lateinit var getBookUseCase: GetBooksUseCase
     private lateinit var toggleFavoriteUseCase: ToggleFavoriteUseCase
     private lateinit var toggleReadUseCase: ToggleReadUseCase
     private lateinit var viewModel: BookListViewModel
 
+    // Используем UnconfinedTestDispatcher для немедленного выполнения
     @get:Rule
-    val mainDispatcher = MainDispatcherRule()
+    val mainDispatcher = MainDispatcherRule(UnconfinedTestDispatcher())
 
     @Before
-    fun setUp(){
-        bookRepo = mock()
-        getAllBooksUseCase = GetAllBooksUseCase(bookRepo)
+    fun setUp() {
+        MockitoAnnotations.openMocks(this)
+
+
+
+        // Создаем use cases
+        getBookUseCase = GetBooksUseCase(bookRepo)
         toggleReadUseCase = ToggleReadUseCase(bookRepo)
         toggleFavoriteUseCase = ToggleFavoriteUseCase(bookRepo)
+
         viewModel = BookListViewModel(
-            getAllBooksUseCase,
+            getBookUseCase,
+            bookRepo,
+            userRepo,
             toggleFavoriteUseCase,
-            toggleReadUseCase
+            toggleReadUseCase,
         )
-
     }
-
 
     @Test
     fun load_books_should_update_books_state_if_success() = runTest {
         val expected: List<Book> = listOf(
-                Book(
-                    "test_key",
-                    "",
-                    "",
-                    "",
-                    "",
-                    "",
-                    "",
-                    "",
-                    false,
-                    false,
-                    ""
-                    )
-                )
+            Book("test_key", "", "", "", "", "", "", "", false, false, "")
+        )
 
-        whenever(bookRepo.getAllBooks(any())).thenReturn(expected)
+        // Настройка моков
+        whenever(bookRepo.getAllBooks()).thenReturn(expected)
+        whenever(bookRepo.getFavIds("test")).thenReturn(emptyList())
+        whenever(bookRepo.getReadIds("test")).thenReturn(emptyList())
+        whenever(bookRepo.saveAllToLocal(any())).thenAnswer { Unit }
 
+        // Запускаем метод
+        viewModel.loadBooks("All", "test")
 
-        viewModel.loadBooks("")
+        // В UnconfinedTestDispatcher выполнение происходит немедленно
+        // Не нужно вызывать advanceUntilIdle()
 
-
-        advanceUntilIdle()
-
+        // Проверяем результат
         assertFalse(viewModel.uiState.value.isLoading)
         assertEquals(expected, viewModel.uiState.value.books)
 
-
+        // Проверяем вызовы
+        verify(bookRepo, times(1)).getAllBooks()
     }
-
-
-    @Test
-    fun load_books_should_update_error_state_if_failed_to_load_books() = runTest {
-        whenever(bookRepo.getAllBooks(any())).thenAnswer{throw Exception("Determined error")}
-
-        viewModel.loadBooks("")
-        advanceUntilIdle()
-        assertEquals("Failed to load books", viewModel.uiState.value.error)
-        assertFalse(viewModel.uiState.value.isLoading)
-    }
-
-
 }

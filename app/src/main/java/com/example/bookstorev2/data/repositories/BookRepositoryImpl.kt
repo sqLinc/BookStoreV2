@@ -1,5 +1,6 @@
 package com.example.bookstorev2.data.repositories
 
+import android.util.Log
 import com.example.bookstorev2.data.local.room.mapper.bookListToDb
 import com.example.bookstorev2.data.local.room.mapper.dbListToDomain
 import com.example.bookstorev2.data.local.room.mapper.dtoListToDomain
@@ -87,7 +88,9 @@ class BookRepositoryImpl @Inject constructor(
     }
 
     override suspend fun saveAllToLocal(books: List<Book>) {
+        Log.d("MyLog", "saveAllToLocal suspend fun...")
         val toDb = books.bookListToDb()
+        Log.d("MyLog", "mapped books to db list")
         room.saveAll(toDb)
     }
 

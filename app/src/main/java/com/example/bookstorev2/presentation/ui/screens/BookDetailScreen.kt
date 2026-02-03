@@ -37,7 +37,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import com.bumptech.glide.integration.compose.ExperimentalGlideComposeApi
 import com.bumptech.glide.integration.compose.GlideImage
 import com.example.bookstorev2.R
-import com.example.bookstorev2.presentation.viewmodels.BookDetailViewModel
+import com.example.bookstorev2.presentation.viewmodels.viewmodels.BookDetailViewModel
 
 
 @OptIn(ExperimentalGlideComposeApi::class, ExperimentalMaterial3Api::class)

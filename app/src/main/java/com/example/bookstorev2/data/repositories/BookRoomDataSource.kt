@@ -1,5 +1,6 @@
 package com.example.bookstorev2.data.repositories
 
+import android.util.Log
 import com.example.bookstorev2.data.local.room.dao.BookDao
 import com.example.bookstorev2.data.local.room.entity.BookDbEntity
 import javax.inject.Inject
@@ -13,6 +14,7 @@ class BookRoomDataSource @Inject constructor(
     }
 
     suspend fun saveAll(books: List<BookDbEntity>) {
+        Log.d("MyLog", "saveAll RoomData...")
         dao.insertAllBooks(books)
     }
 

@@ -26,21 +26,22 @@ import androidx.compose.ui.draw.paint
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
-import androidx.hilt.navigation.compose.hiltViewModel
 import com.example.bookstorev2.R
 import com.example.bookstorev2.domain.models.User
-import com.example.bookstorev2.presentation.viewmodels.LoginViewModel
+import com.example.bookstorev2.presentation.viewmodels.contracts.LoginViewModelContract
+import com.example.bookstorev2.presentation.viewmodels.viewmodels.LoginViewModel
 
 @OptIn(ExperimentalMaterial3Api::class)
 
 
 @Composable
 fun LoginScreen(
-    viewModel: LoginViewModel = hiltViewModel(),
+    viewModel: LoginViewModelContract,
     onSuccess: (User) -> Unit = {}
 ) {
 
@@ -121,7 +122,8 @@ fun LoginScreen(
                 OutlinedButton(
                     onClick = { viewModel.onLoginClick() },
                     modifier = Modifier.fillMaxWidth(0.5f),
-                    enabled = !uiState.isLoading
+                    enabled = !uiState.isLoading,
+
                 ) {
                     if (uiState.isLoading) {
                         CircularProgressIndicator(color = Color.White)
@@ -151,7 +153,11 @@ fun LoginScreen(
                     modifier = Modifier.fillMaxWidth(0.5f),
                     enabled = !uiState.isLoading
                 ) {
-                    Text(text = stringResource(R.string.login_with_google))
+                    if (uiState.isLoading) {
+                        CircularProgressIndicator(color = Color.White)
+                    } else {
+                        Text(text = stringResource(R.string.login_with_google))
+                    }
                 }
             }
         }

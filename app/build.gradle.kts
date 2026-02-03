@@ -39,6 +39,7 @@ android {
                 getDefaultProguardFile("proguard-android-optimize.txt"),
                 "proguard-rules.pro"
             )
+            signingConfig = signingConfigs.getByName("debug")
         }
     }
 
@@ -139,6 +140,7 @@ dependencies {
     testImplementation("org.mockito.kotlin:mockito-kotlin:5.2.0")
     testImplementation("com.google.dagger:hilt-android-testing:2.48")
     kaptTest("com.google.dagger:hilt-compiler:2.48")
+    testImplementation("org.robolectric:robolectric:4.11")
 
     // Интеграционные тесты (androidTestImplementation)
     androidTestImplementation(platform("androidx.compose:compose-bom:2024.02.00"))
@@ -150,10 +152,12 @@ dependencies {
     androidTestImplementation("androidx.test.ext:junit:1.1.5")
     androidTestImplementation("androidx.test.espresso:espresso-core:3.5.1")
 
+
     // Compose тесты
     androidTestImplementation("androidx.compose.ui:ui-test-junit4")
     debugImplementation("androidx.compose.ui:ui-tooling")
     debugImplementation("androidx.compose.ui:ui-test-manifest")
+    debugImplementation("com.google.android.gms:play-services-auth:21.5.0")
 
     // Hilt для Android тестов
     androidTestImplementation("com.google.dagger:hilt-android-testing:2.48")

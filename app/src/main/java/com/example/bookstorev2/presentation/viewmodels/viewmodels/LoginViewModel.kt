@@ -1,5 +1,6 @@
-package com.example.bookstorev2.presentation.viewmodels
+package com.example.bookstorev2.presentation.viewmodels.viewmodels
 
+import android.content.Context
 import androidx.activity.result.ActivityResult
 import androidx.compose.runtime.State
 import androidx.compose.runtime.mutableStateOf
@@ -11,6 +12,7 @@ import com.example.bookstorev2.domain.repositories.UserRepository
 import com.example.bookstorev2.domain.usecases.AuthByEmailPassUseCase
 import com.example.bookstorev2.domain.usecases.RegisterByEmailPassUseCase
 import com.example.bookstorev2.presentation.ui.state.LoginUiState
+import com.example.bookstorev2.presentation.viewmodels.contracts.LoginViewModelContract
 import com.google.firebase.auth.FirebaseUser
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
@@ -23,10 +25,10 @@ class LoginViewModel @Inject constructor(
     private val userRepo: UserRepository,
     private val settingRepo: SettingsRepository,
 
-    ) : ViewModel() {
+    ) : ViewModel(), LoginViewModelContract {
 
     private val _uiState = mutableStateOf(LoginUiState())
-    val uiState: State<LoginUiState> = _uiState
+    override val uiState: State<LoginUiState> = _uiState
 
 
     suspend fun onAdminCheck() {
@@ -39,18 +41,21 @@ class LoginViewModel @Inject constructor(
 
     }
 
-    fun onEmailChange(email: String) {
+    override fun onEmailChange(email: String) {
         _uiState.value = _uiState.value.copy(email = email)
         clearError()
     }
 
-    fun onPasswordChange(password: String) {
+    override fun onPasswordChange(password: String) {
         _uiState.value = _uiState.value.copy(password = password)
         clearError()
     }
 
-    fun onLoginClick() {
+    override fun onLoginClick() {
         viewModelScope.launch {
+            _uiState.value = _uiState.value.copy(
+                isLoading = true
+            )
             val result = authByEmailPassUseCase(
                 _uiState.value.email,
                 _uiState.value.password,
@@ -60,17 +65,21 @@ class LoginViewModel @Inject constructor(
             result.fold(
                 onSuccess = { userData ->
                     _uiState.value = _uiState.value.copy(
-                        user = userData
+                        user = userData,
+                        isLoading = false
                     )
                     settingRepo.setEmail(userData.email)
                     settingRepo.setUid(userData.uid)
 
 
+
                 },
                 onFailure = { e ->
                     _uiState.value = _uiState.value.copy(
-                        error = e.message ?: "Auth error"
+                        error = e.message ?: "Auth error",
+                        isLoading = false
                     )
+
                 }
             )
 
@@ -78,9 +87,11 @@ class LoginViewModel @Inject constructor(
 
     }
 
-    fun onRegisterClick() {
+    override fun onRegisterClick() {
         viewModelScope.launch {
-
+            _uiState.value = _uiState.value.copy(
+                isLoading = true
+            )
 
             val result = registerByEmailPassUseCase(
                 _uiState.value.email,
@@ -89,7 +100,8 @@ class LoginViewModel @Inject constructor(
             result.fold(
                 onSuccess = { userData ->
                     _uiState.value = _uiState.value.copy(
-                        user = userData
+                        user = userData,
+                        isLoading = false
                     )
                     settingRepo.setEmail(userData.email)
                     settingRepo.setUid(userData.uid)
@@ -97,7 +109,8 @@ class LoginViewModel @Inject constructor(
                 },
                 onFailure = { e ->
                     _uiState.value = _uiState.value.copy(
-                        error = e.message ?: "Register error"
+                        error = e.message ?: "Register error",
+                        isLoading = false
                     )
                 }
             )
@@ -105,23 +118,28 @@ class LoginViewModel @Inject constructor(
         }
     }
 
-    fun clearError() {
+    override fun clearError() {
         _uiState.value = _uiState.value.copy(error = null)
     }
 
-    fun onLoginWithGoogleClick(context: android.content.Context, clientId: String) {
+    override fun onLoginWithGoogleClick(context: Context, clientId: String) {
         viewModelScope.launch {
+            _uiState.value = _uiState.value.copy(
+                isLoading = true
+            )
             val contract = userRepo.loginByGoogle(context, clientId)
             contract.fold(
                 onSuccess = { result ->
                     _uiState.value = _uiState.value.copy(
                         contract = result,
-                        isGoogle = true
+                        isGoogle = true,
+                        isLoading = false
                     )
                 },
                 onFailure = { e ->
                     _uiState.value = _uiState.value.copy(
-                        error = e.message
+                        error = e.message,
+                        isLoading = false
                     )
                 }
             )
@@ -129,7 +147,7 @@ class LoginViewModel @Inject constructor(
 
     }
 
-    fun onGoogleSuccess(user: FirebaseUser) {
+    override fun onGoogleSuccess(user: FirebaseUser) {
         _uiState.value = _uiState.value.copy(
             user = User(user.uid, user.email!!)
         )
@@ -140,7 +158,7 @@ class LoginViewModel @Inject constructor(
 
     }
 
-    fun loginLauncher(result: ActivityResult) {
+    override fun loginLauncher(result: ActivityResult) {
         viewModelScope.launch {
             val user = userRepo.googleLauncher(result)
 

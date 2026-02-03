@@ -1,4 +1,4 @@
-package com.example.bookstorev2.presentation.viewmodels
+package com.example.bookstorev2.presentation.viewmodels.viewmodels
 
 import android.util.Log
 import androidx.lifecycle.ViewModel
@@ -44,11 +44,12 @@ class BookListViewModel @Inject constructor(
         viewModelScope.launch {
             _uiState.value = _uiState.value.copy(isLoading = true)
             try {
+                Log.d("MyLog", "scope is launched")
                 val books = getBooksUseCase(category)
-
+                Log.d("MyLog", "got books")
                 val favIds = bookRepo.getFavIds(uid)
                 val readIds = bookRepo.getReadIds(uid)
-
+                Log.d("MyLog", "got ids")
                 val favSet = favIds.toSet()
                 val readSet = readIds.toSet()
                 val updatedBooks: List<Book> = books.map { book ->
@@ -57,12 +58,14 @@ class BookListViewModel @Inject constructor(
                         read = book.key in readSet
                     )
                 }
+                Log.d("MyLog", "got updated books: $updatedBooks")
 
                 _uiState.value = _uiState.value.copy(
                     books = updatedBooks,
                     isLoading = false
                 )
                 bookRepo.saveAllToLocal(_uiState.value.books)
+                Log.d("MyLog", "Saved to local")
 
             } catch (e: Exception) {
                 _uiState.value = _uiState.value.copy(

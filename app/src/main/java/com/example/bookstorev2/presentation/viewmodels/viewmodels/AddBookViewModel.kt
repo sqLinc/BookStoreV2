@@ -1,7 +1,6 @@
-package com.example.bookstorev2.presentation.viewmodels
+package com.example.bookstorev2.presentation.viewmodels.viewmodels
 
 import android.net.Uri
-import android.util.Log
 import androidx.core.net.toUri
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -75,45 +74,48 @@ class AddBookViewModel @Inject constructor(
 
     }
 
-    suspend fun onBookIdUpdate(bookId: String) {
-        val book = bookRepo.getBookById(bookId)
+    fun onBookIdUpdate(bookId: String) {
+        viewModelScope.launch {
+            val book = bookRepo.getBookById(bookId)
 
-        _uiState.value = _uiState.value.copy(
-            description = book.description
-        )
+            _uiState.value = _uiState.value.copy(
+                description = book.description
+            )
 
-        _uiState.value = _uiState.value.copy(
-            title = book.title
-        )
-        _uiState.value = _uiState.value.copy(
-            key = book.key
-        )
-        _uiState.value = _uiState.value.copy(
-            base64Image = book.base64Image!!
+            _uiState.value = _uiState.value.copy(
+                title = book.title
+            )
+            _uiState.value = _uiState.value.copy(
+                key = book.key
+            )
+            _uiState.value = _uiState.value.copy(
+                base64Image = book.base64Image!!
 
-        )
-        _uiState.value = _uiState.value.copy(
-            category = book.category
-        )
+            )
+            _uiState.value = _uiState.value.copy(
+                category = book.category
+            )
 
-        _uiState.value = _uiState.value.copy(
-            price = book.price
-        )
-        _uiState.value = _uiState.value.copy(
-            date = book.date
-        )
-        _uiState.value = _uiState.value.copy(
-            author = book.author
-        )
-        _uiState.value = _uiState.value.copy(
-            isRead = book.read
-        )
-        _uiState.value = _uiState.value.copy(
-            isFavorite = book.favorite
-        )
-        _uiState.value = _uiState.value.copy(
-            imageUri = book.imageUri.toUri()
-        )
+            _uiState.value = _uiState.value.copy(
+                price = book.price
+            )
+            _uiState.value = _uiState.value.copy(
+                date = book.date
+            )
+            _uiState.value = _uiState.value.copy(
+                author = book.author
+            )
+            _uiState.value = _uiState.value.copy(
+                isRead = book.read
+            )
+            _uiState.value = _uiState.value.copy(
+                isFavorite = book.favorite
+            )
+            _uiState.value = _uiState.value.copy(
+                imageUri = book.imageUri.toUri()
+            )
+        }
+
 
     }
 

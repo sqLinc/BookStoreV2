@@ -3,6 +3,7 @@ package com.example.bookstorev2.presentation.ui.screens
 import android.graphics.BitmapFactory
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.compose.foundation.gestures.scrollable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
@@ -10,6 +11,8 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Info
 import androidx.compose.material3.Button
@@ -44,7 +47,7 @@ import com.example.bookstorev2.domain.models.Book
 import com.example.bookstorev2.presentation.ui.components.ActionButton
 import com.example.bookstorev2.presentation.ui.components.CategoryDropDownMenu
 import com.example.bookstorev2.presentation.ui.components.DialogBody
-import com.example.bookstorev2.presentation.viewmodels.AddBookViewModel
+import com.example.bookstorev2.presentation.viewmodels.viewmodels.AddBookViewModel
 
 @OptIn(ExperimentalMaterial3Api::class, ExperimentalGlideComposeApi::class)
 @Composable
@@ -107,7 +110,8 @@ fun AddBookScreen(
             modifier = Modifier
                 .fillMaxSize()
                 .padding(paddingValues)
-                .padding(start = 100.dp, end = 100.dp),
+                .padding(start = 100.dp, end = 100.dp)
+                .verticalScroll(rememberScrollState()),
             horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.Center
         ) {

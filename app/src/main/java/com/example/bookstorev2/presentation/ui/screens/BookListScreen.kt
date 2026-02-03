@@ -36,7 +36,7 @@ import com.example.bookstorev2.domain.models.User
 import com.example.bookstorev2.presentation.ui.components.BookItem
 import com.example.bookstorev2.presentation.ui.components.DrawerBody
 import com.example.bookstorev2.presentation.ui.components.DrawerHeader
-import com.example.bookstorev2.presentation.viewmodels.BookListViewModel
+import com.example.bookstorev2.presentation.viewmodels.viewmodels.BookListViewModel
 
 
 @Composable

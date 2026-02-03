@@ -6,7 +6,7 @@ import com.example.bookstorev2.data.local.room.dao.BookDao
 import com.example.bookstorev2.data.local.room.entity.BookDbEntity
 
 @Database(
-    version = 3,
+    version = 4,
     entities = [
         BookDbEntity::class
     ]

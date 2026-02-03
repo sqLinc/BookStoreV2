@@ -14,7 +14,7 @@ import org.mockito.kotlin.whenever
 
 const val CATEGORY_READ = "Read"
 const val CATEGORY_FAVORITE = "Favorite"
-const val CATEGORY_ALL = ""
+const val CATEGORY_ALL = "All"
 const val CATEGORY = "Drama"
 
 class GetAllBooksUseCaseTest {

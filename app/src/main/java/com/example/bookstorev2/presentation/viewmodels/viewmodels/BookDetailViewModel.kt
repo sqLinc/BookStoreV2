@@ -1,4 +1,4 @@
-package com.example.bookstorev2.presentation.viewmodels
+package com.example.bookstorev2.presentation.viewmodels.viewmodels
 
 import androidx.compose.runtime.State
 import androidx.compose.runtime.mutableStateOf

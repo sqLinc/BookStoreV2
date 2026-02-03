@@ -28,7 +28,8 @@ import com.example.bookstorev2.presentation.ui.screens.BookDetailScreen
 import com.example.bookstorev2.presentation.ui.screens.BookListScreen
 import com.example.bookstorev2.presentation.ui.screens.LoginScreen
 import com.example.bookstorev2.presentation.ui.screens.SettingsScreen
-import com.example.bookstorev2.presentation.viewmodels.SettingsViewModel
+import com.example.bookstorev2.presentation.viewmodels.viewmodels.LoginViewModel
+import com.example.bookstorev2.presentation.viewmodels.viewmodels.SettingsViewModel
 import com.example.bookstorev2.ui.theme.setLocale
 import dagger.hilt.android.AndroidEntryPoint
 
@@ -73,6 +74,7 @@ class MainActivity : ComponentActivity() {
                     ) {
                         composable(Screen.Login.route) {
                             LoginScreen(
+                                viewModel = hiltViewModel<LoginViewModel>(),
                                 onSuccess = {
                                     navController.navigate(Screen.BookList.route) {
                                         popUpTo(Screen.Login.route) { inclusive = true }

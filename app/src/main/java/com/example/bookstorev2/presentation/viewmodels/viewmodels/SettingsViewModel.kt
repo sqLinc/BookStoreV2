@@ -1,4 +1,4 @@
-package com.example.bookstorev2.presentation.viewmodels
+package com.example.bookstorev2.presentation.viewmodels.viewmodels
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
